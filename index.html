@@ -1,30 +1,94 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adria Style Studio</title>
-    <meta http-equiv="refresh" content="0; url=landing.html">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #fdfcfb 0%, #f5f3f0 100%);
-        }
-        .loader {
-            text-align: center;
-            color: #d4a574;
-        }
-    </style>
+    <title>Adria Style Studio | Closet Styling & Wardrobe Matching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
-    <div class="loader">
-        <h1>Redirecting to Adria Style Studio...</h1>
-        <p>If you are not redirected, <a href="landing.html" style="color: #d4a574;">click here</a>.</p>
-    </div>
+    <section class="hero">
+        <div class="container">
+            <div class="content">
+                <div class="subtitle">Discover Your Style</div>
+                <h1>Adria Style Studio</h1>
+                <p class="description">
+                    Transform your closet into a curated collection of perfectly coordinated outfits. 
+                    I help you rediscover the pieces you already own and create effortless, 
+                    stylish combinations that reflect your unique personality.
+                </p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-title">Closet Curation</div>
+                        <div class="feature-text">Maximize your wardrobe's potential</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">👗</div>
+                        <div class="feature-title">Style Matching</div>
+                        <div class="feature-text">Create cohesive, stunning looks</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">💫</div>
+                        <div class="feature-title">Personal Touch</div>
+                        <div class="feature-text">Styling tailored to you</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="form-title">Let's Connect</h2>
+                <p class="form-subtitle">Begin your style journey today</p>
+                
+                <div id="successMessage" class="success-message">
+                    Thank you! I'll be in touch soon to discuss your styling needs.
+                </div>
+
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Tell me about your style goals</label>
+                        <textarea id="message" name="message" placeholder="What brings you here? What would you like to achieve with your wardrobe?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Request More Information</button>
+                </form>
+
+                <div class="divider">
+                    <span class="divider-text">Or</span>
+                </div>
+
+                <button class="btn calendar-btn" onclick="openCalendar()">
+                    <span>📅</span>
+                    <span>Book a Consultation</span>
+                </button>
+
+                <div class="demo-link">
+                    <a href="matcher.html">Try Our Interactive Outfit Matcher Demo →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/landing.js"></script>
 </body>
 </html>
