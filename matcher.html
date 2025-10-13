@@ -8,8 +8,46 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .user-info {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .user-name {
+            color: #c19a5d;
+            font-weight: 600;
+        }
+        .btn-logout-small {
+            padding: 0.5rem 1rem;
+            background: #c19a5d;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-logout-small:hover {
+            background: #a87f4a;
+        }
+    </style>
 </head>
 <body>
+    <div class="user-info" id="userInfo" style="display: none;">
+        <span class="user-name"><span id="userNameDisplay"></span></span>
+        <button onclick="handleLogout()" class="btn-logout-small">Logout</button>
+    </div>
+
     <a href="index.html" class="btn btn-secondary nav-link">← Back to Home</a>
     
     <header class="header">
@@ -81,6 +119,32 @@
         </section>
     </div>
 
+    <script src="js/auth.js"></script>
     <script src="js/matcher.js"></script>
+    <script>
+        // Protect this page - require authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuth = await auth.protectPage();
+            if (isAuth) {
+                // Show user info
+                try {
+                    const user = await auth.getCurrentUser();
+                    if (user) {
+                        const userInfo = document.getElementById('userInfo');
+                        const userNameDisplay = document.getElementById('userNameDisplay');
+                        userNameDisplay.textContent = user.firstName || user.email;
+                        userInfo.style.display = 'flex';
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+            }
+        });
+
+        // Handle logout
+        async function handleLogout() {
+            await auth.logout();
+        }
+    </script>
 </body>
 </html>

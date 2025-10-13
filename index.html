@@ -8,8 +8,87 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/landing.css">
+    <style>
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        .btn-nav {
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-login {
+            background: transparent;
+            border: 2px solid #c19a5d;
+            color: #c19a5d;
+        }
+        .btn-login:hover {
+            background: #c19a5d;
+            color: white;
+        }
+        .btn-register {
+            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
+            border: none;
+            color: white;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+        }
+        .user-menu {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-name {
+            color: #c19a5d;
+            font-weight: 600;
+        }
+        .btn-logout {
+            padding: 0.6rem 1.5rem;
+            background: #c19a5d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-logout:hover {
+            background: #a87f4a;
+        }
+    </style>
 </head>
 <body>
+    <div class="nav-bar">
+        <div id="authButtons" class="auth-buttons">
+            <a href="login.html" class="btn-nav btn-login">Login</a>
+            <a href="register.html" class="btn-nav btn-register">Sign Up</a>
+        </div>
+        <div id="userMenu" class="user-menu">
+            <span class="user-name">Welcome, <span id="userName"></span>!</span>
+            <button onclick="handleLogout()" class="btn-logout">Logout</button>
+        </div>
+    </div>
+
     <section class="hero">
         <div class="container">
             <div class="content">
@@ -91,6 +170,18 @@
         </div>
     </section>
 
+    <script src="js/auth.js"></script>
     <script src="js/landing.js"></script>
+    <script>
+        // Update auth UI on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.updateAuthUI();
+        });
+
+        // Handle logout
+        async function handleLogout() {
+            await auth.logout();
+        }
+    </script>
 </body>
 </html>
