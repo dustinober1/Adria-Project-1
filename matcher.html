@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adria Style Studio | Outfit Matcher Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="landing.html" class="btn btn-secondary nav-link">← Back to Home</a>
+    
+    <header class="header">
+        <h1>Adria Style Studio</h1>
+        <p>Interactive Outfit Matcher Demo - Upload your tops and bottoms to create perfect combinations</p>
+    </header>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2>Upload Your Wardrobe</h2>
+            <div class="upload-grid">
+                <div class="upload-area" onclick="document.getElementById('topUpload').click()">
+                    <input type="file" id="topUpload" accept="image/*" multiple onchange="handleImageUpload(this, 'tops')">
+                    <div class="upload-icon">👚</div>
+                    <h3>Upload Tops</h3>
+                    <p>Drag & drop or click to select tops</p>
+                </div>
+                <div class="upload-area" onclick="document.getElementById('bottomUpload').click()">
+                    <input type="file" id="bottomUpload" accept="image/*" multiple onchange="handleImageUpload(this, 'bottoms')">
+                    <div class="upload-icon">👖</div>
+                    <h3>Upload Bottoms</h3>
+                    <p>Drag & drop or click to select bottoms</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Outfit Matcher Section -->
+        <section class="matcher-section">
+            <h2 class="matcher-title">Mix & Match Outfits</h2>
+            
+            <div class="outfit-container">
+                <!-- Tops Carousel -->
+                <div class="clothing-carousel">
+                    <div class="carousel-inner" id="topsCarousel">
+                        <!-- Demo tops will be inserted here -->
+                    </div>
+                    <button class="carousel-controls prev" onclick="changeSlide('tops', -1)">‹</button>
+                    <button class="carousel-controls next" onclick="changeSlide('tops', 1)">›</button>
+                </div>
+
+                <div class="vs-divider">+</div>
+
+                <!-- Bottoms Carousel -->
+                <div class="clothing-carousel">
+                    <div class="carousel-inner" id="bottomsCarousel">
+                        <!-- Demo bottoms will be inserted here -->
+                    </div>
+                    <button class="carousel-controls prev" onclick="changeSlide('bottoms', -1)">‹</button>
+                    <button class="carousel-controls next" onclick="changeSlide('bottoms', 1)">›</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="saveOutfit()">💾 Save This Combo</button>
+                <button class="btn btn-secondary" onclick="randomMatch()">🎲 Random Match</button>
+                <button class="btn btn-secondary" onclick="addMoreClothing()">➕ Add More Items</button>
+            </div>
+
+            <div class="demo-note">
+                <p><strong>Demo Note:</strong> This is a demonstration with sample women's clothing images. In the full version, users can upload their own wardrobe photos and get AI-powered styling suggestions.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="matcher.js"></script>
+</body>
+</html>
