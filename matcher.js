@@ -2,56 +2,56 @@
 const demoTops = [
     {
         id: 1,
-        url: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=300&h=400&fit=crop&crop=top',
-        name: 'White Button Blouse'
+        url: 'clothing examples/tops/shopping.webp',
+        name: 'Top 1'
     },
     {
         id: 2,
-        url: 'https://images.unsplash.com/photo-1571445992736-26b95c77b515?w=300&h=400&fit=crop&crop=center',
-        name: 'Black Turtleneck'
+        url: 'clothing examples/tops/shopping (1).webp',
+        name: 'Top 2'
     },
     {
         id: 3,
-        url: 'https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=300&h=400&fit=crop&crop=center',
-        name: 'Striped Long Sleeve'
+        url: 'clothing examples/tops/shopping (2).webp',
+        name: 'Top 3'
     },
     {
         id: 4,
-        url: 'https://images.unsplash.com/photo-1582142306909-195724d33567?w=300&h=400&fit=crop&crop=center',
-        name: 'Cream Sweater'
+        url: 'clothing examples/tops/shopping (3).webp',
+        name: 'Top 4'
     },
     {
         id: 5,
-        url: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=400&fit=crop&crop=center',
-        name: 'Pink Silk Blouse'
+        url: 'clothing examples/tops/shopping (4).webp',
+        name: 'Top 5'
     }
 ];
 
 const demoBottoms = [
     {
         id: 1,
-        url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop&crop=center',
-        name: 'High Waist Jeans'
+        url: 'clothing examples/bottoms/images.jpeg',
+        name: 'Bottom 1'
     },
     {
         id: 2,
-        url: 'https://images.unsplash.com/photo-1506629905877-dee2de9c8f8c?w=300&h=400&fit=crop&crop=center',
-        name: 'Black Pencil Skirt'
+        url: 'clothing examples/bottoms/images (1).jpeg',
+        name: 'Bottom 2'
     },
     {
         id: 3,
-        url: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=300&h=400&fit=crop&crop=center',
-        name: 'Wide Leg Trousers'
+        url: 'clothing examples/bottoms/images (2).jpeg',
+        name: 'Bottom 3'
     },
     {
         id: 4,
-        url: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=300&h=400&fit=crop&crop=center',
-        name: 'Pleated Midi Skirt'
+        url: 'clothing examples/bottoms/images (3).jpeg',
+        name: 'Bottom 4'
     },
     {
         id: 5,
-        url: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&h=400&fit=crop&crop=center',
-        name: 'Denim Shorts'
+        url: 'clothing examples/bottoms/images (4).jpeg',
+        name: 'Bottom 5'
     }
 ];
 

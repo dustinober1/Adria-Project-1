@@ -54,6 +54,14 @@ The project has been reorganized into separate pages with modular CSS and JavaSc
    - Save outfit feature
    - Drag and drop support
 
+### Image Assets
+
+1. **clothing examples/tops/** - Demo top clothing images
+   - 5 webp images (shopping.webp through shopping (4).webp)
+
+2. **clothing examples/bottoms/** - Demo bottom clothing images
+   - 5 jpeg images (images.jpeg through images (4).jpeg)
+
 ## Features
 
 ### Landing Page (landing.html)
@@ -77,20 +85,20 @@ The project has been reorganized into separate pages with modular CSS and JavaSc
 ## Demo Clothing Items
 
 ### Tops (5 items):
-- White Button Blouse
-- Black Turtleneck
-- Striped Long Sleeve
-- Cream Sweater
-- Pink Silk Blouse
+- Top 1 (shopping.webp)
+- Top 2 (shopping (1).webp)
+- Top 3 (shopping (2).webp)
+- Top 4 (shopping (3).webp)
+- Top 5 (shopping (4).webp)
 
 ### Bottoms (5 items):
-- High Waist Jeans
-- Black Pencil Skirt
-- Wide Leg Trousers
-- Pleated Midi Skirt
-- Denim Shorts
+- Bottom 1 (images.jpeg)
+- Bottom 2 (images (1).jpeg)
+- Bottom 3 (images (2).jpeg)
+- Bottom 4 (images (3).jpeg)
+- Bottom 5 (images (4).jpeg)
 
-All demo images are sourced from Unsplash and feature professional women's fashion photography.
+All demo images are stored locally in the `clothing examples/` folder and feature actual women's clothing items.
 
 ## Navigation
 
