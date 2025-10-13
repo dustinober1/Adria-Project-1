@@ -2,9 +2,9 @@
 
 ## File Organization
 
-The project has been reorganized into separate pages with modular CSS and JavaScript files:
+The project has been organized into a clean, modular structure with separate directories for HTML, CSS, JavaScript, and assets:
 
-### HTML Files
+### Root HTML Files
 
 1. **index.html** - Redirect page
    - Automatically redirects visitors to `landing.html`
@@ -15,16 +15,16 @@ The project has been reorganized into separate pages with modular CSS and JavaSc
    - Features and services overview
    - Calendar booking button
    - Link to demo page
-   - Uses: `landing.css` and `landing.js`
+   - Uses: `css/landing.css` and `js/landing.js`
 
 3. **matcher.html** - Interactive outfit matcher demo
    - Upload functionality for tops and bottoms
    - Carousel to browse clothing items
    - Mix and match interface
    - Demo with 5 sample tops and 5 sample bottoms
-   - Uses: `styles.css` and `matcher.js`
+   - Uses: `css/styles.css` and `js/matcher.js`
 
-### CSS Files
+### CSS Directory (`/css`)
 
 1. **landing.css** - Styles for landing page
    - Hero section with gradient background
@@ -39,7 +39,7 @@ The project has been reorganized into separate pages with modular CSS and JavaSc
    - Button styles
    - Responsive layout
 
-### JavaScript Files
+### JavaScript Directory (`/js`)
 
 1. **landing.js** - Landing page functionality
    - Contact form submission handler
@@ -54,13 +54,16 @@ The project has been reorganized into separate pages with modular CSS and JavaSc
    - Save outfit feature
    - Drag and drop support
 
-### Image Assets
+### Assets Directory (`/assets`)
 
-1. **clothing examples/tops/** - Demo top clothing images
-   - 5 webp images (shopping.webp through shopping (4).webp)
+**images/clothing/** - Demo clothing images
+- **tops/** - 5 webp images (shopping.webp through shopping (4).webp)
+- **bottoms/** - 5 jpeg images (images.jpeg through images (4).jpeg)
 
-2. **clothing examples/bottoms/** - Demo bottom clothing images
-   - 5 jpeg images (images.jpeg through images (4).jpeg)
+### Documentation Directory (`/docs`)
+
+1. **PROJECT_STRUCTURE.md** - Detailed project documentation (this file)
+2. **FILE_STRUCTURE.txt** - Visual file tree reference
 
 ## Features
 

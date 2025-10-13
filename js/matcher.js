@@ -2,27 +2,27 @@
 const demoTops = [
     {
         id: 1,
-        url: 'clothing examples/tops/shopping.webp',
+        url: 'assets/images/clothing/tops/shopping.webp',
         name: 'Top 1'
     },
     {
         id: 2,
-        url: 'clothing examples/tops/shopping (1).webp',
+        url: 'assets/images/clothing/tops/shopping (1).webp',
         name: 'Top 2'
     },
     {
         id: 3,
-        url: 'clothing examples/tops/shopping (2).webp',
+        url: 'assets/images/clothing/tops/shopping (2).webp',
         name: 'Top 3'
     },
     {
         id: 4,
-        url: 'clothing examples/tops/shopping (3).webp',
+        url: 'assets/images/clothing/tops/shopping (3).webp',
         name: 'Top 4'
     },
     {
         id: 5,
-        url: 'clothing examples/tops/shopping (4).webp',
+        url: 'assets/images/clothing/tops/shopping (4).webp',
         name: 'Top 5'
     }
 ];
@@ -30,27 +30,27 @@ const demoTops = [
 const demoBottoms = [
     {
         id: 1,
-        url: 'clothing examples/bottoms/images.jpeg',
+        url: 'assets/images/clothing/bottoms/images.jpeg',
         name: 'Bottom 1'
     },
     {
         id: 2,
-        url: 'clothing examples/bottoms/images (1).jpeg',
+        url: 'assets/images/clothing/bottoms/images (1).jpeg',
         name: 'Bottom 2'
     },
     {
         id: 3,
-        url: 'clothing examples/bottoms/images (2).jpeg',
+        url: 'assets/images/clothing/bottoms/images (2).jpeg',
         name: 'Bottom 3'
     },
     {
         id: 4,
-        url: 'clothing examples/bottoms/images (3).jpeg',
+        url: 'assets/images/clothing/bottoms/images (3).jpeg',
         name: 'Bottom 4'
     },
     {
         id: 5,
-        url: 'clothing examples/bottoms/images (4).jpeg',
+        url: 'assets/images/clothing/bottoms/images (4).jpeg',
         name: 'Bottom 5'
     }
 ];

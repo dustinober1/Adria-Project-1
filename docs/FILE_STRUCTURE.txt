@@ -1,0 +1,57 @@
+Adria Style Studio - File Structure
+====================================
+
+Root Directory:
+├── index.html              (Redirect page)
+├── landing.html            (Main splash/contact page)
+├── matcher.html            (Outfit matcher demo)
+├── README.md               (Project documentation)
+├── .gitignore              (Git ignore rules)
+│
+├── css/                    (Stylesheets)
+│   ├── landing.css         (Landing page styles)
+│   └── styles.css          (Matcher page styles)
+│
+├── js/                     (JavaScript files)
+│   ├── landing.js          (Landing page scripts)
+│   └── matcher.js          (Matcher page scripts)
+│
+├── assets/                 (Images and media)
+│   └── images/
+│       └── clothing/       (Demo clothing images)
+│           ├── tops/
+│           │   ├── shopping.webp
+│           │   ├── shopping (1).webp
+│           │   ├── shopping (2).webp
+│           │   ├── shopping (3).webp
+│           │   └── shopping (4).webp
+│           └── bottoms/
+│               ├── images.jpeg
+│               ├── images (1).jpeg
+│               ├── images (2).jpeg
+│               ├── images (3).jpeg
+│               └── images (4).jpeg
+│
+└── docs/                   (Documentation)
+    ├── PROJECT_STRUCTURE.md
+    └── FILE_STRUCTURE.txt  (This file)
+
+Page Flow:
+==========
+index.html → landing.html ↔ matcher.html
+
+Features:
+=========
+✓ Separated HTML, CSS, and JavaScript
+✓ Two distinct pages (landing + demo)
+✓ Local clothing images (10 items)
+✓ Fully responsive design
+✓ Upload functionality
+✓ Interactive carousel
+✓ Drag & drop support
+
+To Deploy:
+==========
+1. Commit all changes: git add . && git commit -m "Updated structure"
+2. Push to GitHub: git push
+3. GitHub Pages will automatically deploy
