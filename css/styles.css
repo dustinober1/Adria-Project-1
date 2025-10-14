@@ -244,8 +244,8 @@ body {
 .nav-link {
     position: fixed;
     top: 20px;
-    right: 20px;
-    z-index: 1000;
+    left: 20px;
+    z-index: 999;
 }
 
 @media (max-width: 768px) {
