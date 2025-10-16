@@ -1,39 +1,53 @@
-const { query } = require('../database/db');
+const User = require('./User');
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parse/sync');
+
+const ARTICLES_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'blog_articles.csv');
+
+// Get all articles from CSV
+const getAllArticlesFromCSV = () => {
+  try {
+    if (!fs.existsSync(ARTICLES_CSV_PATH)) {
+      return [];
+    }
+    const fileContent = fs.readFileSync(ARTICLES_CSV_PATH, 'utf-8');
+    if (!fileContent.trim()) {
+      return [];
+    }
+    return csv.parse(fileContent, {
+      columns: true,
+      skip_empty_lines: true
+    });
+  } catch (error) {
+    console.error('Error reading articles CSV:', error);
+    return [];
+  }
+};
 
 class Admin {
   // Check if user is admin
   static async isAdmin(userId) {
-    const result = await query(
-      'SELECT is_admin FROM users WHERE id = $1',
-      [userId]
-    );
-    return result.rows[0]?.is_admin || false;
+    const user = await User.findById(userId);
+    return user?.is_admin || false;
   }
 
   // Promote user to admin
   static async promoteToAdmin(userId) {
-    const result = await query(
-      'UPDATE users SET is_admin = true WHERE id = $1 RETURNING id, email, is_admin',
-      [userId]
-    );
-    return result.rows[0];
+    const result = await User.updateAdminStatus(userId, true);
+    return result;
   }
 
   // Demote admin to regular user
   static async demoteFromAdmin(userId) {
-    const result = await query(
-      'UPDATE users SET is_admin = false WHERE id = $1 RETURNING id, email, is_admin',
-      [userId]
-    );
-    return result.rows[0];
+    const result = await User.updateAdminStatus(userId, false);
+    return result;
   }
 
   // Get all admin users
   static async findAllAdmins() {
-    const result = await query(
-      'SELECT id, email, first_name, last_name, is_admin, created_at FROM users WHERE is_admin = true ORDER BY created_at DESC'
-    );
-    return result.rows;
+    const users = await User.findAll();
+    return users.filter(u => u.is_admin);
   }
 
   // Get admin statistics
@@ -41,24 +55,21 @@ class Admin {
     const stats = {};
     
     // Total users
-    const usersResult = await query('SELECT COUNT(*) as count FROM users');
-    stats.totalUsers = parseInt(usersResult.rows[0].count);
+    const allUsers = await User.findAll();
+    stats.totalUsers = allUsers.length;
 
     // Total articles
-    const articlesResult = await query('SELECT COUNT(*) as count FROM blog_articles');
-    stats.totalArticles = parseInt(articlesResult.rows[0].count);
+    const articles = getAllArticlesFromCSV();
+    stats.totalArticles = articles.length;
 
     // Published articles
-    const publishedResult = await query('SELECT COUNT(*) as count FROM blog_articles WHERE published = true');
-    stats.publishedArticles = parseInt(publishedResult.rows[0].count);
+    stats.publishedArticles = articles.filter(a => a.published === 'true').length;
 
     // Draft articles
-    const draftResult = await query('SELECT COUNT(*) as count FROM blog_articles WHERE published = false');
-    stats.draftArticles = parseInt(draftResult.rows[0].count);
+    stats.draftArticles = articles.filter(a => a.published !== 'true').length;
 
     // Total admins
-    const adminsResult = await query('SELECT COUNT(*) as count FROM users WHERE is_admin = true');
-    stats.totalAdmins = parseInt(adminsResult.rows[0].count);
+    stats.totalAdmins = allUsers.filter(u => u.is_admin).length;
 
     return stats;
   }

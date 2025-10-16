@@ -48,6 +48,10 @@ node_modules/
 .env.local
 .env.development.local
 .env.test.local
+
+# Data and CSV files (user data)
+data/
+*.csv
 .env.production.local
 
 # Dependencies
