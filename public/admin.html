@@ -69,14 +69,15 @@
                             <tr>
                                 <th>Email</th>
                                 <th>Name</th>
+                                <th>Tier</th>
+                                <th>Status</th>
                                 <th>Admin</th>
                                 <th>Joined</th>
-                                <th>Last Login</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="usersList">
-                            <tr><td colspan="6" class="loading">Loading users...</td></tr>
+                            <tr><td colspan="7" class="loading">Loading users...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -211,7 +212,32 @@
             <div id="userDetailsContent" class="user-details">
                 <!-- Content will be populated by JS -->
             </div>
+            
+            <div class="form-group">
+                <label for="userTierSelect">Customer Tier*</label>
+                <select id="userTierSelect">
+                    <option value="free">Free</option>
+                    <option value="paid">Paid</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="userStatusSelect">Prospect Status*</label>
+                <select id="userStatusSelect">
+                    <option value="active_customer">🟢 Active Customer</option>
+                    <option value="green">🟢 Green Prospect</option>
+                    <option value="yellow">🟡 Yellow Prospect</option>
+                    <option value="red">🔴 Red Prospect</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="userAdminNotes">Admin Notes</label>
+                <textarea id="userAdminNotes" rows="4" placeholder="Add notes about this customer..."></textarea>
+            </div>
+
             <div class="modal-actions">
+                <button id="saveUserChangesBtn" class="btn-primary">Save Changes</button>
                 <button id="promoteUserBtn" class="btn-warning" style="display:none;">Promote to Admin</button>
                 <button id="demoteUserBtn" class="btn-warning" style="display:none;">Demote from Admin</button>
                 <button id="deleteUserBtn" class="btn-danger">Delete User</button>
@@ -223,6 +249,7 @@
     <!-- Messages Area -->
     <div id="messageContainer" class="message-container"></div>
 
+    <script src="js/logger.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

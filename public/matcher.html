@@ -45,6 +45,7 @@
 <body>
     <div class="user-info" id="userInfo" style="display: none;">
         <span class="user-name"><span id="userNameDisplay"></span></span>
+        <span class="tier-badge" style="font-size: 0.85rem; padding: 0.25rem 0.75rem; background: #f0f0f0; border-radius: 15px;"></span>
         <button onclick="handleLogout()" class="btn-logout-small">Logout</button>
     </div>
 
@@ -58,7 +59,10 @@
     <div class="container">
         <!-- Upload Section -->
         <section class="upload-section">
-            <h2>Upload Your Wardrobe</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Upload Your Wardrobe</h2>
+                <button onclick="showTierInfo()" class="btn btn-secondary" style="font-size: 0.9rem;">ℹ️ Info</button>
+            </div>
             <div class="upload-grid">
                 <div class="upload-area" onclick="document.getElementById('topUpload').click()">
                     <input type="file" id="topUpload" accept="image/*" multiple onchange="handleImageUpload(this, 'tops')">
@@ -146,5 +150,7 @@
             await auth.logout();
         }
     </script>
+    <script src="js/logger.js"></script>
+    <script src="js/matcher.js"></script>
 </body>
 </html>

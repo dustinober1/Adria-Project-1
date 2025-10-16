@@ -39,7 +39,7 @@ async function checkAuthentication() {
 
     document.getElementById('adminName').textContent = currentUser.email;
   } catch (error) {
-    console.error('Auth check failed:', error);
+    logger.error('Auth check failed:', error);
     window.location.href = 'login.html';
   }
 }
@@ -122,7 +122,7 @@ async function loadDashboard() {
     document.getElementById('draftArticles').textContent = stats.draftArticles;
     document.getElementById('totalAdmins').textContent = stats.totalAdmins;
   } catch (error) {
-    console.error('Failed to load dashboard:', error);
+    logger.error('Failed to load dashboard:', error);
     showMessage('Failed to load dashboard statistics', 'error');
   }
 }
@@ -141,28 +141,45 @@ async function loadUsers() {
 
     const usersList = document.getElementById('usersList');
     if (users.length === 0) {
-      usersList.innerHTML = '<tr><td colspan="6" class="loading">No users found</td></tr>';
+      usersList.innerHTML = '<tr><td colspan="7" class="loading">No users found</td></tr>';
       return;
     }
+
+    // Status badge helper
+    const getStatusBadge = (status) => {
+      const statusMap = {
+        'active_customer': '🟢 Active',
+        'green': '🟢 Green',
+        'yellow': '🟡 Yellow',
+        'red': '🔴 Red'
+      };
+      return statusMap[status] || status;
+    };
+
+    // Tier badge helper
+    const getTierBadge = (tier) => {
+      return tier === 'paid' ? '💎 Paid' : '📝 Free';
+    };
 
     usersList.innerHTML = users.map(user => `
       <tr>
         <td>${escapeHtml(user.email)}</td>
         <td>${escapeHtml(user.first_name || '')} ${escapeHtml(user.last_name || '')}</td>
+        <td>${getTierBadge(user.customer_tier)}</td>
+        <td>${getStatusBadge(user.customer_status)}</td>
         <td>
           ${user.is_admin ? '<span class="status-badge status-admin">Admin</span>' : '<span style="color: var(--text-light);">User</span>'}
         </td>
         <td>${new Date(user.created_at).toLocaleDateString()}</td>
-        <td>${user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}</td>
         <td>
           <div class="action-buttons">
-            <button class="btn-primary btn-small" onclick="viewUserDetails(${user.id})">View</button>
+            <button class="btn-primary btn-small" onclick="viewUserDetails('${user.id}')">View</button>
           </div>
         </td>
       </tr>
     `).join('');
   } catch (error) {
-    console.error('Failed to load users:', error);
+    logger.error('Failed to load users:', error);
     showMessage('Failed to load users', 'error');
   }
 }
@@ -177,6 +194,9 @@ async function viewUserDetails(userId) {
 
     const data = await response.json();
     const user = data.user;
+
+    // Store current user ID for save changes
+    window.currentEditingUserId = user.id;
 
     const userDetailsContent = document.getElementById('userDetailsContent');
     userDetailsContent.innerHTML = `
@@ -202,22 +222,31 @@ async function viewUserDetails(userId) {
       </div>
     `;
 
+    // Populate dropdown fields
+    document.getElementById('userTierSelect').value = user.customer_tier || 'free';
+    document.getElementById('userStatusSelect').value = user.customer_status || 'green';
+    document.getElementById('userAdminNotes').value = user.admin_notes || '';
+
     // Setup action buttons
     const promoteBtn = document.getElementById('promoteUserBtn');
     const demoteBtn = document.getElementById('demoteUserBtn');
     const deleteBtn = document.getElementById('deleteUserBtn');
+    const saveChangesBtn = document.getElementById('saveUserChangesBtn');
 
     promoteBtn.style.display = user.isAdmin ? 'none' : 'block';
     demoteBtn.style.display = user.isAdmin ? 'block' : 'none';
 
-    promoteBtn.onclick = () => promoteUser(userId);
+    promoteBtn.onclick = () => promoteUser(user.id);
+    demoteBtn.onclick = () => demoteUser(user.id);
+    deleteBtn.onclick = () => deleteUser(user.id);
+    saveChangesBtn.onclick = () => saveUserChanges(user.id);
     demoteBtn.onclick = () => demoteUser(userId);
     deleteBtn.onclick = () => deleteUser(userId);
 
     // Show modal
     document.getElementById('userDetailsModal').classList.add('show');
   } catch (error) {
-    console.error('Failed to load user details:', error);
+    logger.error('Failed to load user details:', error);
     showMessage('Failed to load user details', 'error');
   }
 }
@@ -235,7 +264,7 @@ async function promoteUser(userId) {
     closeModal('userDetailsModal');
     loadUsers();
   } catch (error) {
-    console.error('Failed to promote user:', error);
+    logger.error('Failed to promote user:', error);
     showMessage('Failed to promote user', 'error');
   }
 }
@@ -253,7 +282,7 @@ async function demoteUser(userId) {
     closeModal('userDetailsModal');
     loadUsers();
   } catch (error) {
-    console.error('Failed to demote user:', error);
+    logger.error('Failed to demote user:', error);
     showMessage('Failed to demote user', 'error');
   }
 }
@@ -275,8 +304,55 @@ async function deleteUser(userId) {
     closeModal('userDetailsModal');
     loadUsers();
   } catch (error) {
-    console.error('Failed to delete user:', error);
+    logger.error('Failed to delete user:', error);
     showMessage('Failed to delete user', 'error');
+  }
+}
+
+// Save customer tier, status, and notes
+async function saveUserChanges(userId) {
+  try {
+    const tier = document.getElementById('userTierSelect').value;
+    const status = document.getElementById('userStatusSelect').value;
+    const notes = document.getElementById('userAdminNotes').value;
+
+    // Update tier
+    if (tier) {
+      const tierResponse = await fetch(`${API_BASE}/admin/users/${userId}/tier`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier }),
+        credentials: 'include'
+      });
+      if (!tierResponse.ok) throw new Error('Failed to update tier');
+    }
+
+    // Update status
+    if (status) {
+      const statusResponse = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+        credentials: 'include'
+      });
+      if (!statusResponse.ok) throw new Error('Failed to update status');
+    }
+
+    // Update notes
+    const notesResponse = await fetch(`${API_BASE}/admin/users/${userId}/notes`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes }),
+      credentials: 'include'
+    });
+    if (!notesResponse.ok) throw new Error('Failed to update notes');
+
+    showMessage('Customer information updated successfully', 'success');
+    closeModal('userDetailsModal');
+    loadUsers();
+  } catch (error) {
+    logger.error('Failed to save user changes:', error);
+    showMessage('Failed to save changes', 'error');
   }
 }
 
@@ -312,7 +388,7 @@ async function loadArticles() {
 
     displayArticles(articles);
   } catch (error) {
-    console.error('Failed to load articles:', error);
+    logger.error('Failed to load articles:', error);
     showMessage('Failed to load articles', 'error');
   }
 }
@@ -381,7 +457,7 @@ async function createArticle(e) {
     switchSection('articles');
     loadArticles();
   } catch (error) {
-    console.error('Failed to create article:', error);
+    logger.error('Failed to create article:', error);
     showMessage(error.message || 'Failed to create article', 'error');
   }
 }
@@ -407,7 +483,7 @@ async function editArticle(articleId) {
 
     document.getElementById('editArticleModal').classList.add('show');
   } catch (error) {
-    console.error('Failed to load article:', error);
+    logger.error('Failed to load article:', error);
     showMessage('Failed to load article', 'error');
   }
 }
@@ -444,7 +520,7 @@ document.getElementById('editArticleForm')?.addEventListener('submit', async (e)
     closeModal('editArticleModal');
     loadArticles();
   } catch (error) {
-    console.error('Failed to update article:', error);
+    logger.error('Failed to update article:', error);
     showMessage(error.message || 'Failed to update article', 'error');
   }
 });
@@ -465,7 +541,7 @@ async function deleteArticle(articleId) {
     showMessage('Article deleted successfully', 'success');
     loadArticles();
   } catch (error) {
-    console.error('Failed to delete article:', error);
+    logger.error('Failed to delete article:', error);
     showMessage('Failed to delete article', 'error');
   }
 }
@@ -540,7 +616,7 @@ async function logout() {
       window.location.href = 'index.html';
     }
   } catch (error) {
-    console.error('Logout failed:', error);
+    logger.error('Logout failed:', error);
     window.location.href = 'index.html';
   }
 }

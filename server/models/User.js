@@ -43,7 +43,7 @@ const writeUsersToCSV = (users) => {
     ensureDataDir();
     const output = csvStringify.stringify(users, {
       header: true,
-      columns: ['id', 'email', 'password_hash', 'first_name', 'last_name', 'is_admin', 'created_at', 'last_login']
+      columns: ['id', 'email', 'password_hash', 'first_name', 'last_name', 'is_admin', 'customer_tier', 'customer_status', 'admin_notes', 'created_at', 'last_login']
     });
     fs.writeFileSync(USERS_CSV_PATH, output, 'utf-8');
   } catch (error) {
@@ -74,6 +74,9 @@ class User {
         first_name: firstName,
         last_name: lastName,
         is_admin: 'false',
+        customer_tier: 'free', // free or paid
+        customer_status: 'green', // green, yellow, red, or active_customer
+        admin_notes: '',
         created_at: new Date().toISOString(),
         last_login: null
       };
@@ -86,6 +89,7 @@ class User {
         email: newUser.email,
         first_name: newUser.first_name,
         last_name: newUser.last_name,
+        customer_tier: newUser.customer_tier,
         created_at: newUser.created_at
       };
     } catch (error) {
@@ -141,6 +145,9 @@ class User {
       first_name: u.first_name,
       last_name: u.last_name,
       is_admin: u.is_admin === 'true',
+      customer_tier: u.customer_tier || 'free',
+      customer_status: u.customer_status || 'green',
+      admin_notes: u.admin_notes || '',
       created_at: u.created_at,
       last_login: u.last_login
     })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -164,6 +171,58 @@ class User {
         id: user.id,
         email: user.email,
         is_admin: user.is_admin === 'true'
+      };
+    }
+    return null;
+  }
+
+  // Update customer tier (free or paid)
+  static async updateCustomerTier(userId, tier) {
+    const users = getAllUsersFromCSV();
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      user.customer_tier = tier; // 'free' or 'paid'
+      writeUsersToCSV(users);
+      return {
+        id: user.id,
+        email: user.email,
+        customer_tier: user.customer_tier
+      };
+    }
+    return null;
+  }
+
+  // Update customer status (prospect ranking or active customer)
+  static async updateCustomerStatus(userId, status) {
+    const users = getAllUsersFromCSV();
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      // Valid statuses: green, yellow, red, active_customer
+      const validStatuses = ['green', 'yellow', 'red', 'active_customer'];
+      if (validStatuses.includes(status)) {
+        user.customer_status = status;
+        writeUsersToCSV(users);
+        return {
+          id: user.id,
+          email: user.email,
+          customer_status: user.customer_status
+        };
+      }
+    }
+    return null;
+  }
+
+  // Update admin notes for a customer
+  static async updateAdminNotes(userId, notes) {
+    const users = getAllUsersFromCSV();
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      user.admin_notes = notes;
+      writeUsersToCSV(users);
+      return {
+        id: user.id,
+        email: user.email,
+        admin_notes: user.admin_notes
       };
     }
     return null;

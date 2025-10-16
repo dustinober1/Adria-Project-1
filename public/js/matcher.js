@@ -1,11 +1,20 @@
-// User-uploaded clothing data only - no default demo images
+// User-uploaded clothing data
 const userTops = [];
 const userBottoms = [];
 let currentTopIndex = 0;
 let currentBottomIndex = 0;
+let userTier = 'free'; // Will be fetched from API
+let isAuthenticated = false;
 
-// Initialize matcher (starts empty, waits for user uploads)
-function initDemo() {
+// Initialize matcher (check auth and load saved wardrobe if paid tier)
+async function initDemo() {
+    await checkUserAuthAndTier();
+    
+    // Load saved wardrobe if paid tier
+    if (isAuthenticated && userTier === 'paid') {
+        await loadSavedWardrobe();
+    }
+    
     loadClothingCarousel('tops', userTops);
     loadClothingCarousel('bottoms', userBottoms);
 }
@@ -136,9 +145,115 @@ function randomMatch() {
     }, 500);
 }
 
-// Add more clothing prompt
-function addMoreClothing() {
-    alert('💡 Tip: Click the upload areas above to add more tops and bottoms from your wardrobe!\n\nYou can upload multiple images at once to expand your virtual closet.');
+// Check user authentication and tier
+async function checkUserAuthAndTier() {
+    try {
+        const response = await fetch('/api/auth/me', {
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const user = data.user;
+            isAuthenticated = true;
+            userTier = user.customer_tier || 'free';
+            
+            // Show user info
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userNameDisplay').textContent = user.firstName || user.email;
+            
+            // Show tier info in UI
+            const tierBadge = document.querySelector('.tier-badge');
+            if (tierBadge) {
+                tierBadge.textContent = userTier === 'paid' ? '💎 Paid - Wardrobe Saved' : '📝 Free - Unsaved (Session Only)';
+                tierBadge.style.color = userTier === 'paid' ? '#c19a5d' : '#999';
+            }
+        }
+    } catch (error) {
+        logger.error('Failed to check auth:', error);
+        // User is not authenticated, continue as guest
+    }
+}
+
+// Load saved wardrobe from server
+async function loadSavedWardrobe() {
+    try {
+        const response = await fetch('/api/wardrobe/wardrobe', {
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            userTops.push(...(data.tops || []));
+            userBottoms.push(...(data.bottoms || []));
+        }
+    } catch (error) {
+        logger.error('Failed to load saved wardrobe:', error);
+    }
+}
+
+// Save wardrobe items to server (paid tier only)
+async function saveWardrobeToServer() {
+    if (!isAuthenticated || userTier !== 'paid') {
+        alert('💎 Upgrade to Paid Tier to save your wardrobe permanently!\n\nFree users can mix & match during this session only.');
+        return;
+    }
+
+    try {
+        // Save tops
+        if (userTops.length > 0) {
+            const topsToSave = userTops
+                .filter(item => item.url && item.url.startsWith('data:'))
+                .map(item => ({
+                    name: item.name,
+                    data: item.url
+                }));
+
+            if (topsToSave.length > 0) {
+                await fetch('/api/wardrobe/wardrobe/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: topsToSave, type: 'tops' }),
+                    credentials: 'include'
+                });
+            }
+        }
+
+        // Save bottoms
+        if (userBottoms.length > 0) {
+            const bottomsToSave = userBottoms
+                .filter(item => item.url && item.url.startsWith('data:'))
+                .map(item => ({
+                    name: item.name,
+                    data: item.url
+                }));
+
+            if (bottomsToSave.length > 0) {
+                await fetch('/api/wardrobe/wardrobe/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: bottomsToSave, type: 'bottoms' }),
+                    credentials: 'include'
+                });
+            }
+        }
+
+        alert('✅ Your wardrobe has been saved!');
+    } catch (error) {
+        logger.error('Failed to save wardrobe:', error);
+        alert('Failed to save wardrobe. Please try again.');
+    }
+}
+
+// Show tier-specific info in upload section
+function showTierInfo() {
+    if (!isAuthenticated) {
+        alert('🔐 Log in to save your wardrobe!\n\nFree users: Mix & match during this session\nPaid users: Wardrobe saved permanently');
+    } else if (userTier === 'free') {
+        alert('📝 Free Tier\n\nYour wardrobe will be cleared when you log out.\n\n💎 Upgrade to Paid to save permanently!');
+    } else {
+        alert('💎 Paid Tier\n\nYour wardrobe is being saved automatically!');
+    }
 }
 
 // Drag and drop functionality

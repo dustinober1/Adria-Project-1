@@ -18,6 +18,9 @@ router.get('/users/:id', adminController.getUser);
 router.delete('/users/:id', adminController.deleteUser);
 router.post('/users/:id/promote', adminController.promoteToAdmin);
 router.post('/users/:id/demote', adminController.demoteFromAdmin);
+router.put('/users/:id/tier', adminController.updateCustomerTier);
+router.put('/users/:id/status', adminController.updateCustomerStatus);
+router.put('/users/:id/notes', adminController.updateAdminNotes);
 
 // ============ BLOG ARTICLE MANAGEMENT ============
 

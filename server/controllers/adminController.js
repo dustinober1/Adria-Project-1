@@ -174,11 +174,122 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+// Update customer tier (free or paid)
+const updateCustomerTier = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tier } = req.body;
+
+    // Validate tier
+    const validTiers = ['free', 'paid'];
+    if (!validTiers.includes(tier)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid tier. Must be "free" or "paid"'
+      });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const updated = await User.updateCustomerTier(id, tier);
+
+    res.json({
+      success: true,
+      message: `User tier updated to ${tier}`,
+      user: updated
+    });
+  } catch (error) {
+    logger.error('Update customer tier error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update customer tier'
+    });
+  }
+};
+
+// Update customer status (prospect ranking)
+const updateCustomerStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    // Validate status
+    const validStatuses = ['green', 'yellow', 'red', 'active_customer'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid status. Must be "green", "yellow", "red", or "active_customer"'
+      });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const updated = await User.updateCustomerStatus(id, status);
+
+    res.json({
+      success: true,
+      message: `User status updated to ${status}`,
+      user: updated
+    });
+  } catch (error) {
+    logger.error('Update customer status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update customer status'
+    });
+  }
+};
+
+// Update admin notes for a customer
+const updateAdminNotes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { notes } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const updated = await User.updateAdminNotes(id, notes || '');
+
+    res.json({
+      success: true,
+      message: 'Admin notes updated',
+      user: updated
+    });
+  } catch (error) {
+    logger.error('Update admin notes error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update admin notes'
+    });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUser,
   deleteUser,
   promoteToAdmin,
   demoteFromAdmin,
+  updateCustomerTier,
+  updateCustomerStatus,
+  updateAdminNotes,
   getDashboardStats
 };
