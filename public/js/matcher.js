@@ -1,69 +1,13 @@
-// Demo clothing data with women's fashion examples
-const demoTops = [
-    {
-        id: 1,
-        url: 'assets/images/clothing/tops/shopping.webp',
-        name: 'Top 1'
-    },
-    {
-        id: 2,
-        url: 'assets/images/clothing/tops/shopping (1).webp',
-        name: 'Top 2'
-    },
-    {
-        id: 3,
-        url: 'assets/images/clothing/tops/shopping (2).webp',
-        name: 'Top 3'
-    },
-    {
-        id: 4,
-        url: 'assets/images/clothing/tops/shopping (3).webp',
-        name: 'Top 4'
-    },
-    {
-        id: 5,
-        url: 'assets/images/clothing/tops/shopping (4).webp',
-        name: 'Top 5'
-    }
-];
-
-const demoBottoms = [
-    {
-        id: 1,
-        url: 'assets/images/clothing/bottoms/images.jpeg',
-        name: 'Bottom 1'
-    },
-    {
-        id: 2,
-        url: 'assets/images/clothing/bottoms/images (1).jpeg',
-        name: 'Bottom 2'
-    },
-    {
-        id: 3,
-        url: 'assets/images/clothing/bottoms/images (2).jpeg',
-        name: 'Bottom 3'
-    },
-    {
-        id: 4,
-        url: 'assets/images/clothing/bottoms/images (3).jpeg',
-        name: 'Bottom 4'
-    },
-    {
-        id: 5,
-        url: 'assets/images/clothing/bottoms/images (4).jpeg',
-        name: 'Bottom 5'
-    }
-];
-
-let userTops = [];
-let userBottoms = [];
+// User-uploaded clothing data only - no default demo images
+const userTops = [];
+const userBottoms = [];
 let currentTopIndex = 0;
 let currentBottomIndex = 0;
 
-// Initialize demo
+// Initialize matcher (starts empty, waits for user uploads)
 function initDemo() {
-    loadClothingCarousel('tops', demoTops);
-    loadClothingCarousel('bottoms', demoBottoms);
+    loadClothingCarousel('tops', userTops);
+    loadClothingCarousel('bottoms', userBottoms);
 }
 
 // Load clothing items into carousel
@@ -134,13 +78,10 @@ function saveOutfit() {
 
 // Get current item name for display
 function getCurrentItemName(type) {
-    const allTops = [...demoTops, ...userTops];
-    const allBottoms = [...demoBottoms, ...userBottoms];
-    
     if (type === 'tops') {
-        return allTops[currentTopIndex]?.name || 'Unknown Top';
+        return userTops[currentTopIndex]?.name || 'Unknown Top';
     } else {
-        return allBottoms[currentBottomIndex]?.name || 'Unknown Bottom';
+        return userBottoms[currentBottomIndex]?.name || 'Unknown Bottom';
     }
 }
 
