@@ -4,6 +4,7 @@ const csv = require('csv-parse/sync');
 const csvStringify = require('csv-stringify/sync');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const logger = require('../utils/logger');
 
 const USERS_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'users.csv');
 
@@ -31,7 +32,7 @@ const getAllUsersFromCSV = () => {
       skip_empty_lines: true
     });
   } catch (error) {
-    console.error('Error reading users CSV:', error);
+    logger.error('Error reading users CSV:', error);
     return [];
   }
 };
@@ -46,7 +47,7 @@ const writeUsersToCSV = (users) => {
     });
     fs.writeFileSync(USERS_CSV_PATH, output, 'utf-8');
   } catch (error) {
-    console.error('Error writing users CSV:', error);
+    logger.error('Error writing users CSV:', error);
     throw error;
   }
 };

@@ -3,6 +3,7 @@ const path = require('path');
 const csv = require('csv-parse/sync');
 const csvStringify = require('csv-stringify/sync');
 const { v4: uuidv4 } = require('uuid');
+const logger = require('../utils/logger');
 
 const EMAIL_LIST_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'email_list.csv');
 
@@ -30,7 +31,7 @@ const getAllEmailsFromCSV = () => {
       skip_empty_lines: true
     });
   } catch (error) {
-    console.error('Error reading email list CSV:', error);
+    logger.error('Error reading email list CSV:', error);
     return [];
   }
 };
@@ -45,7 +46,7 @@ const writeEmailsToCSV = (emails) => {
     });
     fs.writeFileSync(EMAIL_LIST_CSV_PATH, output, 'utf-8');
   } catch (error) {
-    console.error('Error writing email list CSV:', error);
+    logger.error('Error writing email list CSV:', error);
     throw error;
   }
 };

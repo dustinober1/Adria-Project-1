@@ -1,3 +1,4 @@
+const logger = require("../utils/logger");
 const { validationResult } = require('express-validator');
 const BlogArticle = require('../models/BlogArticle');
 const Admin = require('../models/Admin');
@@ -30,7 +31,7 @@ const createArticle = async (req, res) => {
       article
     });
   } catch (error) {
-    console.error('Create article error:', error);
+    logger.error('Create article error:', error);
     res.status(400).json({
       success: false,
       message: error.message || 'Failed to create article'
@@ -47,7 +48,7 @@ const getAllArticles = async (req, res) => {
       articles
     });
   } catch (error) {
-    console.error('Get articles error:', error);
+    logger.error('Get articles error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve articles'
@@ -73,7 +74,7 @@ const getArticle = async (req, res) => {
       article
     });
   } catch (error) {
-    console.error('Get article error:', error);
+    logger.error('Get article error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve article'
@@ -117,7 +118,7 @@ const updateArticle = async (req, res) => {
       article
     });
   } catch (error) {
-    console.error('Update article error:', error);
+    logger.error('Update article error:', error);
     res.status(400).json({
       success: false,
       message: error.message || 'Failed to update article'
@@ -145,7 +146,7 @@ const deleteArticle = async (req, res) => {
       message: 'Article deleted successfully'
     });
   } catch (error) {
-    console.error('Delete article error:', error);
+    logger.error('Delete article error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete article'
@@ -175,7 +176,7 @@ const togglePublishArticle = async (req, res) => {
       article: updatedArticle
     });
   } catch (error) {
-    console.error('Toggle publish error:', error);
+    logger.error('Toggle publish error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update article publish status'

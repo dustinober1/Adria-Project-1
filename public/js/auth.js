@@ -1,36 +1,19 @@
 // Authentication utility functions
 const API_BASE_URL = window.location.origin;
 
-// Store token in localStorage (as backup to httpOnly cookie)
-const setToken = (token) => {
-  localStorage.setItem('authToken', token);
-};
-
-const getToken = () => {
-  return localStorage.getItem('authToken');
-};
-
-const removeToken = () => {
-  localStorage.removeItem('authToken');
-};
-
 // API request helper with authentication
+// Note: Authentication is now handled entirely through httpOnly cookies (XSS protection)
 const apiRequest = async (endpoint, options = {}) => {
-  const token = getToken();
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers
   };
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
-      credentials: 'include' // Include cookies
+      credentials: 'include' // Include httpOnly cookies
     });
 
     const data = await response.json();
@@ -54,8 +37,7 @@ const register = async (email, password, firstName, lastName) => {
       body: JSON.stringify({ email, password, firstName, lastName })
     });
 
-    if (data.success && data.token) {
-      setToken(data.token);
+    if (data.success) {
       return data;
     }
     throw new Error(data.message || 'Registration failed');
@@ -72,8 +54,7 @@ const login = async (email, password) => {
       body: JSON.stringify({ email, password })
     });
 
-    if (data.success && data.token) {
-      setToken(data.token);
+    if (data.success) {
       return data;
     }
     throw new Error(data.message || 'Login failed');
@@ -88,11 +69,9 @@ const logout = async () => {
     await apiRequest('/api/auth/logout', {
       method: 'POST'
     });
-    removeToken();
     window.location.href = '/index.html';
   } catch (error) {
-    // Still remove token even if request fails
-    removeToken();
+    // Still redirect even if request fails
     window.location.href = '/index.html';
   }
 };
@@ -105,25 +84,29 @@ const getCurrentUser = async () => {
     });
     return data.user;
   } catch (error) {
-    removeToken();
     return null;
   }
 };
 
 // Check if user is authenticated
-const isAuthenticated = () => {
-  return !!getToken();
+// This checks by attempting to fetch the current user (relies on httpOnly cookie)
+const isAuthenticated = async () => {
+  try {
+    const user = await getCurrentUser();
+    return !!user;
+  } catch {
+    return false;
+  }
 };
 
 // Protect page (redirect if not authenticated)
 const protectPage = async () => {
-  if (!isAuthenticated()) {
-    window.location.href = '/index.html';
-    return false;
-  }
-
   try {
-    await getCurrentUser();
+    const user = await getCurrentUser();
+    if (!user) {
+      window.location.href = '/index.html';
+      return false;
+    }
     return true;
   } catch (error) {
     window.location.href = '/index.html';
@@ -151,23 +134,21 @@ const updateAuthUI = async () => {
 
   if (!authButtons) return;
 
-  if (isAuthenticated()) {
-    try {
-      const user = await getCurrentUser();
-      if (user) {
-        authButtons.style.display = 'none';
-        if (userMenu) {
-          userMenu.style.display = 'flex';
-          const userNameElement = document.getElementById('userName');
-          if (userNameElement) {
-            userNameElement.textContent = user.firstName || user.email;
-          }
+  try {
+    const user = await getCurrentUser();
+    if (user) {
+      authButtons.style.display = 'none';
+      if (userMenu) {
+        userMenu.style.display = 'flex';
+        const userNameElement = document.getElementById('userName');
+        if (userNameElement) {
+          userNameElement.textContent = user.firstName || user.email;
         }
-        return;
       }
-    } catch (error) {
-      console.error('Error fetching user:', error);
+      return;
     }
+  } catch (error) {
+    console.error('Error fetching user:', error);
   }
 
   // Not authenticated

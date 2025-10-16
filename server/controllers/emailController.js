@@ -1,3 +1,4 @@
+const logger = require("../utils/logger");
 const { validationResult } = require('express-validator');
 const EmailList = require('../models/EmailList');
 
@@ -28,7 +29,7 @@ const addToEmailList = async (req, res) => {
       data: result
     });
   } catch (error) {
-    console.error('Email list error:', error);
+    logger.error('Email list error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to add email to list'
@@ -48,7 +49,7 @@ const getAllEmails = async (req, res) => {
       data: emails
     });
   } catch (error) {
-    console.error('Get emails error:', error);
+    logger.error('Get emails error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get email list'
@@ -75,7 +76,7 @@ const unsubscribe = async (req, res) => {
       message: 'Successfully unsubscribed'
     });
   } catch (error) {
-    console.error('Unsubscribe error:', error);
+    logger.error('Unsubscribe error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to unsubscribe'

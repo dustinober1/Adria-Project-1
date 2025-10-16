@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const logger = require('../utils/logger');
 const User = require('../models/User');
 
 // Generate JWT token
@@ -56,10 +57,10 @@ const register = async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.error('Registration error:', error);
     res.status(400).json({
       success: false,
-      message: error.message || 'Registration failed'
+      message: process.env.NODE_ENV === 'production' ? 'Registration failed' : error.message || 'Registration failed'
     });
   }
 };
@@ -121,7 +122,7 @@ const login = async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Login failed'
@@ -162,7 +163,7 @@ const getCurrentUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get user error:', error);
+    logger.error('Get user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get user information'

@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator');
+const logger = require('../utils/logger');
 const User = require('../models/User');
 const Admin = require('../models/Admin');
 
@@ -11,7 +12,7 @@ const getAllUsers = async (req, res) => {
       users
     });
   } catch (error) {
-    console.error('Get users error:', error);
+    logger.error('Get users error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve users'
@@ -45,7 +46,7 @@ const getUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get user error:', error);
+    logger.error('Get user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve user'
@@ -81,7 +82,7 @@ const deleteUser = async (req, res) => {
       message: 'User deleted successfully'
     });
   } catch (error) {
-    console.error('Delete user error:', error);
+    logger.error('Delete user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete user'
@@ -110,7 +111,7 @@ const promoteToAdmin = async (req, res) => {
       user: updatedUser
     });
   } catch (error) {
-    console.error('Promote user error:', error);
+    logger.error('Promote user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to promote user'
@@ -147,7 +148,7 @@ const demoteFromAdmin = async (req, res) => {
       user: updatedUser
     });
   } catch (error) {
-    console.error('Demote user error:', error);
+    logger.error('Demote user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to demote user'
@@ -165,7 +166,7 @@ const getDashboardStats = async (req, res) => {
       stats
     });
   } catch (error) {
-    console.error('Get stats error:', error);
+    logger.error('Get stats error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve statistics'

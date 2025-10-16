@@ -2,6 +2,7 @@ const User = require('./User');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parse/sync');
+const logger = require('../utils/logger');
 
 const ARTICLES_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'blog_articles.csv');
 
@@ -20,7 +21,7 @@ const getAllArticlesFromCSV = () => {
       skip_empty_lines: true
     });
   } catch (error) {
-    console.error('Error reading articles CSV:', error);
+    logger.error('Error reading articles CSV:', error);
     return [];
   }
 };

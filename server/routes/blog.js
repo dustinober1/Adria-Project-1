@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('../utils/logger');
 const BlogArticle = require('../models/BlogArticle');
 
 const router = express.Router();
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
       articles
     });
   } catch (error) {
-    console.error('Get published articles error:', error);
+    logger.error('Get published articles error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve articles'
@@ -45,7 +46,7 @@ router.get('/:slug', async (req, res) => {
       article
     });
   } catch (error) {
-    console.error('Get article error:', error);
+    logger.error('Get article error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve article'
