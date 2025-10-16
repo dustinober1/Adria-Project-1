@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Serve static files (HTML, CSS, JS, images)
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -41,7 +41,7 @@ app.get('/api/health', (req, res) => {
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // Error handling middleware

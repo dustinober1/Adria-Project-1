@@ -18,35 +18,37 @@ Visit the live site: [https://dustinober1.github.io](https://dustinober1.github.
 
 ## 📁 Project Structure
 
+For a comprehensive overview of the project directory structure and organization, see [STRUCTURE.md](STRUCTURE.md).
+
+**Quick Summary:**
 ```
-dustinober1.github.io/
-├── index.html              # Redirect page
-├── landing.html            # Main landing/contact page
-├── matcher.html            # Outfit matcher demo
-├── css/                    # Stylesheets
-│   ├── landing.css
-│   └── styles.css
-├── js/                     # JavaScript files
-│   ├── landing.js
-│   └── matcher.js
-├── assets/                 # Images and media
-│   └── images/
-│       └── clothing/
-│           ├── tops/
-│           └── bottoms/
-└── docs/                   # Documentation
-    ├── PROJECT_STRUCTURE.md
-    └── FILE_STRUCTURE.txt
+├── public/                 # Frontend static files (HTML, CSS, JS, images)
+├── server/                 # Express backend (controllers, models, routes, middleware)
+├── scripts/                # Setup and utility scripts
+├── docs/                   # Documentation and guides
+├── data/                   # User data storage (CSV files, not committed)
+├── package.json            # NPM dependencies and scripts
+└── .env                    # Environment variables
 ```
+
+All static frontend files are served from the `public/` directory.
 
 ## 🛠️ Technologies Used
 
+### Frontend
 - **HTML5**: Semantic markup
 - **CSS3**: Modern styling with Grid and Flexbox
 - **JavaScript (ES6+)**: Interactive functionality
 - **Google Fonts**: Montserrat typography
 - **FileReader API**: Image upload handling
 - **Drag & Drop API**: Enhanced UX
+
+### Backend
+- **Node.js**: JavaScript runtime
+- **Express.js**: Web framework
+- **JWT**: User authentication
+- **bcryptjs**: Password hashing
+- **CSV files**: User data storage (lightweight solution)
 
 ## 📋 Pages
 
