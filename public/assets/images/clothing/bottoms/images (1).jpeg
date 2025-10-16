@@ -1,0 +1,13 @@
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bottomGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D3D3D3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A9A9A9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="#f5f5f5"/>
+  <path d="M 95 85 L 115 360 L 150 370 L 185 360 L 205 85 Z" fill="url(#bottomGradient2)" stroke="#333" stroke-width="2"/>
+  <line x1="105" y1="160" x2="195" y2="160" stroke="#333" stroke-width="1"/>
+  <line x1="100" y1="270" x2="200" y2="270" stroke="#333" stroke-width="1"/>
+  <text x="150" y="225" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">Khakis</text>
+</svg>

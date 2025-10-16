@@ -1,0 +1,13 @@
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bottomGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="#f5f5f5"/>
+  <path d="M 100 80 L 120 350 L 150 365 L 180 350 L 200 80 Z" fill="url(#bottomGradient1)" stroke="#333" stroke-width="2"/>
+  <line x1="110" y1="150" x2="190" y2="150" stroke="#333" stroke-width="1"/>
+  <line x1="105" y1="250" x2="195" y2="250" stroke="#333" stroke-width="1"/>
+  <text x="150" y="220" font-family="Arial" font-size="14" fill="#fff" text-anchor="middle">Jeans</text>
+</svg>
