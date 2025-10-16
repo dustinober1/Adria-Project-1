@@ -156,6 +156,7 @@ const getCurrentUser = async (req, res) => {
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
+        isAdmin: user.is_admin === true || user.is_admin === 'true',
         createdAt: user.created_at,
         lastLogin: user.last_login
       }
