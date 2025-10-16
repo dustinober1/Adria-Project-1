@@ -13,6 +13,7 @@ function initDemo() {
 // Load clothing items into carousel
 function loadClothingCarousel(type, items) {
     const carousel = document.getElementById(type === 'tops' ? 'topsCarousel' : 'bottomsCarousel');
+    if (!carousel) return;
     carousel.innerHTML = '';
     
     items.forEach((item, index) => {
@@ -26,7 +27,15 @@ function loadClothingCarousel(type, items) {
 
 // Handle image upload
 function handleImageUpload(input, type) {
-    const files = input.files;
+    if (!input) return;
+    processUploadedFiles(input.files, type);
+    // Reset the file input so the same file can be uploaded again if needed
+    input.value = '';
+}
+
+// Shared file processing for click-to-upload and drag-and-drop
+function processUploadedFiles(files, type) {
+    if (!files || files.length === 0) return;
     const targetArray = type === 'tops' ? userTops : userBottoms;
     
     for (let i = 0; i < files.length; i++) {
@@ -42,10 +51,14 @@ function handleImageUpload(input, type) {
             targetArray.push(newItem);
             
             // Reload carousel with combined demo + user items
-            const allItems = type === 'tops' ? 
-                [...demoTops, ...userTops] : 
-                [...demoBottoms, ...userBottoms];
-            loadClothingCarousel(type, allItems);
+            if (type === 'tops') {
+                currentTopIndex = targetArray.length - 1;
+            } else {
+                currentBottomIndex = targetArray.length - 1;
+            }
+
+            loadClothingCarousel(type, targetArray);
+            updateCarouselPosition(type);
         };
         
         reader.readAsDataURL(file);
@@ -64,6 +77,18 @@ function changeSlide(type, direction) {
         carousel.style.transform = `translateX(-${currentTopIndex * 100}%)`;
     } else {
         currentBottomIndex = (currentBottomIndex + direction + items.length) % items.length;
+        carousel.style.transform = `translateX(-${currentBottomIndex * 100}%)`;
+    }
+}
+
+// Ensure carousel shows the active item after uploads or randomization
+function updateCarouselPosition(type) {
+    const carousel = document.getElementById(type === 'tops' ? 'topsCarousel' : 'bottomsCarousel');
+    if (!carousel) return;
+
+    if (type === 'tops') {
+        carousel.style.transform = `translateX(-${currentTopIndex * 100}%)`;
+    } else {
         carousel.style.transform = `translateX(-${currentBottomIndex * 100}%)`;
     }
 }
@@ -136,11 +161,8 @@ function setupDragAndDrop() {
             area.style.background = '#fafafa';
             
             const files = e.dataTransfer.files;
-            const input = area.querySelector('input[type="file"]');
-            input.files = files;
-            
             const type = area.querySelector('h3').textContent.includes('Tops') ? 'tops' : 'bottoms';
-            handleImageUpload(input, type);
+            processUploadedFiles(files, type);
         });
     });
 }
