@@ -15,6 +15,7 @@ const createTables = async () => {
         password_hash VARCHAR(255) NOT NULL,
         first_name VARCHAR(100),
         last_name VARCHAR(100),
+        is_admin BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_login TIMESTAMP
@@ -54,6 +55,32 @@ const createTables = async () => {
         expires_at TIMESTAMP NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Create blog_articles table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS blog_articles (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        content TEXT NOT NULL,
+        excerpt VARCHAR(500),
+        featured_image VARCHAR(500),
+        author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        published BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Create index on slug for faster lookups
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_blog_articles_slug ON blog_articles(slug);
+    `);
+
+    // Create index on published for faster queries
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_blog_articles_published ON blog_articles(published);
     `);
 
     await client.query('COMMIT');

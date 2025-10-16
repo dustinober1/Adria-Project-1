@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Adria Style Studio</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="logo-section">
+                <h2>Adria Admin</h2>
+                <p id="adminName" class="admin-user">Loading...</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+                <li><a href="#users" class="nav-link" data-section="users">Users</a></li>
+                <li><a href="#articles" class="nav-link" data-section="articles">Blog Articles</a></li>
+                <li><a href="#new-article" class="nav-link" data-section="new-article">New Article</a></li>
+            </ul>
+            
+            <div class="logout-section">
+                <button id="logoutBtn" class="btn-logout">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h1>Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalArticles">0</div>
+                        <div class="stat-label">Total Articles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="publishedArticles">0</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="draftArticles">0</div>
+                        <div class="stat-label">Drafts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAdmins">0</div>
+                        <div class="stat-label">Admin Users</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="content-section">
+                <h1>Users</h1>
+                <div class="section-toolbar">
+                    <input type="text" id="userSearchInput" placeholder="Search users..." class="search-input">
+                    <button id="refreshUsersBtn" class="btn-secondary">Refresh</button>
+                </div>
+                <div id="usersContainer" class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Admin</th>
+                                <th>Joined</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersList">
+                            <tr><td colspan="6" class="loading">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Articles Section -->
+            <section id="articles" class="content-section">
+                <h1>Blog Articles</h1>
+                <div class="section-toolbar">
+                    <input type="text" id="articleSearchInput" placeholder="Search articles..." class="search-input">
+                    <select id="articleStatusFilter" class="filter-select">
+                        <option value="all">All Articles</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Drafts</option>
+                    </select>
+                    <button id="refreshArticlesBtn" class="btn-secondary">Refresh</button>
+                </div>
+                <div id="articlesContainer" class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Slug</th>
+                                <th>Status</th>
+                                <th>Author</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesList">
+                            <tr><td colspan="6" class="loading">Loading articles...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- New Article Section -->
+            <section id="new-article" class="content-section">
+                <h1>Create New Article</h1>
+                <form id="articleForm" class="form-large">
+                    <div class="form-group">
+                        <label for="articleTitle">Title*</label>
+                        <input type="text" id="articleTitle" name="title" required placeholder="Article title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleSlug">Slug*</label>
+                        <input type="text" id="articleSlug" name="slug" required placeholder="article-slug">
+                        <small>Only lowercase letters, numbers, and hyphens</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleExcerpt">Excerpt</label>
+                        <textarea id="articleExcerpt" name="excerpt" rows="2" placeholder="Brief summary of the article..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleContent">Content*</label>
+                        <textarea id="articleContent" name="content" rows="10" required placeholder="Article content (markdown supported)..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleImage">Featured Image URL</label>
+                        <input type="url" id="articleImage" name="featured_image" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="articlePublished" name="published">
+                        <label for="articlePublished">Publish immediately</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Create Article</button>
+                        <button type="reset" class="btn-secondary">Clear</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Article Modal -->
+    <div id="editArticleModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Edit Article</h2>
+            <form id="editArticleForm" class="form-large">
+                <input type="hidden" id="editArticleId" value="">
+                
+                <div class="form-group">
+                    <label for="editArticleTitle">Title*</label>
+                    <input type="text" id="editArticleTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editArticleSlug">Slug*</label>
+                    <input type="text" id="editArticleSlug" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editArticleExcerpt">Excerpt</label>
+                    <textarea id="editArticleExcerpt" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editArticleContent">Content*</label>
+                    <textarea id="editArticleContent" rows="10" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editArticleImage">Featured Image URL</label>
+                    <input type="url" id="editArticleImage">
+                </div>
+
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="editArticlePublished">
+                    <label for="editArticlePublished">Published</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Update Article</button>
+                    <button type="button" class="btn-secondary modal-close-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>User Details</h2>
+            <div id="userDetailsContent" class="user-details">
+                <!-- Content will be populated by JS -->
+            </div>
+            <div class="modal-actions">
+                <button id="promoteUserBtn" class="btn-warning" style="display:none;">Promote to Admin</button>
+                <button id="demoteUserBtn" class="btn-warning" style="display:none;">Demote from Admin</button>
+                <button id="deleteUserBtn" class="btn-danger">Delete User</button>
+                <button class="btn-secondary modal-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

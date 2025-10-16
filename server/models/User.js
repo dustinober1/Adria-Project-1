@@ -37,7 +37,7 @@ class User {
   // Find user by ID
   static async findById(id) {
     const result = await query(
-      'SELECT id, email, first_name, last_name, created_at, last_login FROM users WHERE id = $1',
+      'SELECT id, email, first_name, last_name, is_admin, created_at, last_login FROM users WHERE id = $1',
       [id]
     );
     return result.rows[0];
@@ -59,7 +59,7 @@ class User {
   // Get all users (admin only)
   static async findAll() {
     const result = await query(
-      'SELECT id, email, first_name, last_name, created_at, last_login FROM users ORDER BY created_at DESC'
+      'SELECT id, email, first_name, last_name, is_admin, created_at, last_login FROM users ORDER BY created_at DESC'
     );
     return result.rows;
   }

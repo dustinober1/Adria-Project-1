@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Admin = require('../models/Admin');
 
 // Middleware to verify JWT token
 const authenticate = async (req, res, next) => {
@@ -36,7 +37,8 @@ const authenticate = async (req, res, next) => {
       id: user.id,
       email: user.email,
       firstName: user.first_name,
-      lastName: user.last_name
+      lastName: user.last_name,
+      isAdmin: user.is_admin
     };
 
     next();
@@ -78,7 +80,8 @@ const optionalAuth = async (req, res, next) => {
           id: user.id,
           email: user.email,
           firstName: user.first_name,
-          lastName: user.last_name
+          lastName: user.last_name,
+          isAdmin: user.is_admin
         };
       }
     }
@@ -89,4 +92,23 @@ const optionalAuth = async (req, res, next) => {
   next();
 };
 
-module.exports = { authenticate, optionalAuth };
+// Middleware to check if user is admin
+const authorizeAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access denied. Authentication required.'
+    });
+  }
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. Admin privileges required.'
+    });
+  }
+
+  next();
+};
+
+module.exports = { authenticate, optionalAuth, authorizeAdmin };
