@@ -1,5 +1,5 @@
 const User = require('./User');
-const { query, get } = require('../database/sqlite');
+const { query } = require('../database/db');
 const logger = require('../utils/logger');
 
 class Admin {

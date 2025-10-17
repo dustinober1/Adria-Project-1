@@ -1,4 +1,4 @@
-const { query, run, get } = require('../database/sqlite');
+const { query } = require('../database/db');
 const logger = require('../utils/logger');
 
 class EmailList {
@@ -6,14 +6,15 @@ class EmailList {
   static async addEmail({ email, name, phone, message, source = 'homepage' }) {
     try {
       // Check if email already exists
-      const existingEmail = await get('SELECT id, name, phone, message, created_at FROM email_list WHERE email = ?', [email]);
+      const existingResult = await query('SELECT id, name, phone, message, created_at FROM email_list WHERE email = $1', [email]);
       
-      if (existingEmail) {
+      if (existingResult.rows.length > 0) {
+        const existingEmail = existingResult.rows[0];
         // Update existing record
-        await run(
+        await query(
           `UPDATE email_list 
-           SET name = ?, phone = ?, message = ?, subscribed = 1 
-           WHERE email = ?`,
+           SET name = $1, phone = $2, message = $3, subscribed = TRUE 
+           WHERE email = $4`,
           [name || existingEmail.name, phone || existingEmail.phone, message || existingEmail.message, email]
         );
         
@@ -26,17 +27,19 @@ class EmailList {
       }
 
       // Create new email entry
-      const result = await run(
+      const result = await query(
         `INSERT INTO email_list (email, name, phone, message, source, subscribed)
-         VALUES (?, ?, ?, ?, ?, 1)`,
+         VALUES ($1, $2, $3, $4, $5, TRUE)
+         RETURNING id, email, name, created_at`,
         [email, name || '', phone || '', message || '', source]
       );
 
+      const emailRecord = result.rows[0];
       return {
-        id: result.lastID,
-        email,
-        name: name || '',
-        created_at: new Date().toISOString()
+        id: emailRecord.id,
+        email: emailRecord.email,
+        name: emailRecord.name,
+        created_at: emailRecord.created_at
       };
     } catch (error) {
       logger.error('Error adding email to list:', error);
@@ -47,7 +50,7 @@ class EmailList {
   // Get all emails
   static async findAll() {
     try {
-      const result = await query('SELECT * FROM email_list WHERE subscribed = 1 ORDER BY created_at DESC');
+      const result = await query('SELECT * FROM email_list WHERE subscribed = TRUE ORDER BY created_at DESC');
       return result.rows.map(email => ({
         id: email.id,
         email: email.email,
@@ -55,7 +58,7 @@ class EmailList {
         phone: email.phone,
         message: email.message,
         source: email.source,
-        subscribed: Boolean(email.subscribed),
+        subscribed: email.subscribed,
         created_at: email.created_at
       }));
     } catch (error) {
@@ -67,7 +70,7 @@ class EmailList {
   // Unsubscribe email
   static async unsubscribe(email) {
     try {
-      await run('UPDATE email_list SET subscribed = 0 WHERE email = ?', [email]);
+      await query('UPDATE email_list SET subscribed = FALSE WHERE email = $1', [email]);
     } catch (error) {
       logger.error('Error unsubscribing email:', error);
       throw error;
@@ -77,8 +80,8 @@ class EmailList {
   // Get count of subscribed emails
   static async getCount() {
     try {
-      const result = await get('SELECT COUNT(*) as count FROM email_list WHERE subscribed = 1');
-      return result.count;
+      const result = await query('SELECT COUNT(*) as count FROM email_list WHERE subscribed = TRUE');
+      return parseInt(result.rows[0].count, 10);
     } catch (error) {
       logger.error('Error getting email count:', error);
       throw error;
@@ -96,7 +99,7 @@ class EmailList {
         phone: email.phone,
         message: email.message,
         source: email.source,
-        subscribed: Boolean(email.subscribed),
+        subscribed: email.subscribed,
         created_at: email.created_at
       }));
     } catch (error) {
@@ -108,7 +111,7 @@ class EmailList {
   // Delete email from list
   static async delete(id) {
     try {
-      await run('DELETE FROM email_list WHERE id = ?', [id]);
+      await query('DELETE FROM email_list WHERE id = $1', [id]);
     } catch (error) {
       logger.error('Error deleting email from list:', error);
       throw error;
@@ -118,7 +121,7 @@ class EmailList {
   // Subscribe email (resubscribe)
   static async subscribe(email) {
     try {
-      await run('UPDATE email_list SET subscribed = 1 WHERE email = ?', [email]);
+      await query('UPDATE email_list SET subscribed = TRUE WHERE email = $1', [email]);
     } catch (error) {
       logger.error('Error subscribing email:', error);
       throw error;

@@ -1,4 +1,4 @@
-const { query, run, get } = require('../database/sqlite');
+const { query } = require('../database/db');
 const logger = require('../utils/logger');
 const User = require('./User');
 
@@ -7,27 +7,29 @@ class BlogArticle {
   static async create({ title, slug, content, excerpt, authorId, featured_image }) {
     try {
       // Check if slug already exists
-      const existingArticle = await get('SELECT id FROM blog_articles WHERE slug = ?', [slug]);
-      if (existingArticle) {
+      const existingResult = await query('SELECT id FROM blog_articles WHERE slug = $1', [slug]);
+      if (existingResult.rows.length > 0) {
         throw new Error('Article slug already exists');
       }
 
-      const result = await run(
+      const result = await query(
         `INSERT INTO blog_articles (title, slug, content, excerpt, author_id, featured_image, published)
-         VALUES (?, ?, ?, ?, ?, ?, 0)`,
+         VALUES ($1, $2, $3, $4, $5, $6, FALSE)
+         RETURNING id, title, slug, excerpt, author_id, featured_image, published, created_at, updated_at`,
         [title, slug, content, excerpt, authorId || null, featured_image || '']
       );
 
+      const article = result.rows[0];
       return {
-        id: result.lastID,
-        title,
-        slug,
-        excerpt,
-        author_id: authorId || null,
-        featured_image: featured_image || '',
-        published: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        id: article.id,
+        title: article.title,
+        slug: article.slug,
+        excerpt: article.excerpt,
+        author_id: article.author_id,
+        featured_image: article.featured_image,
+        published: article.published,
+        created_at: article.created_at,
+        updated_at: article.updated_at
       };
     } catch (error) {
       logger.error('Error creating blog article:', error);
@@ -38,8 +40,9 @@ class BlogArticle {
   // Get article by ID
   static async findById(id) {
     try {
-      const article = await get('SELECT * FROM blog_articles WHERE id = ?', [id]);
-      if (article) {
+      const result = await query('SELECT * FROM blog_articles WHERE id = $1', [id]);
+      if (result.rows.length > 0) {
+        const article = result.rows[0];
         const author = article.author_id ? await User.findById(article.author_id) : null;
         return {
           id: article.id,
@@ -49,7 +52,7 @@ class BlogArticle {
           excerpt: article.excerpt,
           author_id: article.author_id,
           featured_image: article.featured_image,
-          published: Boolean(article.published),
+          published: article.published,
           created_at: article.created_at,
           updated_at: article.updated_at,
           first_name: author?.first_name || '',
@@ -67,8 +70,9 @@ class BlogArticle {
   // Get article by slug
   static async findBySlug(slug) {
     try {
-      const article = await get('SELECT * FROM blog_articles WHERE slug = ?', [slug]);
-      if (article) {
+      const result = await query('SELECT * FROM blog_articles WHERE slug = $1', [slug]);
+      if (result.rows.length > 0) {
+        const article = result.rows[0];
         const author = article.author_id ? await User.findById(article.author_id) : null;
         return {
           id: article.id,
@@ -78,7 +82,7 @@ class BlogArticle {
           excerpt: article.excerpt,
           author_id: article.author_id,
           featured_image: article.featured_image,
-          published: Boolean(article.published),
+          published: article.published,
           created_at: article.created_at,
           updated_at: article.updated_at,
           first_name: author?.first_name || '',
@@ -109,7 +113,7 @@ class BlogArticle {
           excerpt: article.excerpt,
           author_id: article.author_id,
           featured_image: article.featured_image,
-          published: Boolean(article.published),
+          published: article.published,
           created_at: article.created_at,
           updated_at: article.updated_at,
           first_name: author?.first_name || '',
@@ -128,7 +132,7 @@ class BlogArticle {
   // Get published articles (public view)
   static async findPublished() {
     try {
-      const result = await query('SELECT * FROM blog_articles WHERE published = 1 ORDER BY created_at DESC');
+      const result = await query('SELECT * FROM blog_articles WHERE published = TRUE ORDER BY created_at DESC');
       const enrichedArticles = [];
       
       for (const article of result.rows) {
@@ -161,15 +165,16 @@ class BlogArticle {
   static async update(id, { title, slug, content, excerpt, featured_image, published }) {
     try {
       // Check if article exists
-      const existingArticle = await get('SELECT id, slug FROM blog_articles WHERE id = ?', [id]);
-      if (!existingArticle) {
+      const existingResult = await query('SELECT id, slug FROM blog_articles WHERE id = $1', [id]);
+      if (existingResult.rows.length === 0) {
         throw new Error('Article not found');
       }
+      const existingArticle = existingResult.rows[0];
 
       // Check if new slug conflicts with another article
       if (slug && slug !== existingArticle.slug) {
-        const conflictingArticle = await get('SELECT id FROM blog_articles WHERE slug = ? AND id != ?', [slug, id]);
-        if (conflictingArticle) {
+        const conflictResult = await query('SELECT id FROM blog_articles WHERE slug = $1 AND id != $2', [slug, id]);
+        if (conflictResult.rows.length > 0) {
           throw new Error('Article slug already exists');
         }
       }
@@ -177,37 +182,44 @@ class BlogArticle {
       // Build update query dynamically
       const updateFields = [];
       const updateValues = [];
+      let paramCount = 1;
       
       if (title !== undefined) {
-        updateFields.push('title = ?');
+        updateFields.push(`title = $${paramCount}`);
         updateValues.push(title);
+        paramCount++;
       }
       if (slug !== undefined) {
-        updateFields.push('slug = ?');
+        updateFields.push(`slug = $${paramCount}`);
         updateValues.push(slug);
+        paramCount++;
       }
       if (content !== undefined) {
-        updateFields.push('content = ?');
+        updateFields.push(`content = $${paramCount}`);
         updateValues.push(content);
+        paramCount++;
       }
       if (excerpt !== undefined) {
-        updateFields.push('excerpt = ?');
+        updateFields.push(`excerpt = $${paramCount}`);
         updateValues.push(excerpt);
+        paramCount++;
       }
       if (featured_image !== undefined) {
-        updateFields.push('featured_image = ?');
+        updateFields.push(`featured_image = $${paramCount}`);
         updateValues.push(featured_image);
+        paramCount++;
       }
       if (published !== undefined) {
-        updateFields.push('published = ?');
-        updateValues.push(published ? 1 : 0);
+        updateFields.push(`published = $${paramCount}`);
+        updateValues.push(published);
+        paramCount++;
       }
       
       updateFields.push('updated_at = CURRENT_TIMESTAMP');
       updateValues.push(id);
 
-      await run(
-        `UPDATE blog_articles SET ${updateFields.join(', ')} WHERE id = ?`,
+      await query(
+        `UPDATE blog_articles SET ${updateFields.join(', ')} WHERE id = $${paramCount}`,
         updateValues
       );
 
@@ -222,7 +234,7 @@ class BlogArticle {
   // Delete article
   static async delete(id) {
     try {
-      await run('DELETE FROM blog_articles WHERE id = ?', [id]);
+      await query('DELETE FROM blog_articles WHERE id = $1', [id]);
     } catch (error) {
       logger.error('Error deleting article:', error);
       throw error;
@@ -232,7 +244,7 @@ class BlogArticle {
   // Get articles by author
   static async findByAuthorId(authorId) {
     try {
-      const result = await query('SELECT * FROM blog_articles WHERE author_id = ? ORDER BY created_at DESC', [authorId]);
+      const result = await query('SELECT * FROM blog_articles WHERE author_id = $1 ORDER BY created_at DESC', [authorId]);
       return result.rows.map(article => ({
         id: article.id,
         title: article.title,
@@ -241,7 +253,7 @@ class BlogArticle {
         excerpt: article.excerpt,
         author_id: article.author_id,
         featured_image: article.featured_image,
-        published: Boolean(article.published),
+        published: article.published,
         created_at: article.created_at,
         updated_at: article.updated_at
       }));

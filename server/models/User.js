@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { query, run, get } = require('../database/sqlite');
+const { query } = require('../database/db');
 const logger = require('../utils/logger');
 
 class User {
@@ -7,8 +7,8 @@ class User {
   static async create({ email, password, firstName, lastName }) {
     try {
       // Check if email already exists
-      const existingUser = await get('SELECT id FROM users WHERE email = ?', [email]);
-      if (existingUser) {
+      const existingResult = await query('SELECT id FROM users WHERE email = $1', [email]);
+      if (existingResult.rows.length > 0) {
         throw new Error('Email already exists');
       }
 
@@ -17,19 +17,21 @@ class User {
       const passwordHash = await bcrypt.hash(password, salt);
 
       // Create new user
-      const result = await run(
+      const result = await query(
         `INSERT INTO users (email, password_hash, first_name, last_name, is_admin)
-         VALUES (?, ?, ?, ?, 0)`,
+         VALUES ($1, $2, $3, $4, FALSE)
+         RETURNING id, email, first_name, last_name, is_admin, created_at`,
         [email, passwordHash, firstName, lastName]
       );
 
+      const user = result.rows[0];
       return {
-        id: result.lastID,
-        email,
-        first_name: firstName,
-        last_name: lastName,
-        is_admin: false,
-        created_at: new Date().toISOString()
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        is_admin: user.is_admin,
+        created_at: user.created_at
       };
     } catch (error) {
       logger.error('Error creating user:', error);
@@ -40,15 +42,16 @@ class User {
   // Find user by email
   static async findByEmail(email) {
     try {
-      const user = await get('SELECT * FROM users WHERE email = ?', [email]);
-      if (user) {
+      const result = await query('SELECT * FROM users WHERE email = $1', [email]);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
         return {
           id: user.id,
           email: user.email,
           password_hash: user.password_hash,
           first_name: user.first_name,
           last_name: user.last_name,
-          is_admin: Boolean(user.is_admin),
+          is_admin: user.is_admin,
           created_at: user.created_at,
           last_login: user.last_login
         };
@@ -63,14 +66,15 @@ class User {
   // Find user by ID
   static async findById(id) {
     try {
-      const user = await get('SELECT * FROM users WHERE id = ?', [id]);
-      if (user) {
+      const result = await query('SELECT * FROM users WHERE id = $1', [id]);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
         return {
           id: user.id,
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
-          is_admin: Boolean(user.is_admin),
+          is_admin: user.is_admin,
           created_at: user.created_at,
           last_login: user.last_login
         };
@@ -90,8 +94,8 @@ class User {
   // Update last login time
   static async updateLastLogin(userId) {
     try {
-      await run(
-        'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+      await query(
+        'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
         [userId]
       );
     } catch (error) {
@@ -109,7 +113,7 @@ class User {
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        is_admin: Boolean(user.is_admin),
+        is_admin: user.is_admin,
         created_at: user.created_at,
         last_login: user.last_login
       }));
@@ -122,7 +126,7 @@ class User {
   // Delete user
   static async delete(userId) {
     try {
-      await run('DELETE FROM users WHERE id = ?', [userId]);
+      await query('DELETE FROM users WHERE id = $1', [userId]);
     } catch (error) {
       logger.error('Error deleting user:', error);
       throw error;
@@ -132,17 +136,18 @@ class User {
   // Update user admin status
   static async updateAdminStatus(userId, isAdmin) {
     try {
-      await run(
-        'UPDATE users SET is_admin = ? WHERE id = ?',
-        [isAdmin ? 1 : 0, userId]
+      await query(
+        'UPDATE users SET is_admin = $1 WHERE id = $2',
+        [isAdmin, userId]
       );
       
-      const updatedUser = await get('SELECT id, email, is_admin FROM users WHERE id = ?', [userId]);
-      if (updatedUser) {
+      const result = await query('SELECT id, email, is_admin FROM users WHERE id = $1', [userId]);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
         return {
-          id: updatedUser.id,
-          email: updatedUser.email,
-          is_admin: Boolean(updatedUser.is_admin)
+          id: user.id,
+          email: user.email,
+          is_admin: user.is_admin
         };
       }
       return null;
@@ -157,7 +162,7 @@ class User {
     try {
       // Note: This would require adding a customer_tier column to the users table
       // For now, we'll just return the user info
-      const user = await findById(userId);
+      const user = await User.findById(userId);
       if (user) {
         return {
           id: user.id,
@@ -177,7 +182,7 @@ class User {
     try {
       // Note: This would require adding a customer_status column to the users table
       // For now, we'll just return the user info
-      const user = await findById(userId);
+      const user = await User.findById(userId);
       if (user) {
         return {
           id: user.id,
@@ -197,7 +202,7 @@ class User {
     try {
       // Note: This would require adding an admin_notes column to the users table
       // For now, we'll just return the user info
-      const user = await findById(userId);
+      const user = await User.findById(userId);
       if (user) {
         return {
           id: user.id,
