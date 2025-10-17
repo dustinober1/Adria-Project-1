@@ -5,7 +5,16 @@ const resolveApiBase = () => {
   if (window.__API_BASE__ && typeof window.__API_BASE__ === 'string') {
     return window.__API_BASE__;
   }
-  return '/api';
+
+  try {
+    const origin = window.location.origin || '';
+    if (window.location.port === '3000' || origin.includes(':3000')) {
+      return 'http://127.0.0.1:8000';
+    }
+    return origin;
+  } catch (e) {
+    return 'http://127.0.0.1:8000';
+  }
 };
 
 let currentUser = null;
@@ -26,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Check if user is authenticated and is admin
 async function checkAuthentication() {
   try {
-    const response = await fetch(`${resolveApiBase()}/auth/me`, {
+    const response = await fetch(`${resolveApiBase()}/api/auth/me`, {
       credentials: 'include'
     });
 
@@ -114,7 +123,7 @@ function switchSection(section) {
 // ============ DASHBOARD ============
 async function loadDashboard() {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/stats`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/stats`, {
       credentials: 'include'
     });
 
@@ -137,7 +146,7 @@ async function loadDashboard() {
 // ============ USERS MANAGEMENT ============
 async function loadUsers() {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/users`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users`, {
       credentials: 'include'
     });
 
@@ -193,7 +202,7 @@ async function loadUsers() {
 
 async function viewUserDetails(userId) {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/users/${userId}`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users/${userId}`, {
       credentials: 'include'
     });
 
@@ -260,7 +269,7 @@ async function viewUserDetails(userId) {
 
 async function promoteUser(userId) {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/users/${userId}/promote`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users/${userId}/promote`, {
       method: 'POST',
       credentials: 'include'
     });
@@ -278,7 +287,7 @@ async function promoteUser(userId) {
 
 async function demoteUser(userId) {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/users/${userId}/demote`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users/${userId}/demote`, {
       method: 'POST',
       credentials: 'include'
     });
@@ -300,7 +309,7 @@ async function deleteUser(userId) {
   }
 
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/users/${userId}`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users/${userId}`, {
       method: 'DELETE',
       credentials: 'include'
     });
@@ -325,7 +334,7 @@ async function saveUserChanges(userId) {
 
     // Update tier
     if (tier) {
-      const tierResponse = await fetch(`${resolveApiBase()}/admin/users/${userId}/tier`, {
+      const tierResponse = await fetch(`${resolveApiBase()}/api/admin/users/${userId}/tier`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tier }),
@@ -336,7 +345,7 @@ async function saveUserChanges(userId) {
 
     // Update status
     if (status) {
-      const statusResponse = await fetch(`${resolveApiBase()}/admin/users/${userId}/status`, {
+      const statusResponse = await fetch(`${resolveApiBase()}/api/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -346,7 +355,7 @@ async function saveUserChanges(userId) {
     }
 
     // Update notes
-    const notesResponse = await fetch(`${resolveApiBase()}/admin/users/${userId}/notes`, {
+    const notesResponse = await fetch(`${resolveApiBase()}/api/admin/users/${userId}/notes`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ notes }),
@@ -376,7 +385,7 @@ function filterUsers() {
 // ============ BLOG ARTICLES ============
 async function loadArticles() {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/articles`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/articles`, {
       credentials: 'include'
     });
 
@@ -445,7 +454,7 @@ async function createArticle(e) {
   };
 
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/articles`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/articles`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -471,7 +480,7 @@ async function createArticle(e) {
 
 async function editArticle(articleId) {
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/articles/${articleId}`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/articles/${articleId}`, {
       credentials: 'include'
     });
 
@@ -509,7 +518,7 @@ document.getElementById('editArticleForm')?.addEventListener('submit', async (e)
   };
 
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/articles/${articleId}`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/articles/${articleId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -538,7 +547,7 @@ async function deleteArticle(articleId) {
   }
 
   try {
-    const response = await fetch(`${resolveApiBase()}/admin/articles/${articleId}`, {
+    const response = await fetch(`${resolveApiBase()}/api/admin/articles/${articleId}`, {
       method: 'DELETE',
       credentials: 'include'
     });
@@ -614,7 +623,7 @@ function escapeHtml(text) {
 
 async function logout() {
   try {
-    const response = await fetch(`${resolveApiBase()}/auth/logout`, {
+    const response = await fetch(`${resolveApiBase()}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include'
     });

@@ -188,16 +188,20 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Logging in...';
 
-            try {
+                try {
                 const result = await auth.login(email, password);
                 
                 if (result.success) {
                     successMessage.textContent = 'Login successful! Redirecting...';
                     successMessage.classList.add('show');
                     
-                    // Redirect after a short delay
+                    // Check if user is admin and redirect appropriately
                     setTimeout(() => {
-                        window.location.href = 'matcher.html';
+                        if (result.user && result.user.isAdmin) {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'matcher.html';
+                        }
                     }, 1000);
                 }
             } catch (error) {
