@@ -1,226 +1,254 @@
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parse/sync');
-const csvStringify = require('csv-stringify/sync');
-const { v4: uuidv4 } = require('uuid');
+const { query, run, get } = require('../database/sqlite');
 const logger = require('../utils/logger');
 const User = require('./User');
-
-const ARTICLES_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'blog_articles.csv');
-
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(ARTICLES_CSV_PATH);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
-
-// Get all articles from CSV
-const getAllArticlesFromCSV = () => {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(ARTICLES_CSV_PATH)) {
-      return [];
-    }
-    const fileContent = fs.readFileSync(ARTICLES_CSV_PATH, 'utf-8');
-    if (!fileContent.trim()) {
-      return [];
-    }
-    return csv.parse(fileContent, {
-      columns: true,
-      skip_empty_lines: true
-    });
-  } catch (error) {
-    logger.error('Error reading articles CSV:', error);
-    return [];
-  }
-};
-
-// Write articles to CSV
-const writeArticlesToCSV = (articles) => {
-  try {
-    ensureDataDir();
-    const output = csvStringify.stringify(articles, {
-      header: true,
-      columns: ['id', 'title', 'slug', 'content', 'excerpt', 'author_id', 'featured_image', 'published', 'created_at', 'updated_at']
-    });
-    fs.writeFileSync(ARTICLES_CSV_PATH, output, 'utf-8');
-  } catch (error) {
-    logger.error('Error writing articles CSV:', error);
-    throw error;
-  }
-};
 
 class BlogArticle {
   // Create a new blog article
   static async create({ title, slug, content, excerpt, authorId, featured_image }) {
     try {
       // Check if slug already exists
-      const articles = getAllArticlesFromCSV();
-      if (articles.some(a => a.slug === slug)) {
+      const existingArticle = await get('SELECT id FROM blog_articles WHERE slug = ?', [slug]);
+      if (existingArticle) {
         throw new Error('Article slug already exists');
       }
 
-      const newArticle = {
-        id: uuidv4(),
+      const result = await run(
+        `INSERT INTO blog_articles (title, slug, content, excerpt, author_id, featured_image, published)
+         VALUES (?, ?, ?, ?, ?, ?, 0)`,
+        [title, slug, content, excerpt, authorId || null, featured_image || '']
+      );
+
+      return {
+        id: result.lastID,
         title,
         slug,
-        content,
         excerpt,
-        author_id: authorId || '',
+        author_id: authorId || null,
         featured_image: featured_image || '',
-        published: 'false',
+        published: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
-
-      articles.push(newArticle);
-      writeArticlesToCSV(articles);
-
-      return {
-        id: newArticle.id,
-        title: newArticle.title,
-        slug: newArticle.slug,
-        excerpt: newArticle.excerpt,
-        author_id: newArticle.author_id,
-        featured_image: newArticle.featured_image,
-        published: newArticle.published === 'true',
-        created_at: newArticle.created_at,
-        updated_at: newArticle.updated_at
-      };
     } catch (error) {
+      logger.error('Error creating blog article:', error);
       throw error;
     }
   }
 
   // Get article by ID
   static async findById(id) {
-    const articles = getAllArticlesFromCSV();
-    const article = articles.find(a => a.id === id);
-    if (article) {
-      const author = article.author_id ? await User.findById(article.author_id) : null;
-      return {
-        ...article,
-        published: article.published === 'true',
-        first_name: author?.first_name || '',
-        last_name: author?.last_name || '',
-        email: author?.email || ''
-      };
+    try {
+      const article = await get('SELECT * FROM blog_articles WHERE id = ?', [id]);
+      if (article) {
+        const author = article.author_id ? await User.findById(article.author_id) : null;
+        return {
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          author_id: article.author_id,
+          featured_image: article.featured_image,
+          published: Boolean(article.published),
+          created_at: article.created_at,
+          updated_at: article.updated_at,
+          first_name: author?.first_name || '',
+          last_name: author?.last_name || '',
+          email: author?.email || ''
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error finding article by ID:', error);
+      throw error;
     }
-    return null;
   }
 
   // Get article by slug
   static async findBySlug(slug) {
-    const articles = getAllArticlesFromCSV();
-    const article = articles.find(a => a.slug === slug);
-    if (article) {
-      const author = article.author_id ? await User.findById(article.author_id) : null;
-      return {
-        ...article,
-        published: article.published === 'true',
-        first_name: author?.first_name || '',
-        last_name: author?.last_name || '',
-        email: author?.email || ''
-      };
+    try {
+      const article = await get('SELECT * FROM blog_articles WHERE slug = ?', [slug]);
+      if (article) {
+        const author = article.author_id ? await User.findById(article.author_id) : null;
+        return {
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          author_id: article.author_id,
+          featured_image: article.featured_image,
+          published: Boolean(article.published),
+          created_at: article.created_at,
+          updated_at: article.updated_at,
+          first_name: author?.first_name || '',
+          last_name: author?.last_name || '',
+          email: author?.email || ''
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error finding article by slug:', error);
+      throw error;
     }
-    return null;
   }
 
   // Get all articles (admin view - all statuses)
   static async findAll() {
-    const articles = getAllArticlesFromCSV();
-    const enrichedArticles = [];
-    
-    for (const article of articles) {
-      const author = article.author_id ? await User.findById(article.author_id) : null;
-      enrichedArticles.push({
-        ...article,
-        published: article.published === 'true',
-        first_name: author?.first_name || '',
-        last_name: author?.last_name || '',
-        email: author?.email || ''
-      });
+    try {
+      const result = await query('SELECT * FROM blog_articles ORDER BY created_at DESC');
+      const enrichedArticles = [];
+      
+      for (const article of result.rows) {
+        const author = article.author_id ? await User.findById(article.author_id) : null;
+        enrichedArticles.push({
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          author_id: article.author_id,
+          featured_image: article.featured_image,
+          published: Boolean(article.published),
+          created_at: article.created_at,
+          updated_at: article.updated_at,
+          first_name: author?.first_name || '',
+          last_name: author?.last_name || '',
+          email: author?.email || ''
+        });
+      }
+      
+      return enrichedArticles;
+    } catch (error) {
+      logger.error('Error finding all articles:', error);
+      throw error;
     }
-    
-    return enrichedArticles.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 
   // Get published articles (public view)
   static async findPublished() {
-    const articles = getAllArticlesFromCSV();
-    const published = articles.filter(a => a.published === 'true');
-    const enrichedArticles = [];
-    
-    for (const article of published) {
-      const author = article.author_id ? await User.findById(article.author_id) : null;
-      enrichedArticles.push({
-        ...article,
-        published: true,
-        first_name: author?.first_name || '',
-        last_name: author?.last_name || '',
-        email: author?.email || ''
-      });
+    try {
+      const result = await query('SELECT * FROM blog_articles WHERE published = 1 ORDER BY created_at DESC');
+      const enrichedArticles = [];
+      
+      for (const article of result.rows) {
+        const author = article.author_id ? await User.findById(article.author_id) : null;
+        enrichedArticles.push({
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          author_id: article.author_id,
+          featured_image: article.featured_image,
+          published: true,
+          created_at: article.created_at,
+          updated_at: article.updated_at,
+          first_name: author?.first_name || '',
+          last_name: author?.last_name || '',
+          email: author?.email || ''
+        });
+      }
+      
+      return enrichedArticles;
+    } catch (error) {
+      logger.error('Error finding published articles:', error);
+      throw error;
     }
-    
-    return enrichedArticles.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 
   // Update article
   static async update(id, { title, slug, content, excerpt, featured_image, published }) {
     try {
-      const articles = getAllArticlesFromCSV();
-      const articleIndex = articles.findIndex(a => a.id === id);
-      
-      if (articleIndex === -1) {
+      // Check if article exists
+      const existingArticle = await get('SELECT id, slug FROM blog_articles WHERE id = ?', [id]);
+      if (!existingArticle) {
         throw new Error('Article not found');
       }
 
       // Check if new slug conflicts with another article
-      if (slug && slug !== articles[articleIndex].slug) {
-        if (articles.some(a => a.slug === slug && a.id !== id)) {
+      if (slug && slug !== existingArticle.slug) {
+        const conflictingArticle = await get('SELECT id FROM blog_articles WHERE slug = ? AND id != ?', [slug, id]);
+        if (conflictingArticle) {
           throw new Error('Article slug already exists');
         }
       }
 
-      const article = articles[articleIndex];
-      if (title !== undefined) article.title = title;
-      if (slug !== undefined) article.slug = slug;
-      if (content !== undefined) article.content = content;
-      if (excerpt !== undefined) article.excerpt = excerpt;
-      if (featured_image !== undefined) article.featured_image = featured_image;
-      if (published !== undefined) article.published = published ? 'true' : 'false';
-      article.updated_at = new Date().toISOString();
+      // Build update query dynamically
+      const updateFields = [];
+      const updateValues = [];
+      
+      if (title !== undefined) {
+        updateFields.push('title = ?');
+        updateValues.push(title);
+      }
+      if (slug !== undefined) {
+        updateFields.push('slug = ?');
+        updateValues.push(slug);
+      }
+      if (content !== undefined) {
+        updateFields.push('content = ?');
+        updateValues.push(content);
+      }
+      if (excerpt !== undefined) {
+        updateFields.push('excerpt = ?');
+        updateValues.push(excerpt);
+      }
+      if (featured_image !== undefined) {
+        updateFields.push('featured_image = ?');
+        updateValues.push(featured_image);
+      }
+      if (published !== undefined) {
+        updateFields.push('published = ?');
+        updateValues.push(published ? 1 : 0);
+      }
+      
+      updateFields.push('updated_at = CURRENT_TIMESTAMP');
+      updateValues.push(id);
 
-      writeArticlesToCSV(articles);
+      await run(
+        `UPDATE blog_articles SET ${updateFields.join(', ')} WHERE id = ?`,
+        updateValues
+      );
 
-      return {
-        ...article,
-        published: article.published === 'true'
-      };
+      // Return updated article
+      return await this.findById(id);
     } catch (error) {
+      logger.error('Error updating article:', error);
       throw error;
     }
   }
 
   // Delete article
   static async delete(id) {
-    const articles = getAllArticlesFromCSV();
-    const filtered = articles.filter(a => a.id !== id);
-    writeArticlesToCSV(filtered);
+    try {
+      await run('DELETE FROM blog_articles WHERE id = ?', [id]);
+    } catch (error) {
+      logger.error('Error deleting article:', error);
+      throw error;
+    }
   }
 
   // Get articles by author
   static async findByAuthorId(authorId) {
-    const articles = getAllArticlesFromCSV();
-    return articles
-      .filter(a => a.author_id === authorId)
-      .map(a => ({
-        ...a,
-        published: a.published === 'true'
-      }))
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    try {
+      const result = await query('SELECT * FROM blog_articles WHERE author_id = ? ORDER BY created_at DESC', [authorId]);
+      return result.rows.map(article => ({
+        id: article.id,
+        title: article.title,
+        slug: article.slug,
+        content: article.content,
+        excerpt: article.excerpt,
+        author_id: article.author_id,
+        featured_image: article.featured_image,
+        published: Boolean(article.published),
+        created_at: article.created_at,
+        updated_at: article.updated_at
+      }));
+    } catch (error) {
+      logger.error('Error finding articles by author:', error);
+      throw error;
+    }
   }
 }
 

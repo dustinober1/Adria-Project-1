@@ -38,7 +38,7 @@ class SecurityMiddleware {
               statusCode,
               duration,
               query: req.query,
-              body: req.method !== 'GET' ? this.sanitizeRequestBody(req.body) : undefined
+              body: req.method !== 'GET' ? SecurityMiddleware.sanitizeRequestBody(req.body) : undefined
             }
           }).catch(err => logger.error('Failed to log security event:', err));
         }
@@ -320,7 +320,7 @@ class SecurityMiddleware {
             method: req.method,
             path: req.path,
             query: req.query,
-            body: this.sanitizeRequestBody(req.body)
+            body: SecurityMiddleware.sanitizeRequestBody(req.body)
           }
         });
       }

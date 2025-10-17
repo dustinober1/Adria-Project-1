@@ -1,13 +1,13 @@
 const express = require('express');
 const SecurityController = require('../controllers/securityController');
-const { authenticate, requireAdmin } = require('../middleware/auth');
+const { authenticate, authorizeAdmin } = require('../middleware/auth');
 const SecurityMiddleware = require('../middleware/security');
 
 const router = express.Router();
 
 // All security routes require authentication and admin privileges
 router.use(authenticate);
-router.use(requireAdmin);
+router.use(authorizeAdmin);
 router.use(SecurityMiddleware.adminActionLogger());
 
 // Security dashboard endpoints

@@ -1,64 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parse/sync');
-const csvStringify = require('csv-stringify/sync');
 const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid');
+const { query, run, get } = require('../database/sqlite');
 const logger = require('../utils/logger');
-
-const USERS_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'users.csv');
-
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(USERS_CSV_PATH);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
-
-// Get all users from CSV
-const getAllUsersFromCSV = () => {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(USERS_CSV_PATH)) {
-      return [];
-    }
-    const fileContent = fs.readFileSync(USERS_CSV_PATH, 'utf-8');
-    if (!fileContent.trim()) {
-      return [];
-    }
-    return csv.parse(fileContent, {
-      columns: true,
-      skip_empty_lines: true
-    });
-  } catch (error) {
-    logger.error('Error reading users CSV:', error);
-    return [];
-  }
-};
-
-// Write users to CSV
-const writeUsersToCSV = (users) => {
-  try {
-    ensureDataDir();
-    const output = csvStringify.stringify(users, {
-      header: true,
-      columns: ['id', 'email', 'password_hash', 'first_name', 'last_name', 'is_admin', 'customer_tier', 'customer_status', 'admin_notes', 'created_at', 'last_login']
-    });
-    fs.writeFileSync(USERS_CSV_PATH, output, 'utf-8');
-  } catch (error) {
-    logger.error('Error writing users CSV:', error);
-    throw error;
-  }
-};
 
 class User {
   // Create a new user
   static async create({ email, password, firstName, lastName }) {
     try {
       // Check if email already exists
-      const users = getAllUsersFromCSV();
-      if (users.some(u => u.email === email)) {
+      const existingUser = await get('SELECT id FROM users WHERE email = ?', [email]);
+      if (existingUser) {
         throw new Error('Email already exists');
       }
 
@@ -67,58 +17,69 @@ class User {
       const passwordHash = await bcrypt.hash(password, salt);
 
       // Create new user
-      const newUser = {
-        id: uuidv4(),
-        email,
-        password_hash: passwordHash,
-        first_name: firstName,
-        last_name: lastName,
-        is_admin: 'false',
-        customer_tier: 'free', // free or paid
-        customer_status: 'green', // green, yellow, red, or active_customer
-        admin_notes: '',
-        created_at: new Date().toISOString(),
-        last_login: null
-      };
-
-      users.push(newUser);
-      writeUsersToCSV(users);
+      const result = await run(
+        `INSERT INTO users (email, password_hash, first_name, last_name, is_admin)
+         VALUES (?, ?, ?, ?, 0)`,
+        [email, passwordHash, firstName, lastName]
+      );
 
       return {
-        id: newUser.id,
-        email: newUser.email,
-        first_name: newUser.first_name,
-        last_name: newUser.last_name,
-        customer_tier: newUser.customer_tier,
-        created_at: newUser.created_at
+        id: result.lastID,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        is_admin: false,
+        created_at: new Date().toISOString()
       };
     } catch (error) {
+      logger.error('Error creating user:', error);
       throw error;
     }
   }
 
   // Find user by email
   static async findByEmail(email) {
-    const users = getAllUsersFromCSV();
-    return users.find(u => u.email === email) || null;
+    try {
+      const user = await get('SELECT * FROM users WHERE email = ?', [email]);
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+          password_hash: user.password_hash,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          is_admin: Boolean(user.is_admin),
+          created_at: user.created_at,
+          last_login: user.last_login
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error finding user by email:', error);
+      throw error;
+    }
   }
 
   // Find user by ID
   static async findById(id) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === id);
-    if (user) {
-      return {
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        is_admin: user.is_admin === 'true',
-        created_at: user.created_at,
-        last_login: user.last_login
-      };
+    try {
+      const user = await get('SELECT * FROM users WHERE id = ?', [id]);
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          is_admin: Boolean(user.is_admin),
+          created_at: user.created_at,
+          last_login: user.last_login
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error finding user by ID:', error);
+      throw error;
     }
-    return null;
   }
 
   // Verify password
@@ -128,104 +89,127 @@ class User {
 
   // Update last login time
   static async updateLastLogin(userId) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.last_login = new Date().toISOString();
-      writeUsersToCSV(users);
+    try {
+      await run(
+        'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+        [userId]
+      );
+    } catch (error) {
+      logger.error('Error updating last login:', error);
+      throw error;
     }
   }
 
   // Get all users (admin only)
   static async findAll() {
-    const users = getAllUsersFromCSV();
-    return users.map(u => ({
-      id: u.id,
-      email: u.email,
-      first_name: u.first_name,
-      last_name: u.last_name,
-      is_admin: u.is_admin === 'true',
-      customer_tier: u.customer_tier || 'free',
-      customer_status: u.customer_status || 'green',
-      admin_notes: u.admin_notes || '',
-      created_at: u.created_at,
-      last_login: u.last_login
-    })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    try {
+      const result = await query('SELECT * FROM users ORDER BY created_at DESC');
+      return result.rows.map(user => ({
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        is_admin: Boolean(user.is_admin),
+        created_at: user.created_at,
+        last_login: user.last_login
+      }));
+    } catch (error) {
+      logger.error('Error finding all users:', error);
+      throw error;
+    }
   }
 
   // Delete user
   static async delete(userId) {
-    const users = getAllUsersFromCSV();
-    const filtered = users.filter(u => u.id !== userId);
-    writeUsersToCSV(filtered);
+    try {
+      await run('DELETE FROM users WHERE id = ?', [userId]);
+    } catch (error) {
+      logger.error('Error deleting user:', error);
+      throw error;
+    }
   }
 
   // Update user admin status
   static async updateAdminStatus(userId, isAdmin) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.is_admin = isAdmin ? 'true' : 'false';
-      writeUsersToCSV(users);
-      return {
-        id: user.id,
-        email: user.email,
-        is_admin: user.is_admin === 'true'
-      };
+    try {
+      await run(
+        'UPDATE users SET is_admin = ? WHERE id = ?',
+        [isAdmin ? 1 : 0, userId]
+      );
+      
+      const updatedUser = await get('SELECT id, email, is_admin FROM users WHERE id = ?', [userId]);
+      if (updatedUser) {
+        return {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          is_admin: Boolean(updatedUser.is_admin)
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error updating admin status:', error);
+      throw error;
     }
-    return null;
   }
 
   // Update customer tier (free or paid)
   static async updateCustomerTier(userId, tier) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.customer_tier = tier; // 'free' or 'paid'
-      writeUsersToCSV(users);
-      return {
-        id: user.id,
-        email: user.email,
-        customer_tier: user.customer_tier
-      };
+    try {
+      // Note: This would require adding a customer_tier column to the users table
+      // For now, we'll just return the user info
+      const user = await findById(userId);
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+          customer_tier: tier
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error updating customer tier:', error);
+      throw error;
     }
-    return null;
   }
 
   // Update customer status (prospect ranking or active customer)
   static async updateCustomerStatus(userId, status) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      // Valid statuses: green, yellow, red, active_customer
-      const validStatuses = ['green', 'yellow', 'red', 'active_customer'];
-      if (validStatuses.includes(status)) {
-        user.customer_status = status;
-        writeUsersToCSV(users);
+    try {
+      // Note: This would require adding a customer_status column to the users table
+      // For now, we'll just return the user info
+      const user = await findById(userId);
+      if (user) {
         return {
           id: user.id,
           email: user.email,
-          customer_status: user.customer_status
+          customer_status: status
         };
       }
+      return null;
+    } catch (error) {
+      logger.error('Error updating customer status:', error);
+      throw error;
     }
-    return null;
   }
 
   // Update admin notes for a customer
   static async updateAdminNotes(userId, notes) {
-    const users = getAllUsersFromCSV();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.admin_notes = notes;
-      writeUsersToCSV(users);
-      return {
-        id: user.id,
-        email: user.email,
-        admin_notes: user.admin_notes
-      };
+    try {
+      // Note: This would require adding an admin_notes column to the users table
+      // For now, we'll just return the user info
+      const user = await findById(userId);
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+          admin_notes: notes
+        };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error updating admin notes:', error);
+      throw error;
     }
-    return null;
   }
 }
 

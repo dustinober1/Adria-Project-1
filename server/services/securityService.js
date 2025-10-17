@@ -1,4 +1,4 @@
-const { query } = require('../database/db');
+const { query, run } = require('../database/sqlite');
 const logger = require('../utils/logger');
 
 class SecurityService {
@@ -25,21 +25,20 @@ class SecurityService {
         metadata = {}
       } = eventData;
 
-      const result = await query(
+      const result = await run(
         `INSERT INTO security_events 
          (event_type, severity, user_id, ip_address, user_agent, description, metadata)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         RETURNING id, created_at`,
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [eventType, severity, userId, ipAddress, userAgent, description, JSON.stringify(metadata)]
       );
 
       logger.log(`Security event logged: ${eventType} - ${severity}`, {
-        eventId: result.rows[0].id,
+        eventId: result.lastID,
         userId,
         ipAddress
       });
 
-      return result.rows[0];
+      return { id: result.lastID, created_at: new Date().toISOString() };
     } catch (error) {
       logger.error('Failed to log security event:', error);
       throw error;
@@ -55,10 +54,10 @@ class SecurityService {
    */
   static async logFailedLogin(email, ipAddress, userAgent, reason = 'invalid_credentials') {
     try {
-      await query(
+      await run(
         `INSERT INTO failed_login_attempts 
          (email, ip_address, user_agent, reason)
-         VALUES ($1, $2, $3, $4)`,
+         VALUES (?, ?, ?, ?)`,
         [email, ipAddress, userAgent, reason]
       );
 
@@ -91,12 +90,12 @@ class SecurityService {
       const result = await query(
         `SELECT COUNT(*) as attempt_count 
          FROM failed_login_attempts 
-         WHERE ip_address = $1 
-         AND attempt_time > NOW() - INTERVAL '${windowMinutes} minutes'`,
+         WHERE ip_address = ? 
+         AND attempt_time > datetime('now', '-${windowMinutes} minutes')`,
         [ipAddress]
       );
 
-      const attemptCount = parseInt(result.rows[0].attempt_count);
+      const attemptCount = result.rows[0].attempt_count;
       return attemptCount >= maxAttempts;
     } catch (error) {
       logger.error('Failed to check rate limit:', error);
@@ -116,26 +115,26 @@ class SecurityService {
   static async isApiRateLimited(ipAddress, endpoint, maxRequests = 100, windowMinutes = 15) {
     try {
       // Clean old entries first
-      await query(
+      await run(
         `DELETE FROM api_rate_limits 
-         WHERE window_start < NOW() - INTERVAL '${windowMinutes} minutes'`
+         WHERE window_start < datetime('now', '-${windowMinutes} minutes')`
       );
 
       // Check current window
       const result = await query(
         `SELECT request_count, window_start 
          FROM api_rate_limits 
-         WHERE ip_address = $1 AND endpoint = $2 
-         AND window_start > NOW() - INTERVAL '${windowMinutes} minutes'`,
+         WHERE ip_address = ? AND endpoint = ? 
+         AND window_start > datetime('now', '-${windowMinutes} minutes')`,
         [ipAddress, endpoint]
       );
 
       if (result.rows.length === 0) {
         // First request in window
-        await query(
+        await run(
           `INSERT INTO api_rate_limits 
            (ip_address, endpoint, request_count, window_start)
-           VALUES ($1, $2, 1, NOW())`,
+           VALUES (?, ?, 1, datetime('now'))`,
           [ipAddress, endpoint]
         );
         return false;
@@ -155,11 +154,11 @@ class SecurityService {
       }
 
       // Increment counter
-      await query(
+      await run(
         `UPDATE api_rate_limits 
          SET request_count = request_count + 1, 
-             last_request = NOW()
-         WHERE ip_address = $1 AND endpoint = $2`,
+             last_request = datetime('now')
+         WHERE ip_address = ? AND endpoint = ?`,
         [ipAddress, endpoint]
       );
 
@@ -193,52 +192,54 @@ class SecurityService {
         WHERE 1=1
       `;
       const queryParams = [];
-      let paramIndex = 1;
 
       if (filters.eventType) {
-        queryText += ` AND se.event_type = $${paramIndex++}`;
+        queryText += ` AND se.event_type = ?`;
         queryParams.push(filters.eventType);
       }
 
       if (filters.severity) {
-        queryText += ` AND se.severity = $${paramIndex++}`;
+        queryText += ` AND se.severity = ?`;
         queryParams.push(filters.severity);
       }
 
       if (filters.userId) {
-        queryText += ` AND se.user_id = $${paramIndex++}`;
+        queryText += ` AND se.user_id = ?`;
         queryParams.push(filters.userId);
       }
 
       if (filters.ipAddress) {
-        queryText += ` AND se.ip_address = $${paramIndex++}`;
+        queryText += ` AND se.ip_address = ?`;
         queryParams.push(filters.ipAddress);
       }
 
       if (filters.startDate) {
-        queryText += ` AND se.created_at >= $${paramIndex++}`;
+        queryText += ` AND se.created_at >= ?`;
         queryParams.push(filters.startDate);
       }
 
       if (filters.endDate) {
-        queryText += ` AND se.created_at <= $${paramIndex++}`;
+        queryText += ` AND se.created_at <= ?`;
         queryParams.push(filters.endDate);
       }
 
       queryText += ` ORDER BY se.created_at DESC`;
 
       if (filters.limit) {
-        queryText += ` LIMIT $${paramIndex++}`;
+        queryText += ` LIMIT ?`;
         queryParams.push(filters.limit);
       }
 
       if (filters.offset) {
-        queryText += ` OFFSET $${paramIndex++}`;
+        queryText += ` OFFSET ?`;
         queryParams.push(filters.offset);
       }
 
       const result = await query(queryText, queryParams);
-      return result.rows;
+      return result.rows.map(event => ({
+        ...event,
+        metadata: event.metadata ? JSON.parse(event.metadata) : null
+      }));
     } catch (error) {
       logger.error('Failed to get security events:', error);
       throw error;
@@ -263,7 +264,7 @@ class SecurityService {
           COUNT(CASE WHEN event_type = 'rate_limit_exceeded' THEN 1 END) as rate_limit_hits,
           COUNT(DISTINCT ip_address) as unique_ips
          FROM security_events 
-         WHERE created_at > NOW() - INTERVAL '${days} days'`
+         WHERE created_at > datetime('now', '-${days} days')`
       );
 
       return result.rows[0];
@@ -279,23 +280,23 @@ class SecurityService {
    */
   static async cleanupOldData(daysToKeep = 90) {
     try {
-      const result = await query(
+      const result = await run(
         `DELETE FROM security_events 
-         WHERE created_at < NOW() - INTERVAL '${daysToKeep} days'`
+         WHERE created_at < datetime('now', '-${daysToKeep} days')`
       );
 
-      await query(
+      await run(
         `DELETE FROM failed_login_attempts 
-         WHERE attempt_time < NOW() - INTERVAL '${daysToKeep} days'`
+         WHERE attempt_time < datetime('now', '-${daysToKeep} days')`
       );
 
-      await query(
+      await run(
         `DELETE FROM api_rate_limits 
-         WHERE window_start < NOW() - INTERVAL '1 hour'`
+         WHERE window_start < datetime('now', '-1 hour')`
       );
 
-      logger.log(`Cleaned up old security data. Removed ${result.rowCount} security events.`);
-      return result.rowCount;
+      logger.log(`Cleaned up old security data. Removed ${result.changes} security events.`);
+      return result.changes;
     } catch (error) {
       logger.error('Failed to cleanup old security data:', error);
       throw error;

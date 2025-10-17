@@ -1,128 +1,128 @@
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parse/sync');
-const csvStringify = require('csv-stringify/sync');
-const { v4: uuidv4 } = require('uuid');
+const { query, run, get } = require('../database/sqlite');
 const logger = require('../utils/logger');
-
-const EMAIL_LIST_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'email_list.csv');
-
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(EMAIL_LIST_CSV_PATH);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
-
-// Get all emails from CSV
-const getAllEmailsFromCSV = () => {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(EMAIL_LIST_CSV_PATH)) {
-      return [];
-    }
-    const fileContent = fs.readFileSync(EMAIL_LIST_CSV_PATH, 'utf-8');
-    if (!fileContent.trim()) {
-      return [];
-    }
-    return csv.parse(fileContent, {
-      columns: true,
-      skip_empty_lines: true
-    });
-  } catch (error) {
-    logger.error('Error reading email list CSV:', error);
-    return [];
-  }
-};
-
-// Write emails to CSV
-const writeEmailsToCSV = (emails) => {
-  try {
-    ensureDataDir();
-    const output = csvStringify.stringify(emails, {
-      header: true,
-      columns: ['id', 'email', 'name', 'phone', 'message', 'source', 'subscribed', 'created_at']
-    });
-    fs.writeFileSync(EMAIL_LIST_CSV_PATH, output, 'utf-8');
-  } catch (error) {
-    logger.error('Error writing email list CSV:', error);
-    throw error;
-  }
-};
 
 class EmailList {
   // Add email to marketing list
   static async addEmail({ email, name, phone, message, source = 'homepage' }) {
     try {
-      const emails = getAllEmailsFromCSV();
-      
       // Check if email already exists
-      const existingEmail = emails.find(e => e.email === email);
+      const existingEmail = await get('SELECT id, name, phone, message, created_at FROM email_list WHERE email = ?', [email]);
+      
       if (existingEmail) {
         // Update existing record
-        existingEmail.name = name || existingEmail.name;
-        existingEmail.phone = phone || existingEmail.phone;
-        existingEmail.message = message || existingEmail.message;
-        existingEmail.subscribed = 'true';
-        writeEmailsToCSV(emails);
+        await run(
+          `UPDATE email_list 
+           SET name = ?, phone = ?, message = ?, subscribed = 1 
+           WHERE email = ?`,
+          [name || existingEmail.name, phone || existingEmail.phone, message || existingEmail.message, email]
+        );
         
         return {
           id: existingEmail.id,
-          email: existingEmail.email,
-          name: existingEmail.name,
+          email,
+          name: name || existingEmail.name,
           created_at: existingEmail.created_at
         };
       }
 
       // Create new email entry
-      const newEmail = {
-        id: uuidv4(),
-        email,
-        name: name || '',
-        phone: phone || '',
-        message: message || '',
-        source,
-        subscribed: 'true',
-        created_at: new Date().toISOString()
-      };
-
-      emails.push(newEmail);
-      writeEmailsToCSV(emails);
+      const result = await run(
+        `INSERT INTO email_list (email, name, phone, message, source, subscribed)
+         VALUES (?, ?, ?, ?, ?, 1)`,
+        [email, name || '', phone || '', message || '', source]
+      );
 
       return {
-        id: newEmail.id,
-        email: newEmail.email,
-        name: newEmail.name,
-        created_at: newEmail.created_at
+        id: result.lastID,
+        email,
+        name: name || '',
+        created_at: new Date().toISOString()
       };
     } catch (error) {
+      logger.error('Error adding email to list:', error);
       throw error;
     }
   }
 
   // Get all emails
   static async findAll() {
-    const emails = getAllEmailsFromCSV();
-    return emails
-      .filter(e => e.subscribed === 'true')
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    try {
+      const result = await query('SELECT * FROM email_list WHERE subscribed = 1 ORDER BY created_at DESC');
+      return result.rows.map(email => ({
+        id: email.id,
+        email: email.email,
+        name: email.name,
+        phone: email.phone,
+        message: email.message,
+        source: email.source,
+        subscribed: Boolean(email.subscribed),
+        created_at: email.created_at
+      }));
+    } catch (error) {
+      logger.error('Error finding all emails:', error);
+      throw error;
+    }
   }
 
   // Unsubscribe email
   static async unsubscribe(email) {
-    const emails = getAllEmailsFromCSV();
-    const emailEntry = emails.find(e => e.email === email);
-    if (emailEntry) {
-      emailEntry.subscribed = 'false';
-      writeEmailsToCSV(emails);
+    try {
+      await run('UPDATE email_list SET subscribed = 0 WHERE email = ?', [email]);
+    } catch (error) {
+      logger.error('Error unsubscribing email:', error);
+      throw error;
     }
   }
 
   // Get count of subscribed emails
   static async getCount() {
-    const emails = getAllEmailsFromCSV();
-    return emails.filter(e => e.subscribed === 'true').length;
+    try {
+      const result = await get('SELECT COUNT(*) as count FROM email_list WHERE subscribed = 1');
+      return result.count;
+    } catch (error) {
+      logger.error('Error getting email count:', error);
+      throw error;
+    }
+  }
+
+  // Get all emails (including unsubscribed) for admin view
+  static async findAllAdmin() {
+    try {
+      const result = await query('SELECT * FROM email_list ORDER BY created_at DESC');
+      return result.rows.map(email => ({
+        id: email.id,
+        email: email.email,
+        name: email.name,
+        phone: email.phone,
+        message: email.message,
+        source: email.source,
+        subscribed: Boolean(email.subscribed),
+        created_at: email.created_at
+      }));
+    } catch (error) {
+      logger.error('Error finding all emails for admin:', error);
+      throw error;
+    }
+  }
+
+  // Delete email from list
+  static async delete(id) {
+    try {
+      await run('DELETE FROM email_list WHERE id = ?', [id]);
+    } catch (error) {
+      logger.error('Error deleting email from list:', error);
+      throw error;
+    }
+  }
+
+  // Subscribe email (resubscribe)
+  static async subscribe(email) {
+    try {
+      await run('UPDATE email_list SET subscribed = 1 WHERE email = ?', [email]);
+    } catch (error) {
+      logger.error('Error subscribing email:', error);
+      throw error;
+    }
   }
 }
 

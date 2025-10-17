@@ -50,8 +50,7 @@ app.use(helmet({
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
       manifestSrc: ["'self'"],
-      workerSrc: ["'self'"],
-      upgradeInsecureRequests: !isDevelopment
+      workerSrc: ["'self'"]
     }
   },
   // Additional security headers
