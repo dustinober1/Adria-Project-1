@@ -117,7 +117,7 @@
             <!-- New Article Section -->
             <section id="new-article" class="content-section">
                 <h1>Create New Article</h1>
-                <form id="articleForm" class="form-large">
+                <form id="articleForm" class="form-large" method="POST" action="javascript:void(0);">
                     <div class="form-group">
                         <label for="articleTitle">Title*</label>
                         <input type="text" id="articleTitle" name="title" required placeholder="Article title">
@@ -163,7 +163,7 @@
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>Edit Article</h2>
-            <form id="editArticleForm" class="form-large">
+            <form id="editArticleForm" class="form-large" method="POST" action="javascript:void(0);">
                 <input type="hidden" id="editArticleId" value="">
                 
                 <div class="form-group">
