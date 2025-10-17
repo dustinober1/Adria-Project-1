@@ -99,6 +99,15 @@ const isAuthenticated = async () => {
   }
 };
 
+// Export auth functions as an object for use in HTML
+const auth = {
+  register,
+  login,
+  logout,
+  getCurrentUser,
+  isAuthenticated
+};
+
 // Protect page (redirect if not authenticated)
 const protectPage = async () => {
   try {

@@ -247,9 +247,11 @@
         });
 
         // Redirect if already logged in
-        if (auth.isAuthenticated()) {
-            window.location.href = 'matcher.html';
-        }
+        (async () => {
+            if (await auth.isAuthenticated()) {
+                window.location.href = 'matcher.html';
+            }
+        })();
     </script>
 </body>
 </html>
