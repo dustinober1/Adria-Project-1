@@ -5,6 +5,7 @@ const csvStringify = require('csv-stringify/sync');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../utils/logger');
+const { sanitize } = require('../utils/sanitize');
 
 const USERS_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'users.csv');
 
@@ -217,7 +218,7 @@ class User {
     const users = getAllUsersFromCSV();
     const user = users.find(u => u.id === userId);
     if (user) {
-      user.admin_notes = notes;
+      user.admin_notes = sanitize(notes);
       writeUsersToCSV(users);
       return {
         id: user.id,

@@ -4,6 +4,7 @@ const csv = require('csv-parse/sync');
 const csvStringify = require('csv-stringify/sync');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../utils/logger');
+const { sanitize } = require('../utils/sanitize');
 
 const EMAIL_LIST_CSV_PATH = path.join(__dirname, '..', '..', 'data', 'email_list.csv');
 
@@ -61,9 +62,9 @@ class EmailList {
       const existingEmail = emails.find(e => e.email === email);
       if (existingEmail) {
         // Update existing record
-        existingEmail.name = name || existingEmail.name;
-        existingEmail.phone = phone || existingEmail.phone;
-        existingEmail.message = message || existingEmail.message;
+        existingEmail.name = sanitize(name) || existingEmail.name;
+        existingEmail.phone = sanitize(phone) || existingEmail.phone;
+        existingEmail.message = sanitize(message) || existingEmail.message;
         existingEmail.subscribed = 'true';
         writeEmailsToCSV(emails);
         
@@ -78,10 +79,10 @@ class EmailList {
       // Create new email entry
       const newEmail = {
         id: uuidv4(),
-        email,
-        name: name || '',
-        phone: phone || '',
-        message: message || '',
+        email: sanitize(email),
+        name: sanitize(name) || '',
+        phone: sanitize(phone) || '',
+        message: sanitize(message) || '',
         source,
         subscribed: 'true',
         created_at: new Date().toISOString()
