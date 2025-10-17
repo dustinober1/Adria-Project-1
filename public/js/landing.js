@@ -1,5 +1,5 @@
-// Replace this URL with Adria's actual Google Calendar booking link
-const CALENDAR_BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/YOUR_BOOKING_PAGE_ID';
+// Adria's Google Calendar booking link
+const CALENDAR_BOOKING_URL = 'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3wUMcfi9PCbrbgE118d-hvfmKZwgdv39eg488EKFZ8jbFP-yJMlaNEaRHs2Lxe_6Fjz7E-WNSK';
 
 function openCalendar() {
     window.open(CALENDAR_BOOKING_URL, '_blank');
@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Clear form
                     contactForm.reset();
                     
-                    // Hide success message after 5 seconds
+                    // Redirect to more information page after 2 seconds
                     setTimeout(function() {
-                        document.getElementById('successMessage').classList.remove('show');
-                    }, 5000);
+                        window.location.href = 'more-information.html';
+                    }, 2000);
                 }
             } catch (error) {
                 console.error('Form submission error:', error);
