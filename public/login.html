@@ -161,6 +161,12 @@
         </div>
     </div>
 
+    <script>
+        // IMPORTANT: Set API base BEFORE loading auth.js
+        if (window.location.port === '3000') {
+            window.__API_BASE__ = 'http://127.0.0.1:8000';
+        }
+    </script>
     <script src="js/auth.js"></script>
     <script>
         const form = document.getElementById('loginForm');

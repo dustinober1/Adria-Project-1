@@ -1,5 +1,25 @@
 // Authentication utility functions
-const API_BASE_URL = window.location.origin;
+// When the frontend is served from the static server (port 3000) we must
+// point API requests at the FastAPI backend (port 8000). Using the
+// frontend origin (window.location.origin) will cause fetch to hit the
+// static file server and return HTML ("Unexpected token '<'" JSON parse error).
+// Resolve API base lazily at request time to avoid timing issues when pages
+// set `window.__API_BASE__` after this script loads.
+const resolveApiBase = () => {
+  if (window.__API_BASE__ && typeof window.__API_BASE__ === 'string') {
+    return window.__API_BASE__;
+  }
+
+  try {
+    const origin = window.location.origin || '';
+    if (window.location.port === '3000' || origin.includes(':3000')) {
+      return 'http://127.0.0.1:8000';
+    }
+    return origin;
+  } catch (e) {
+    return 'http://127.0.0.1:8000';
+  }
+};
 
 // API request helper with authentication
 // Note: Authentication is now handled entirely through httpOnly cookies (XSS protection)
@@ -10,7 +30,8 @@ const apiRequest = async (endpoint, options = {}) => {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const apiBase = resolveApiBase();
+    const response = await fetch(`${apiBase}${endpoint}`, {
       ...options,
       headers,
       credentials: 'include' // Include httpOnly cookies

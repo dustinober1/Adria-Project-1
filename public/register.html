@@ -188,6 +188,15 @@
         </div>
     </div>
 
+    <script>
+        // IMPORTANT: Set API base BEFORE loading auth.js
+        // If served from a static dev server (port 3000), explicitly point
+        // the frontend API calls at the backend. This avoids fetch hitting
+        // the static server and receiving HTML (which causes JSON parse errors).
+        if (window.location.port === '3000') {
+            window.__API_BASE__ = 'http://127.0.0.1:8000';
+        }
+    </script>
     <script src="js/auth.js"></script>
     <script>
         const form = document.getElementById('registerForm');
