@@ -37,10 +37,23 @@ const apiRequest = async (endpoint, options = {}) => {
       credentials: 'include' // Include httpOnly cookies
     });
 
-    const data = await response.json();
+    // Check if response is JSON before parsing
+    const contentType = response.headers.get('content-type');
+    let data;
+    
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      // If response is not JSON, try to get text for error reporting
+      const text = await response.text();
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+      }
+      throw new Error('Response is not JSON');
+    }
 
     if (!response.ok) {
-      throw new Error(data.message || 'Request failed');
+      throw new Error(data.detail || data.message || 'Request failed');
     }
 
     return data;

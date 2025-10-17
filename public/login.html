@@ -207,13 +207,6 @@
                 submitBtn.textContent = 'Login';
             }
         });
-
-        // Redirect if already logged in
-        (async () => {
-            if (await auth.isAuthenticated()) {
-                window.location.href = 'matcher.html';
-            }
-        })();
     </script>
 </body>
 </html>
