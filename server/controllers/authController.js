@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
 const logger = require('../utils/logger');
 const User = require('../models/User');
+const ValidationService = require('../services/validationService');
+const SecurityService = require('../services/securityService');
 
 // Generate JWT token
 const generateToken = (userId) => {
@@ -15,16 +16,47 @@ const generateToken = (userId) => {
 // Register a new user
 const register = async (req, res) => {
   try {
-    // Validate request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent');
+
+    // Validate request using secure validation service
+    const validation = ValidationService.validate(req.body, ValidationService.userRegistrationSchema);
+    if (!validation.isValid) {
+      await SecurityService.logSecurityEvent({
+        eventType: 'registration_validation_failed',
+        severity: 'medium',
+        ipAddress,
+        userAgent,
+        description: 'User registration validation failed',
+        metadata: { validationErrors: validation.errors, email: req.body.email }
+      });
+
       return res.status(400).json({
         success: false,
-        errors: errors.array()
+        message: 'Validation failed',
+        errors: validation.errors
       });
     }
 
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName } = validation.data;
+
+    // Check if user already exists
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      await SecurityService.logSecurityEvent({
+        eventType: 'duplicate_registration_attempt',
+        severity: 'medium',
+        ipAddress,
+        userAgent,
+        description: 'Attempt to register with existing email',
+        metadata: { email }
+      });
+
+      return res.status(409).json({
+        success: false,
+        message: 'An account with this email already exists'
+      });
+    }
 
     // Create user
     const user = await User.create({
@@ -32,6 +64,17 @@ const register = async (req, res) => {
       password,
       firstName,
       lastName
+    });
+
+    // Log successful registration
+    await SecurityService.logSecurityEvent({
+      eventType: 'user_registered',
+      severity: 'low',
+      userId: user.id,
+      ipAddress,
+      userAgent,
+      description: `New user registered: ${email}`,
+      metadata: { email, userId: user.id }
     });
 
     // Generate token
@@ -58,6 +101,19 @@ const register = async (req, res) => {
     });
   } catch (error) {
     logger.error('Registration error:', error);
+    
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent');
+    
+    await SecurityService.logSecurityEvent({
+      eventType: 'registration_error',
+      severity: 'medium',
+      ipAddress,
+      userAgent,
+      description: 'Registration process failed',
+      metadata: { error: error.message, email: req.body.email }
+    });
+
     res.status(400).json({
       success: false,
       message: process.env.NODE_ENV === 'production' ? 'Registration failed' : error.message || 'Registration failed'
@@ -68,19 +124,35 @@ const register = async (req, res) => {
 // Login user
 const login = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent');
+
+    // Validate request using secure validation service
+    const validation = ValidationService.validate(req.body, ValidationService.userLoginSchema);
+    if (!validation.isValid) {
+      await SecurityService.logSecurityEvent({
+        eventType: 'login_validation_failed',
+        severity: 'medium',
+        ipAddress,
+        userAgent,
+        description: 'Login validation failed',
+        metadata: { validationErrors: validation.errors, email: req.body.email }
+      });
+
       return res.status(400).json({
         success: false,
-        errors: errors.array()
+        message: 'Validation failed',
+        errors: validation.errors
       });
     }
 
-    const { email, password } = req.body;
+    const { email, password } = validation.data;
 
     // Find user
     const user = await User.findByEmail(email);
     if (!user) {
+      await SecurityService.logFailedLogin(email, ipAddress, userAgent, 'user_not_found');
+      
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
@@ -90,6 +162,8 @@ const login = async (req, res) => {
     // Verify password
     const isValidPassword = await User.verifyPassword(password, user.password_hash);
     if (!isValidPassword) {
+      await SecurityService.logFailedLogin(email, ipAddress, userAgent, 'invalid_password');
+      
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
@@ -98,6 +172,17 @@ const login = async (req, res) => {
 
     // Update last login
     await User.updateLastLogin(user.id);
+
+    // Log successful login
+    await SecurityService.logSecurityEvent({
+      eventType: 'successful_login',
+      severity: 'low',
+      userId: user.id,
+      ipAddress,
+      userAgent,
+      description: `User logged in: ${email}`,
+      metadata: { email, userId: user.id }
+    });
 
     // Generate token
     const token = generateToken(user.id);
@@ -117,12 +202,26 @@ const login = async (req, res) => {
         id: user.id,
         email: user.email,
         firstName: user.first_name,
-        lastName: user.last_name
+        lastName: user.last_name,
+        isAdmin: user.is_admin === true || user.is_admin === 'true'
       },
       token
     });
   } catch (error) {
     logger.error('Login error:', error);
+    
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent');
+    
+    await SecurityService.logSecurityEvent({
+      eventType: 'login_error',
+      severity: 'medium',
+      ipAddress,
+      userAgent,
+      description: 'Login process failed',
+      metadata: { error: error.message, email: req.body.email }
+    });
+
     res.status(500).json({
       success: false,
       message: 'Login failed'
@@ -131,12 +230,38 @@ const login = async (req, res) => {
 };
 
 // Logout user
-const logout = (req, res) => {
-  res.clearCookie('token');
-  res.json({
-    success: true,
-    message: 'Logout successful'
-  });
+const logout = async (req, res) => {
+  try {
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent');
+
+    // Log logout event if user is authenticated
+    if (req.user) {
+      await SecurityService.logSecurityEvent({
+        eventType: 'user_logout',
+        severity: 'low',
+        userId: req.user.id,
+        ipAddress,
+        userAgent,
+        description: `User logged out: ${req.user.email || req.user.id}`,
+        metadata: { userId: req.user.id }
+      });
+    }
+
+    // Clear cookie
+    res.clearCookie('token');
+    
+    res.json({
+      success: true,
+      message: 'Logout successful'
+    });
+  } catch (error) {
+    logger.error('Logout error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Logout failed'
+    });
+  }
 };
 
 // Get current user
