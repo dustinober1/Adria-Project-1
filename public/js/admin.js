@@ -129,8 +129,7 @@ async function loadDashboard() {
 
     if (!response.ok) throw new Error('Failed to load stats');
 
-    const data = await response.json();
-    const stats = data.stats;
+    const stats = await response.json();
 
     document.getElementById('totalUsers').textContent = stats.totalUsers;
     document.getElementById('totalArticles').textContent = stats.totalArticles;
@@ -190,6 +189,7 @@ async function loadUsers() {
         <td>
           <div class="action-buttons">
             <button class="btn-primary btn-small" onclick="viewUserDetails('${user.id}')">View</button>
+            <button class="btn-danger btn-small" onclick="quickDeleteUser('${user.id}', '${escapeHtml(user.email)}')">Delete</button>
           </div>
         </td>
       </tr>
@@ -300,6 +300,27 @@ async function demoteUser(userId) {
   } catch (error) {
     logger.error('Failed to demote user:', error);
     showMessage('Failed to demote user', 'error');
+  }
+}
+
+async function quickDeleteUser(userId, userEmail) {
+  if (!confirm(`Are you sure you want to delete user "${userEmail}"? This action cannot be undone.`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${resolveApiBase()}/api/admin/users/${userId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (!response.ok) throw new Error('Failed to delete user');
+
+    showMessage(`User "${userEmail}" deleted successfully`, 'success');
+    loadUsers();
+  } catch (error) {
+    logger.error('Failed to delete user:', error);
+    showMessage('Failed to delete user', 'error');
   }
 }
 
