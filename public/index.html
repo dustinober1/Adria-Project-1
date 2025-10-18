@@ -8,206 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/landing.css">
-    <style>
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            padding: 1.5rem 2rem;
-            z-index: 1000;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        .btn-nav {
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-login {
-            background: transparent;
-            border: 2px solid #c19a5d;
-            color: #c19a5d;
-        }
-        .btn-login:hover {
-            background: #c19a5d;
-            color: white;
-        }
-        .btn-register {
-            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
-            border: none;
-            color: white;
-        }
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
-        }
-        .user-menu {
-            display: none;
-            align-items: center;
-            gap: 1rem;
-        }
-        .user-name {
-            color: #c19a5d;
-            font-weight: 600;
-        }
-        .btn-logout {
-            padding: 0.6rem 1.5rem;
-            background: #c19a5d;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn-logout:hover {
-            background: #a87f4a;
-        }
-        .article-container {
-            max-width: 900px;
-            margin: 80px auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        .article-container h1 {
-            color: #c19a5d;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        .article-subtitle {
-            color: #666;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            font-style: italic;
-        }
-        .article-section {
-            margin-bottom: 2rem;
-        }
-        .article-section h2 {
-            color: #c19a5d;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e8dcc8;
-            padding-bottom: 0.5rem;
-        }
-        .article-section h3 {
-            color: #333;
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-        }
-        .article-section p {
-            color: #555;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-            text-align: justify;
-        }
-        .article-section ul {
-            color: #555;
-            line-height: 1.8;
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-        .article-section li {
-            margin-bottom: 0.8rem;
-        }
-        .service-card {
-            background: #f9f7f2;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #c19a5d;
-        }
-        .service-card h4 {
-            color: #c19a5d;
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-        }
-        .service-card p {
-            color: #666;
-            margin: 0;
-        }
-        .cta-section {
-            background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        .cta-section p {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .btn-cta {
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary-cta {
-            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
-            color: white;
-            border: none;
-        }
-        .btn-primary-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
-        }
-        .btn-secondary-cta {
-            background: transparent;
-            border: 2px solid #c19a5d;
-            color: #c19a5d;
-        }
-        .btn-secondary-cta:hover {
-            background: #c19a5d;
-            color: white;
-        }
-        .contact-section {
-            text-align: center;
-        }
-        .contact-section p {
-            margin-bottom: 0.5rem;
-        }
-        .back-link {
-            margin-top: 2rem;
-            text-align: center;
-        }
-        .back-link a {
-            color: #c19a5d;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+
 </head>
 <body>
     <div class="nav-bar">
@@ -336,14 +137,35 @@
 
         <div class="article-section">
             <h2>FAQ</h2>
-            <h3>Do you offer virtual services?</h3>
-            <p>Yes — every service can be completed virtually for your convenience.</p>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Do you offer virtual services?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes — every service can be completed virtually for your convenience.
+                </div>
+            </div>
             
-            <h3>How do I prepare for a Closet Edit?</h3>
-            <p>Set aside a couple of hours, wear something comfortable, and be open to letting go of what no longer serves you. I'll handle the rest.</p>
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I prepare for a Closet Edit?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Set aside a couple of hours, wear something comfortable, and be open to letting go of what no longer serves you. I'll handle the rest.
+                </div>
+            </div>
             
-            <h3>What areas do you serve?</h3>
-            <p>In-person services are available locally; travel fees apply beyond 30 miles. Virtual sessions are available worldwide.</p>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What areas do you serve?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    In-person services are available locally; travel fees apply beyond 30 miles. Virtual sessions are available worldwide.
+                </div>
+            </div>
         </div>
 
         <div class="cta-section">
@@ -411,6 +233,30 @@
         async function handleLogout() {
             await auth.logout();
         }
+        
+        // Initialize FAQ accordions
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle');
+                
+                if (answer.classList.contains('show')) {
+                    answer.classList.remove('show');
+                    toggle.textContent = '+';
+                } else {
+                    // Close other open FAQ items
+                    document.querySelectorAll('.faq-answer.show').forEach(item => {
+                        item.classList.remove('show');
+                    });
+                    document.querySelectorAll('.faq-toggle').forEach(t => {
+                        t.textContent = '+';
+                    });
+                    
+                    answer.classList.add('show');
+                    toggle.textContent = '−';
+                }
+            });
+        });
     </script>
 </body>
 </html>
