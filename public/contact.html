@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Adria Cross — Personal Stylist</title>
+    <meta name="description" content="Contact Adria Cross for personal styling services. Book a no cost consultation to discuss your styling goals and find the perfect service for you.">
+    <meta name="keywords" content="contact stylist, book consultation, fashion advice, style consultation, personal stylist contact">
+    <meta name="author" content="Adria Cross">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.adriacross.com/contact.html">
+    <title>Contact Adria Cross | Book Free Style Consultation - Personal Stylist</title>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.adriacross.com/contact.html">
+    <meta property="og:title" content="Contact Adria Cross | Book Free Style Consultation - Personal Stylist">
+    <meta property="og:description" content="Contact Adria Cross for personal styling services. Book a no cost consultation to discuss your styling goals and find the perfect service for you.">
+    <meta property="og:image" content="https://www.adriacross.com/images/contact-stylist.jpg">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.adriacross.com/contact.html">
+    <meta property="twitter:title" content="Contact Adria Cross | Book Free Style Consultation - Personal Stylist">
+    <meta property="twitter:description" content="Contact Adria Cross for personal styling services. Book a no cost consultation to discuss your styling goals and find the perfect service for you.">
+    <meta property="twitter:image" content="https://www.adriacross.com/images/contact-stylist.jpg">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -46,6 +64,32 @@
             box-shadow: 0 5px 20px rgba(212, 165, 116, 0.4);
         }
     </style>
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact Adria Cross - Personal Stylist",
+      "description": "Contact Adria Cross for personal styling services. Book a no cost consultation to discuss your styling goals.",
+      "url": "https://www.adriacross.com/contact.html",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Adria Cross Styling Services",
+        "email": "hello@adriacross.com",
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "email": "hello@adriacross.com",
+            "url": "https://www.adriacross.com/contact.html",
+            "contactType": "customer service",
+            "areaServed": "US",
+            "availableLanguage": "en"
+          }
+        ]
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -149,7 +193,7 @@
         </div>
     </div>
 
-    <script src="js/logger.js"></script>
+    <script src="js/logger.min.js"></script>
     <script>
         // Initialize FAQ accordions
         document.querySelectorAll('.faq-question').forEach(question => {

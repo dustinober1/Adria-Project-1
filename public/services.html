@@ -3,11 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services - Adria Cross — Personal Stylist</title>
+    <meta name="description" content="Explore personal styling services by Adria Cross including closet edits, wardrobe overhauls, color analysis, and personal shopping experiences.">
+    <meta name="keywords" content="personal styling services, closet edit, wardrobe makeover, color analysis, personal shopping, fashion consultation">
+    <meta name="author" content="Adria Cross">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.adriacross.com/services.html">
+    <title>Personal Styling Services | Adria Cross - Closet Edit, Wardrobe Overhaul & More</title>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.adriacross.com/services.html">
+    <meta property="og:title" content="Personal Styling Services | Adria Cross - Closet Edit, Wardrobe Overhaul & More">
+    <meta property="og:description" content="Explore personal styling services by Adria Cross including closet edits, wardrobe overhauls, color analysis, and personal shopping experiences.">
+    <meta property="og:image" content="https://www.adriacross.com/images/styling-services.jpg">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.adriacross.com/services.html">
+    <meta property="twitter:title" content="Personal Styling Services | Adria Cross - Closet Edit, Wardrobe Overhaul & More">
+    <meta property="twitter:description" content="Explore personal styling services by Adria Cross including closet edits, wardrobe overhauls, color analysis, and personal shopping experiences.">
+    <meta property="twitter:image" content="https://www.adriacross.com/images/styling-services.jpg">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/landing.css">
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Personal Styling Services | Adria Cross",
+      "description": "Explore personal styling services by Adria Cross including closet edits, wardrobe overhauls, color analysis, and personal shopping experiences.",
+      "url": "https://www.adriacross.com/services.html",
+      "mainEntity": [
+        {
+          "@type": "Service",
+          "name": "The Closet Edit",
+          "description": "A 2-hour session where we curate 5-7 complete outfits using what you already own, identify what's missing, and provide recommendations for strategic purchases."
+        },
+        {
+          "@type": "Service",
+          "name": "Complete Wardrobe Overhaul",
+          "description": "A full, intentional wardrobe rebuild that fits your lifestyle, goals, and aesthetic. We'll refine what stays, source what's missing, and create a seamless wardrobe."
+        },
+        {
+          "@type": "Service",
+          "name": "One-Event Styling",
+          "description": "Whether it's a gala, business event, or special night out, I'll shop for you or style a look using what you already own."
+        },
+        {
+          "@type": "Service",
+          "name": "Color Analysis",
+          "description": "Discover your personal color palette — the shades that make your skin glow, your eyes pop, and your confidence soar."
+        },
+        {
+          "@type": "Service",
+          "name": "Personal Shopping Experience",
+          "description": "An hourly styling and shopping session tailored to your needs. We'll focus on pieces that align with your wardrobe goals and lifestyle."
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -103,7 +159,7 @@
         </div>
     </div>
 
-    <script src="js/logger.js"></script>
+    <script src="js/logger.min.js"></script>
     <script>
         // Initialize FAQ accordions
         document.querySelectorAll('.faq-question').forEach(question => {
