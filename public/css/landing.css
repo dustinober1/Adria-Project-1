@@ -759,9 +759,4 @@ h1 {
     }
 }
 
-@media (min-width: 900px) {
-    .article-section p {
-        column-count: 2;
-        column-gap: 2rem;
-    }
-}
+
