@@ -8,185 +8,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/landing.css">
-    <style>
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            padding: 1.5rem 2rem;
-            z-index: 1000;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        .btn-nav {
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-login {
-            background: transparent;
-            border: 2px solid #c19a5d;
-            color: #c19a5d;
-        }
-        .btn-login:hover {
-            background: #c19a5d;
-            color: white;
-        }
-        .btn-register {
-            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
-            border: none;
-            color: white;
-        }
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
-        }
-        .article-container {
-            max-width: 900px;
-            margin: 80px auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        .article-container h1 {
-            color: #c19a5d;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        .article-subtitle {
-            color: #666;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            font-style: italic;
-        }
-        .article-section {
-            margin-bottom: 2rem;
-        }
-        .article-section h2 {
-            color: #c19a5d;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e8dcc8;
-            padding-bottom: 0.5rem;
-        }
-        .article-section h3 {
-            color: #333;
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-        }
-        .article-section p {
-            color: #555;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-            text-align: justify;
-        }
-        .article-section ul {
-            color: #555;
-            line-height: 1.8;
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-        .article-section li {
-            margin-bottom: 0.8rem;
-        }
-        .service-card {
-            background: #f9f7f2;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #c19a5d;
-        }
-        .service-card h4 {
-            color: #c19a5d;
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-        }
-        .service-card p {
-            color: #666;
-            margin: 0;
-        }
-        .cta-section {
-            background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        .cta-section p {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .btn-cta {
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary-cta {
-            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
-            color: white;
-            border: none;
-        }
-        .btn-primary-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
-        }
-        .btn-secondary-cta {
-            background: transparent;
-            border: 2px solid #c19a5d;
-            color: #c19a5d;
-        }
-        .btn-secondary-cta:hover {
-            background: #c19a5d;
-            color: white;
-        }
-        .back-link {
-            margin-top: 2rem;
-            text-align: center;
-        }
-        .back-link a {
-            color: #c19a5d;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
-    <div class="nav-bar">
-        <div id="authButtons" class="auth-buttons">
-            <a href="login.html" class="btn-nav btn-login">Login</a>
-            <a href="register.html" class="btn-nav btn-register">Sign Up</a>
+    <!-- Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">Adria Cross</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
         </div>
-    </div>
+    </nav>
 
     <div class="article-container">
         <h1>Adria Cross — Personal Stylist</h1>
@@ -320,27 +158,9 @@
                 <button onclick="window.open('https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3wUMcfi9PCbrbgE118d-hvfmKZwgdv39eg488EKFZ8jbFP-yJMlaNEaRHs2Lxe_6Fjz7E-WNSK', '_blank')" class="btn-cta btn-primary-cta">
                     📅 Book a Consultation
                 </button>
-                <a href="index.html" class="btn-cta btn-secondary-cta">← Back to Home</a>
             </div>
         </div>
-
-        <div class="back-link">
-            <a href="index.html">← Back to Home</a>
-        </div>
     </div>
-
-    <script>
-        // IMPORTANT: Set API base BEFORE loading auth.js
-        if (window.location.port === '3000') {
-            window.__API_BASE__ = 'http://127.0.0.1:8000';
-        }
-    </script>
-    <script src="js/auth.js"></script>
-    <script>
-        // Update auth UI on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.updateAuthUI();
-        });
-    </script>
+    <script src="js/logger.js"></script>
 </body>
 </html>

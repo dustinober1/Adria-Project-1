@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Adria Cross — Personal Stylist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">Adria Cross</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <h1>Contact</h1>
+        
+        <div class="article-section">
+            <h2>Get in Touch</h2>
+            <p>Ready to transform your wardrobe and feel confident in your style? I'd love to hear from you!</p>
+        </div>
+
+        <div class="article-section">
+            <h2>Book a Consultation</h2>
+            <p>Schedule a consultation to discuss your styling goals and find the perfect service for you.</p>
+            <div style="text-align: center; margin: 2rem 0;">
+                <a href="https://calendar.app.google/SyYLz144GdfsBwYf8" target="_blank" class="btn-cta btn-primary-cta" style="padding: 1rem 2.5rem; border-radius: 25px; font-family: 'Montserrat', sans-serif; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%); color: white; border: none; transition: all 0.3s; margin: 0 auto;">
+                    📅 Book a Consultation
+                </a>
+            </div>
+        </div>
+
+        <div class="article-section">
+            <h2>Email</h2>
+            <p>Feel free to reach out via email:</p>
+            <p style="font-weight: 600; color: #c19a5d; font-size: 1.1rem; text-align: center;">hello@adriacross.com</p>
+        </div>
+
+        <div class="article-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item" style="margin-bottom: 0.5rem;">
+                <div class="faq-question">
+                    Do you offer virtual services?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes — every service can be completed virtually for your convenience.
+                </div>
+            </div>
+            
+            <div class="faq-item" style="margin-bottom: 0.5rem;">
+                <div class="faq-question">
+                    How do I prepare for a Closet Edit?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Set aside a couple of hours, wear something comfortable, and be open to letting go of what no longer serves you. I'll handle the rest.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    What areas do you serve?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    In-person services are available locally; travel fees apply beyond 30 miles. Virtual sessions are available worldwide.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/logger.js"></script>
+    <script>
+        // Initialize FAQ accordions
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle');
+                
+                if (answer.classList.contains('show')) {
+                    answer.classList.remove('show');
+                    toggle.textContent = '+';
+                } else {
+                    // Close other open FAQ items
+                    document.querySelectorAll('.faq-answer.show').forEach(item => {
+                        item.classList.remove('show');
+                    });
+                    document.querySelectorAll('.faq-toggle').forEach(t => {
+                        t.textContent = '+';
+                    });
+                    
+                    answer.classList.add('show');
+                    toggle.textContent = '−';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

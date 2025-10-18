@@ -11,16 +11,21 @@
 
 </head>
 <body>
-    <div class="nav-bar">
-        <div id="authButtons" class="auth-buttons">
-            <a href="login.html" class="btn-nav btn-login">Login</a>
-            <a href="register.html" class="btn-nav btn-register">Sign Up</a>
+    <!-- Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">Adria Cross</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
         </div>
-        <div id="userMenu" class="user-menu">
-            <span class="user-name">Welcome, <span id="userName"></span>!</span>
-            <button onclick="handleLogout()" class="btn-logout">Logout</button>
-        </div>
-    </div>
+    </nav>
 
     <div class="article-container">
         <h1>Adria Cross — Personal Stylist</h1>
@@ -175,65 +180,14 @@
                 <button onclick="window.open('https://calendar.app.google/SyYLz144GdfsBwYf8', '_blank')" class="btn-cta btn-primary-cta">
                     📅 Book a Consultation
                 </button>
-                <a href="matcher.html" class="btn-cta btn-secondary-cta">Try Outfit Matcher →</a>
             </div>
         </div>
 
-        <div class="contact-section">
-            <h3><strong>Let's Connect</strong></h3>
-            <p style="margin-bottom: 1rem;">Begin your style journey today</p>
-            
-            <div id="successMessage" class="success-message" style="margin: 1rem 0; display: none;">Thank you! I'll be in touch soon to discuss your styling needs.</div>
 
-            <form id="contactForm" method="POST" action="javascript:void(0);" style="max-width: 500px; margin: 0 auto;">
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label for="name">Name *</label>
-                    <input type="text" id="name" name="name" required style="width: 100%;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required style="width: 100%;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label for="phone">Phone</label>
-                    <input type="tel" id="phone" name="phone" style="width: 100%;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label for="message">Tell me about your style goals</label>
-                    <textarea id="message" name="message" placeholder="What brings you here? What would you like to achieve with your wardrobe?" style="width: 100%; min-height: 100px;"></textarea>
-                </div>
-
-                <button type="submit" class="btn" style="width: 100%;">Request More Information</button>
-            </form>
-        </div>
-
-        <div class="back-link">
-            <a href="blog.html">Read Our Blog Articles →</a>
-        </div>
     </div>
 
+    <script src="js/logger.js"></script>
     <script>
-        // IMPORTANT: Set API base BEFORE loading auth.js
-        if (window.location.port === '3000') {
-            window.__API_BASE__ = 'http://127.0.0.1:8000';
-        }
-    </script>
-    <script src="js/auth.js"></script>
-    <script src="js/landing.js"></script>
-    <script>
-        // Update auth UI on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.updateAuthUI();
-        });
-
-        // Handle logout
-        async function handleLogout() {
-            await auth.logout();
-        }
-        
         // Initialize FAQ accordions
         document.querySelectorAll('.faq-question').forEach(question => {
             question.addEventListener('click', () => {
