@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Complete the intake form for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
-    <meta name="keywords" content="styling intake form, style questionnaire, personal styling form, wardrobe consultation form">
+    <meta name="description" content="Complete the intake forms for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
+    <meta name="keywords" content="styling intake form, style questionnaire, personal styling form, wardrobe consultation form, color analysis, closet edit">
     <meta name="author" content="Adria Cross">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.adriacross.com/intake-form.html">
-    <title>Styling Intake Form | Adria Cross Personal Stylist</title>
+    <title>Styling Intake Forms | Adria Cross Personal Stylist</title>
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.adriacross.com/intake-form.html">
-    <meta property="og:title" content="Styling Intake Form | Adria Cross Personal Stylist">
-    <meta property="og:description" content="Complete the intake form for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
+    <meta property="og:title" content="Styling Intake Forms | Adria Cross Personal Stylist">
+    <meta property="og:description" content="Complete the intake forms for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
     <meta property="og:image" content="https://www.adriacross.com/images/intake-form.jpg">
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.adriacross.com/intake-form.html">
-    <meta property="twitter:title" content="Styling Intake Form | Adria Cross Personal Stylist">
-    <meta property="twitter:description" content="Complete the intake form for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
+    <meta property="twitter:title" content="Styling Intake Forms | Adria Cross Personal Stylist">
+    <meta property="twitter:description" content="Complete the intake forms for Adria Cross styling services. Share your style preferences and goals for a personalized styling experience.">
     <meta property="twitter:image" content="https://www.adriacross.com/images/intake-form.jpg">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,6 +50,37 @@
             color: #c19a5d;
             margin-top: 0;
         }
+        .form-selector {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-selector button {
+            background: transparent;
+            border: 2px solid #c19a5d;
+            color: #c19a5d;
+            padding: 0.8rem 1.5rem;
+            margin: 0 0.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-selector button.active {
+            background: #c19a5d;
+            color: white;
+        }
+        .form-selector button:hover {
+            background: #c19a5d;
+            color: white;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -70,15 +101,21 @@
     </nav>
 
     <div class="article-container" style="max-width: 1000px;">
-        <h1>Styling Intake Form</h1>
+        <h1>Styling Intake Forms</h1>
         
         <div class="form-instructions">
             <h3>Complete Your Style Profile</h3>
-            <p>Please fill out this comprehensive intake form to help me understand your style preferences, lifestyle, and goals. This information will allow me to provide you with personalized styling recommendations tailored specifically to you.</p>
-            <p>The form typically takes 10-15 minutes to complete. Please answer all questions as thoroughly as possible for the best results.</p>
+            <p>Please select the appropriate intake form based on the service you plan to receive. These forms help me understand your style preferences, lifestyle, and goals to provide you with personalized styling recommendations.</p>
+            <p>Each form typically takes 10-15 minutes to complete. Please answer all questions as thoroughly as possible for the best results.</p>
         </div>
 
-        <div class="form-embed-container">
+        <div class="form-selector">
+            <button class="form-toggle active" data-form="color-analysis">Color Analysis</button>
+            <button class="form-toggle" data-form="closet-edit">Closet Edit</button>
+        </div>
+
+        <div id="color-analysis" class="form-section active">
+            <h3>Color Analysis Intake Form</h3>
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSceQ454fbOTXPb4XWU8PHKIckOAq3e75XZdIK-mFsLKamohag/viewform?embedded=true" 
                     width="100%" 
                     height="800" 
@@ -86,7 +123,20 @@
                     marginheight="0" 
                     marginwidth="0" 
                     class="form-embed">
-                Loading intake form...
+                Loading Color Analysis form...
+            </iframe>
+        </div>
+
+        <div id="closet-edit" class="form-section">
+            <h3>Closet Edit Intake Form</h3>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScfUh25QiP-trEt-2O1UCdeuodK2qZrhef0P4azxGGwuIEZTg/viewform?embedded=true" 
+                    width="100%" 
+                    height="800" 
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    class="form-embed">
+                Loading Closet Edit form...
             </iframe>
         </div>
         
@@ -96,5 +146,26 @@
     </div>
 
     <script src="js/logger.min.js"></script>
+    <script>
+        // Form toggle functionality
+        document.querySelectorAll('.form-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and forms
+                document.querySelectorAll('.form-toggle').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.form-section').forEach(form => {
+                    form.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding form
+                const formId = this.getAttribute('data-form');
+                document.getElementById(formId).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
