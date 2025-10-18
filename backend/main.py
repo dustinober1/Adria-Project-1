@@ -6,8 +6,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
+import secrets
 
 from backend.database import engine, get_db, Base
 from backend.models import User, BlogArticle, EmailList
@@ -16,7 +17,7 @@ from backend.schemas import (
     BlogArticleCreate, BlogArticleUpdate, BlogArticleResponse,
     EmailSubscribe, EmailResponse, AdminStats,
     UserTierUpdate, UserStatusUpdate, UserAdminNotesUpdate,
-    UserDetailResponse
+    UserDetailResponse, ForgotPasswordRequest, ResetPasswordRequest
 )
 from backend.security import (
     hash_password, verify_password, create_access_token, verify_token
@@ -171,6 +172,53 @@ async def logout():
     response = JSONResponse({"success": True, "message": "Logged out successfully"})
     response.delete_cookie(key="token")
     return response
+
+
+@app.post("/api/auth/forgot-password")
+async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """Request password reset"""
+    user = db.query(User).filter(User.email == request.email).first()
+    
+    if not user:
+        # Don't reveal if email exists
+        return {"success": True, "message": "If an account with that email exists, a password reset link has been sent."}
+    
+    # Generate reset token
+    reset_token = secrets.token_urlsafe(32)
+    expires = datetime.now() + timedelta(hours=1)
+    
+    user.reset_token = reset_token
+    user.reset_token_expires = expires
+    db.commit()
+    
+    # In a real app, send email. For demo, return the reset link
+    reset_link = f"http://localhost:3000/reset-password.html?token={reset_token}"
+    
+    return {
+        "success": True,
+        "message": "If an account with that email exists, a password reset link has been sent.",
+        "reset_link": reset_link  # Remove in production
+    }
+
+
+@app.post("/api/auth/reset-password")
+async def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+    """Reset password with token"""
+    user = db.query(User).filter(
+        User.reset_token == request.token,
+        User.reset_token_expires > datetime.now()
+    ).first()
+    
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    # Update password
+    user.hashed_password = hash_password(request.newPassword)
+    user.reset_token = None
+    user.reset_token_expires = None
+    db.commit()
+    
+    return {"success": True, "message": "Password reset successfully"}
 
 
 @app.get("/api/auth/me")

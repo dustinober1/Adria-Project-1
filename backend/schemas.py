@@ -39,6 +39,15 @@ class AuthResponse(BaseModel):
     token: Optional[str] = None
 
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    newPassword: str = Field(..., min_length=6)
+
+
 # ============ BLOG SCHEMAS ============
 class BlogArticleCreate(BaseModel):
     title: str

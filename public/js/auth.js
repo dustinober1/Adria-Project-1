@@ -199,6 +199,34 @@ const updateAuthUI = async () => {
   if (userMenu) userMenu.style.display = 'none';
 };
 
+// Forgot password
+const forgotPassword = async (email) => {
+  try {
+    const data = await apiRequest('/api/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Reset password
+const resetPassword = async (token, newPassword) => {
+  try {
+    const data = await apiRequest('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword })
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Export functions
 window.auth = {
   register,
@@ -208,5 +236,7 @@ window.auth = {
   isAuthenticated,
   protectPage,
   subscribeEmail,
-  updateAuthUI
+  updateAuthUI,
+  forgotPassword,
+  resetPassword
 };
