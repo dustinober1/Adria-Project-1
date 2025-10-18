@@ -75,6 +75,138 @@
         .btn-logout:hover {
             background: #a87f4a;
         }
+        .article-container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .article-container h1 {
+            color: #c19a5d;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .article-subtitle {
+            color: #666;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .article-section {
+            margin-bottom: 2rem;
+        }
+        .article-section h2 {
+            color: #c19a5d;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e8dcc8;
+            padding-bottom: 0.5rem;
+        }
+        .article-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .article-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        .article-section ul {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .article-section li {
+            margin-bottom: 0.8rem;
+        }
+        .service-card {
+            background: #f9f7f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #c19a5d;
+        }
+        .service-card h4 {
+            color: #c19a5d;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+        .service-card p {
+            color: #666;
+            margin: 0;
+        }
+        .cta-section {
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .cta-section p {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-cta {
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary-cta {
+            background: linear-gradient(135deg, #d4a574 0%, #c19a5d 100%);
+            color: white;
+            border: none;
+        }
+        .btn-primary-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+        }
+        .btn-secondary-cta {
+            background: transparent;
+            border: 2px solid #c19a5d;
+            color: #c19a5d;
+        }
+        .btn-secondary-cta:hover {
+            background: #c19a5d;
+            color: white;
+        }
+        .contact-section {
+            text-align: center;
+        }
+        .contact-section p {
+            margin-bottom: 0.5rem;
+        }
+        .back-link {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .back-link a {
+            color: #c19a5d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -89,154 +221,88 @@
         </div>
     </div>
 
-    <section class="hero">
-        <div class="container">
-            <div class="content">
-                <h1><strong>Adria Cross — Personal Stylist</strong></h1>
-                <h2 class="subtitle"><em>It's not your body, it's your wardrobe.</em></h2>
-                <p class="description">Helping women and men fall back in love with their clothes — by creating confidence through style that fits who you are, how you live, and where you're headed.</p>
-                
-                <div class="section-divider"><hr></div>
-                
-                <h3><strong>Home — Your First Impression</strong></h3>
-                <p>You've built a life you love — a career, a family, a routine that runs on ambition and purpose.<br>But when it comes to your closet? It doesn't reflect the person you've become.</p>
-                <p>You have <em>so many</em> clothes, but nothing feels right. You rotate the same few outfits, debate wearing the "nicer" one, and wonder what's even clean. Dressing for the day has turned into a mental drain instead of something that feels inspiring.</p>
-                <p>That's where I come in.</p>
-                <p>I help you simplify, refine, and rebuild your wardrobe so that every outfit feels effortless — and entirely <em>you.</em></p>
-                
-                <div class="section-divider"><hr></div>
-                
-                <h3><strong>What I Do</strong></h3>
-                <p><strong>Rediscover your style. Save time. Feel unstoppable.</strong></p>
-                <p>I help high-performing individuals reclaim confidence through a curated, wearable wardrobe — without the overwhelm, waste, or guesswork.</p>
-                
-                <div class="features">
-                    <div class="feature">
-                        <div class="feature-icon">✔</div>
-                        <div class="feature-text">A closet that actually works for your lifestyle</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">✔</div>
-                        <div class="feature-text">Outfits that make you feel confident every day</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">✔</div>
-                        <div class="feature-text">A luxe, practical approach to real-world dressing</div>
-                    </div>
-                </div>
-                
-                <p class="note"><em>All services are available virtually or in-person. Flexible scheduling for busy professionals and parents.</em></p>
-            </div>
+    <div class="article-container">
+        <h1>Adria Cross — Personal Stylist</h1>
+        <p class="article-subtitle"><em>It's not your body, it's your wardrobe.</em></p>
+        <p class="article-subtitle" style="font-style: normal; font-size: 1rem; margin-top: -1.5rem;">Helping women and men fall back in love with their clothes — by creating confidence through style that fits who you are, how you live, and where you're headed.</p>
 
-            <div class="form-section">
-                <h2 class="form-title">Let's Connect</h2>
-                <p class="form-subtitle">Begin your style journey today</p>
-                
-                <div id="successMessage" class="success-message">Thank you! I'll be in touch soon to discuss your styling needs.</div>
-
-                <form id="contactForm" method="POST" action="javascript:void(0);">
-                    <div class="form-group">
-                        <label for="name">Name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Tell me about your style goals</label>
-                        <textarea id="message" name="message" placeholder="What brings you here? What would you like to achieve with your wardrobe?"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn">Request More Information</button>
-                </form>
-
-                <div class="divider"><span class="divider-text">Or</span></div>
-
-                <button class="btn calendar-btn" onclick="window.open('https://calendar.app.google/SyYLz144GdfsBwYf8', '_blank')">
-                    <span>📅</span>
-                    <span>Schedule no cost consultation</span>
-                </button>
-
-                <div class="demo-link">
-                    <a href="matcher.html">Try Our Interactive Outfit Matcher Demo →</a>
-                </div>
-                <div class="demo-link">
-                    <a href="blog.html">Read Our Blog Articles →</a>
-                </div>
-            </div>
+        <div class="article-section">
+            <h2>Home — Your First Impression</h2>
+            <p>You've built a life you love — a career, a family, a routine that runs on ambition and purpose. But when it comes to your closet? It doesn't reflect the person you've become.</p>
+            <p>You have <em>so many</em> clothes, but nothing feels right. You rotate the same few outfits, debate wearing the "nicer" one, and wonder what's even clean. Dressing for the day has turned into a mental drain instead of something that feels inspiring.</p>
+            <p><strong>That's where I come in.</strong></p>
+            <p>I help you simplify, refine, and rebuild your wardrobe so that every outfit feels effortless — and entirely you.</p>
         </div>
-    </section>
-    
-    <section class="full-width-section">
-        <div class="container">
-            <h3><strong>Is This You?</strong></h3>
-            <ul class="faq-list">
+
+        <div class="article-section">
+            <h2>What I Do</h2>
+            <p style="font-weight: 600; color: #c19a5d;">Rediscover your style. Save time. Feel unstoppable.</p>
+            <p>I help high-performing individuals reclaim confidence through a curated, wearable wardrobe — without the overwhelm, waste, or guesswork.</p>
+            <ul>
+                <li>✔ A closet that actually works for your lifestyle</li>
+                <li>✔ Outfits that make you feel confident every day</li>
+                <li>✔ A luxe, practical approach to real-world dressing</li>
+            </ul>
+            <p><em>All services are available virtually or in-person. Flexible scheduling for busy professionals and parents.</em></p>
+        </div>
+
+        <div class="article-section">
+            <h2>Is This You?</h2>
+            <ul>
                 <li>You have a closet full of clothes but only wear the same three "go-to" outfits.</li>
                 <li>You debate wearing your nicer pieces because you don't want to seem <em>overdressed.</em></li>
                 <li>You're tired of wondering what's clean or what goes together.</li>
                 <li>You own plenty of clothes but don't know <em>how</em> to mix them with what you already have.</li>
                 <li>You want to look confident and polished — without spending extra time or energy.</li>
             </ul>
-            <p>If that sounds familiar, your wardrobe isn't the problem — it just needs direction.</p>
+            <p style="font-weight: 600; color: #c19a5d; margin-top: 1.5rem;">If that sounds familiar, your wardrobe isn't the problem — it just needs direction.</p>
         </div>
-    </section>
-    
-    <section class="full-width-section services-section">
-        <div class="container">
-            <h3><strong>Services</strong></h3>
-            
+
+        <div class="article-section">
+            <h2>Services</h2>
+
             <div class="service-card">
-                <h4><strong>The Closet Edit — 2 Hours</strong></h4>
-                <p>Let's make your closet work for you.<br>I'll curate 5–7 complete outfits using what you already own, identify what's missing, and provide recommendations for strategic purchases. You'll learn how to remix your current pieces and build confidence in your style choices.</p>
+                <h4>The Closet Edit — 2 Hours</h4>
+                <p>Let's make your closet work for you. I'll curate 5–7 complete outfits using what you already own, identify what's missing, and provide recommendations for strategic purchases. You'll learn how to remix your current pieces and build confidence in your style choices.</p>
                 <p><em>Includes a personalized digital resource book delivered two weeks after your session with styled outfits and shopping notes.</em></p>
             </div>
-            
+
             <div class="service-card">
-                <h4><strong>Complete Wardrobe Overhaul</strong></h4>
-                <p>A full, intentional wardrobe rebuild that fits your lifestyle, goals, and aesthetic.<br>We'll refine what stays, source what's missing, and create a seamless wardrobe that makes dressing simple — and stylish.</p>
+                <h4>Complete Wardrobe Overhaul</h4>
+                <p>A full, intentional wardrobe rebuild that fits your lifestyle, goals, and aesthetic. We'll refine what stays, source what's missing, and create a seamless wardrobe that makes dressing simple — and stylish.</p>
                 <p><em>Includes a digital style guide with curated outfit combinations.</em></p>
             </div>
-            
+
             <div class="service-card">
-                <h4><strong>One-Event Styling</strong></h4>
-                <p>Whether it's a gala, business event, or special night out, I'll shop for you or style a look using what you already own.<br>You'll feel confident, comfortable, and completely put together — without the stress.</p>
+                <h4>One-Event Styling</h4>
+                <p>Whether it's a gala, business event, or special night out, I'll shop for you or style a look using what you already own. You'll feel confident, comfortable, and completely put together — without the stress.</p>
             </div>
-            
+
             <div class="service-card">
-                <h4><strong>Color Analysis</strong></h4>
-                <p>Discover your personal color palette — the shades that make your skin glow, your eyes pop, and your confidence soar.<br>You'll learn which makeup tones and jewelry metals flatter you most, and receive a digital reference guide for easy use.</p>
+                <h4>Color Analysis</h4>
+                <p>Discover your personal color palette — the shades that make your skin glow, your eyes pop, and your confidence soar. You'll learn which makeup tones and jewelry metals flatter you most, and receive a digital reference guide for easy use.</p>
             </div>
-            
+
             <div class="service-card">
-                <h4><strong>Personal Shopping Experience</strong></h4>
-                <p>An hourly styling and shopping session tailored to your needs.<br>We'll focus on pieces that align with your wardrobe goals and lifestyle.<br><em>3-hour minimum booking. Travel fee applies after 30 miles. Virtual sessions available.</em></p>
+                <h4>Personal Shopping Experience</h4>
+                <p>An hourly styling and shopping session tailored to your needs. We'll focus on pieces that align with your wardrobe goals and lifestyle. 3-hour minimum booking. Travel fee applies after 30 miles. Virtual sessions available.</p>
             </div>
         </div>
-    </section>
-    
-    <section class="full-width-section">
-        <div class="container">
-            <h3><strong>Why Work With a Personal Stylist</strong></h3>
+
+        <div class="article-section">
+            <h2>Why Work With a Personal Stylist</h2>
             
-            <h4><strong>The Problems You're Facing</strong></h4>
-            <ul class="faq-list">
+            <h3>The Problems You're Facing</h3>
+            <ul>
                 <li>You buy clothes but don't wear them.</li>
                 <li>You feel like you're in a style rut, rotating the same few pieces.</li>
                 <li>You're unsure what actually looks good together.</li>
                 <li>You've outgrown your old wardrobe but don't know how to start over.</li>
                 <li>You want to look confident and refined — but don't have time to figure it out.</li>
             </ul>
-            
-            <h4><strong>The Transformation You'll Experience</strong></h4>
-            <ul class="faq-list">
+
+            <h3>The Transformation You'll Experience</h3>
+            <ul>
                 <li>A wardrobe that supports your daily life (and your goals).</li>
                 <li>Smart, intentional purchases that work together.</li>
                 <li>Confidence every time you walk out the door.</li>
@@ -244,62 +310,88 @@
                 <li>Knowledge that lasts — so you can style yourself with ease.</li>
             </ul>
         </div>
-    </section>
-    
-    <section class="full-width-section about-section">
-        <div class="container">
-            <h3><strong>About Me</strong></h3>
+
+        <div class="article-section">
+            <h2>About Me</h2>
             <p>Hi, I'm <strong>Adria</strong> — wife, mom to two amazing girls, CrossFit coach, and Brazilian Jiu-Jitsu blue belt.</p>
             <p>Fashion has always been my creative outlet. As a little girl, I would spend hours putting on fashion shows, restyling my dolls, and experimenting with looks long before I knew what "styling" was.</p>
             <p>Today, that same passion fuels my mission: helping real people feel confident in what they wear — not just for events or photos, but every day.</p>
             <p>I know what it's like to juggle family, work, and wellness while still wanting to look and feel your best. My approach combines personal empowerment with practicality — I create wardrobes that are both luxurious and livable.</p>
-            <p>I believe getting dressed should never feel stressful. It should feel <em>like you.</em></p>
+            <p><strong>I believe getting dressed should never feel stressful. It should feel like you.</strong></p>
         </div>
-    </section>
-    
-    <section class="full-width-section">
-        <div class="container">
-            <h3><strong>Who I Work With</strong></h3>
+
+        <div class="article-section">
+            <h2>Who I Work With</h2>
             <p>I work with women and men who have built successful, full lives — people who value excellence in everything they do and are ready for their wardrobe to reflect that same energy.</p>
             <p>My clients are professionals, entrepreneurs, parents, and go-getters who appreciate quality but need their style to be effortless. They want a wardrobe that moves with their life — one that looks polished without feeling overdone.</p>
             <p>Whether you're refreshing your look, redefining your image, or simply ready to feel like your best self again — I'm here to make that happen.</p>
         </div>
-    </section>
-    
-    <section class="full-width-section">
-        <div class="container">
-            <h3><strong>My Promise</strong></h3>
+
+        <div class="article-section">
+            <h2>My Promise</h2>
             <p>I'll help you find your personal style and make your wardrobe work harder for you — without starting from scratch.</p>
             <p>My services feel luxurious but are rooted in practicality, confidence, and transformation.</p>
-            <p class="promise">Because the truth is simple:<br><strong>It's not your body, it's your wardrobe.</strong></p>
+            <p style="font-weight: 600; color: #c19a5d; font-size: 1.1rem;">Because the truth is simple: <em>It's not your body, it's your wardrobe.</em></p>
         </div>
-    </section>
-    
-    <section class="full-width-section">
-        <div class="container">
-            <h3><strong>FAQ</strong></h3>
-            <div class="faq-item">
-                <p><strong>Do you offer virtual services?</strong></p>
-                <p>Yes — every service can be completed virtually for your convenience.</p>
-            </div>
-            <div class="faq-item">
-                <p><strong>How do I prepare for a Closet Edit?</strong></p>
-                <p>Set aside a couple of hours, wear something comfortable, and be open to letting go of what no longer serves you. I'll handle the rest.</p>
-            </div>
-            <div class="faq-item">
-                <p><strong>What areas do you serve?</strong></p>
-                <p>In-person services are available locally; travel fees apply beyond 30 miles. Virtual sessions are available worldwide.</p>
+
+        <div class="article-section">
+            <h2>FAQ</h2>
+            <h3>Do you offer virtual services?</h3>
+            <p>Yes — every service can be completed virtually for your convenience.</p>
+            
+            <h3>How do I prepare for a Closet Edit?</h3>
+            <p>Set aside a couple of hours, wear something comfortable, and be open to letting go of what no longer serves you. I'll handle the rest.</p>
+            
+            <h3>What areas do you serve?</h3>
+            <p>In-person services are available locally; travel fees apply beyond 30 miles. Virtual sessions are available worldwide.</p>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="color: #333; margin-top: 0;">Ready to Transform Your Wardrobe?</h2>
+            <p>Book a consultation to discuss your styling goals and find the perfect service for you.</p>
+            <div class="cta-buttons">
+                <button onclick="window.open('https://calendar.app.google/SyYLz144GdfsBwYf8', '_blank')" class="btn-cta btn-primary-cta">
+                    📅 Book a Consultation
+                </button>
+                <a href="matcher.html" class="btn-cta btn-secondary-cta">Try Outfit Matcher →</a>
             </div>
         </div>
-    </section>
-    
-    <section class="full-width-section contact-section">
-        <div class="container">
-            <h3><strong>Book a Consultation</strong></h3>
-            <p>Ready to simplify your mornings and feel amazing in what you wear?</p>
-            <p>Fill out the form on my website or email <strong>hello@adriastyles.com</strong>.<br>I respond within 48 hours. For time-sensitive events, please include your date in your message.</p>
+
+        <div class="contact-section">
+            <h3><strong>Let's Connect</strong></h3>
+            <p>Begin your style journey today</p>
+            
+            <div id="successMessage" class="success-message" style="margin: 1rem 0; display: none;">Thank you! I'll be in touch soon to discuss your styling needs.</div>
+
+            <form id="contactForm" method="POST" action="javascript:void(0);" style="max-width: 500px; margin: 0 auto;">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required style="width: 100%;">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required style="width: 100%;">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" style="width: 100%;">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Tell me about your style goals</label>
+                    <textarea id="message" name="message" placeholder="What brings you here? What would you like to achieve with your wardrobe?" style="width: 100%; min-height: 100px;"></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Request More Information</button>
+            </form>
         </div>
-    </section>
+
+        <div class="back-link">
+            <a href="blog.html">Read Our Blog Articles →</a>
+        </div>
+    </div>
 
     <script>
         // IMPORTANT: Set API base BEFORE loading auth.js
