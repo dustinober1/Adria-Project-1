@@ -256,130 +256,21 @@ h1 {
     text-decoration: underline;
 }
 
-.section-divider {
-    margin: 2rem 0;
-}
-
-.section-divider hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #d4a574, transparent);
-    margin: 2rem 0;
-}
-
-.note {
-    font-style: italic;
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f9f9f9;
-    border-left: 3px solid #d4a574;
-}
-
-.faq-list {
-    margin: 1rem 0;
-    padding-left: 1.5rem;
-}
-
-.faq-list li {
-    margin-bottom: 0.8rem;
-    line-height: 1.6;
-}
-
-.full-width-section {
-    padding: 3rem 2rem;
-    background: #fff;
-}
-
-.full-width-section:nth-child(even) {
-    background: #fdfcfb;
-}
-
-.full-width-section h3 {
-    color: #d4a574;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.full-width-section h4 {
-    color: #d4a574;
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
-}
-
-.full-width-section p {
-    margin-bottom: 1rem;
-}
-
-.services-section {
-    padding: 3rem 2rem;
-}
-
-.service-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
-    border: 1px solid #eee;
-}
-
-.service-card:last-child {
-    margin-bottom: 0;
-}
-
-.about-section, .contact-section {
-    text-align: center;
-}
-
-.promise {
-    font-size: 1.3rem;
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background: #f9f9f9;
-    border-left: 3px solid #d4a574;
-    font-style: italic;
-}
-
-.faq-item {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-}
-
-.faq-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-@media (max-width: 968px) {
-    .container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    .features {
-        grid-template-columns: 1fr;
-    }
-
-    .hero {
-        padding: 5rem 1.5rem 2rem 1.5rem;
-    }
-
-    .form-section {
-        padding: 3rem 1.5rem 2rem 1.5rem;
-    }
-    
-    .full-width-section {
-        padding: 2rem 1.5rem;
-    }
-    
-    .section-divider {
-        margin: 1.5rem 0;
-    }
-}
+.section-divider { margin: 2rem 0; }
+.section-divider hr { border: none; height: 1px; background: linear-gradient(to right, transparent, #d4a574, transparent); margin: 2rem 0; }
+.note { font-style: italic; margin-top: 1rem; padding: 1rem; background: #f9f9f9; border-left: 3px solid #d4a574; }
+.faq-list { margin: 1rem 0; padding-left: 1.5rem; }
+.faq-list li { margin-bottom: 0.8rem; line-height: 1.6; }
+.full-width-section { padding: 3rem 2rem; background: #fff; }
+.full-width-section:nth-child(even) { background: #fdfcfb; }
+.full-width-section h3 { color: #d4a574; font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center; }
+.full-width-section h4 { color: #d4a574; font-size: 1.3rem; margin-bottom: 0.8rem; }
+.full-width-section p { margin-bottom: 1rem; }
+.services-section { padding: 3rem 2rem; }
+.service-card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); margin-bottom: 1.5rem; border: 1px solid #eee; }
+.service-card:last-child { margin-bottom: 0; }
+.about-section, .contact-section { text-align: center; }
+.promise { font-size: 1.3rem; margin-top: 1.5rem; padding: 1rem; background: #f9f9f9; border-left: 3px solid #d4a574; font-style: italic; }
+.faq-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #eee; }
+.faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+@media (max-width: 968px) { .container { grid-template-columns: 1fr; gap: 2rem; } h1 { font-size: 2.5rem; } .features { grid-template-columns: 1fr; } .hero { padding: 5rem 1.5rem 2rem 1.5rem; } .form-section { padding: 3rem 1.5rem 2rem 1.5rem; } .full-width-section { padding: 2rem 1.5rem; } .section-divider { margin: 1.5rem 0; } }
