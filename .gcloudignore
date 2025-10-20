@@ -1,0 +1,16 @@
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+
+# Development files
+.vscode
+.idea
+
+# Node modules
+node_modules
+
+# Build artifacts that shouldn't be deployed
+*.log

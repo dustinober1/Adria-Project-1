@@ -1,6 +1,9 @@
 # Use official Nginx image as base
 FROM nginx:alpine
 
+# Install envsubst (gettext package) for environment variable substitution
+RUN apk add --no-cache gettext
+
 # Set working directory
 WORKDIR /usr/share/nginx/html
 
@@ -22,11 +25,21 @@ COPY css/ ./css/
 COPY images/ ./images/
 COPY js/ ./js/
 
-# Copy custom Nginx configuration if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy Nginx configuration template
+COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
-# Expose port 80
-EXPOSE 80
+# Remove default Nginx config
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Copy and make the entrypoint script executable
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Set default PORT environment variable (Cloud Run will override this)
+ENV PORT=8080
+
+# Expose the port (Cloud Run will use the PORT env variable)
+EXPOSE ${PORT}
+
+# Use custom entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
