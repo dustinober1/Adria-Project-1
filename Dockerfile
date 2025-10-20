@@ -22,8 +22,10 @@ COPY more-information.html .
 COPY services.html .
 COPY blog/ ./blog/
 COPY css/ ./css/
-COPY images/ ./images/
 COPY js/ ./js/
+
+# Create images directory (since it's empty, we need to create it manually)
+RUN mkdir -p images
 
 # Copy Nginx configuration template
 COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
