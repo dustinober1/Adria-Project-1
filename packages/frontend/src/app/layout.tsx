@@ -10,8 +10,14 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: 'Adria Cross - Professional Personal Stylist',
-  description: 'Transform your style with expert personal styling services from Adria Cross',
-  keywords: ['personal stylist', 'wardrobe consultant', 'fashion styling', 'color analysis'],
+  description:
+    'Transform your style with expert personal styling services from Adria Cross',
+  keywords: [
+    'personal stylist',
+    'wardrobe consultant',
+    'fashion styling',
+    'color analysis',
+  ],
   authors: [{ name: 'Adria Cross' }],
   openGraph: {
     title: 'Adria Cross - Professional Personal Stylist',
