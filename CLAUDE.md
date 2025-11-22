@@ -8,34 +8,36 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 ## Project Status
 
-**Current Phase**: Sprint 1 - COMPLETED ✅ (November 22, 2025)
-**Sprint 1 Velocity**: 18 story points delivered
+**Current Phase**: Sprint 2 - COMPLETED ✅ (December 20, 2025)
+**Sprint 2 Velocity**: 20 story points delivered
 
 **Completed User Stories**:
 - ✅ US-1.1: Monorepo structure setup (5 points)
 - ✅ US-1.2: CI/CD pipeline configuration (8 points) - GitHub Actions, Cloud Build, deployment automation
 - ✅ US-1.3: PostgreSQL database setup documentation and migration strategy (5 points) - Prisma selected
+- ✅ US-2.1: REST API framework setup with middleware, rate limiting, logging, and Swagger docs
+- ✅ US-2.2: User authentication system with JWT, bcrypt, refresh tokens, and Prisma persistence
+- ✅ US-2.3: Role-based access control (client, admin, super_admin) with admin/profile endpoints
 
-**Sprint 1 Deliverables**:
-- Monorepo structure with backend (Express.js), frontend (Next.js 14), and shared packages
-- Docker Compose development environment
-- GitHub Actions workflows for PR checks
-- Google Cloud Build configurations for staging and production
-- Automated deployment scripts with gradual rollout and rollback capabilities
-- Comprehensive database documentation and provisioning scripts
-- 65+ files created, 15+ documentation files
+**Sprint 2 Deliverables**:
+- Hardened Express server with helmet, CORS, rate limiting, and Winston + Morgan logging
+- Prisma-backed auth flows (register/login/refresh/logout/me) with JWT + refresh tokens and password policies
+- RBAC middleware with hierarchical roles; protected admin + profile routes using real JWT auth
+- Admin user management (list/get/change role/delete) and user profile management (get/update/change password)
+- Updated Swagger docs, environment variable templates, and shared types (first/last name)
+- New integration tests covering auth, admin, and profile flows
 
-**Next Sprint**: Sprint 2 - Core Backend & Authentication (Weeks 3-4)
+**Next Sprint**: Sprint 3 - Services & Content Models (Weeks 5-6)
 **Next Steps**:
-- US-2.1: REST API framework setup with middleware and documentation
-- US-2.2: User authentication system with JWT and bcrypt
-- US-2.3: Role-based access control (client, admin, super_admin)
+- US-3.1: Service model + CRUD endpoints (public + admin)
+- US-3.2: Blog/content models and validation
+- US-3.3: Content listing + detail endpoints, pagination, and public fetch guards
 
-## Recent Updates (Sprint 2 prep)
-- Added auth scaffolding endpoints (`/api/v1/auth/login`, `/register`, `/me`) with placeholder logic and role guard middleware.
-- Introduced baseline Jest coverage across backend, frontend, and shared packages; added `ts-node` to support TS jest configs.
-- Added root `link-checker.js` wrapper and placeholder `legacy-static-site/images/` so link checks run green from repo root.
-- Defaulted Next.js rewrite destination to `NEXT_PUBLIC_API_URL` fallback; linting now uses `eslint-import-resolver-typescript`.
+## Recent Updates (Sprint 2 completion)
+- Replaced mock auth with real JWT protection on admin/profile routes; RBAC enforced via middleware hierarchy
+- Added rate limiting, centralized env config, Winston logger, and refreshed .env templates
+- Implemented Prisma-backed admin/profile controllers and seeded super admin/admin/test users via API tests
+- Added integration tests for admin and profile flows; refreshed auth route tests to be self-contained
 
 ## Documentation
 

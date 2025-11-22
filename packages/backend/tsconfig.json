@@ -8,8 +8,7 @@
     "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@adria/shared": ["../../shared/src"]
+      "@/*": ["./*"]
     },
     "types": ["node", "jest"],
     "composite": false

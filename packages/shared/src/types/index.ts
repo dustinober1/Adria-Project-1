@@ -1,19 +1,10 @@
 // Common types shared across frontend and backend
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Re-export user types from dedicated module
+export * from './user.types';
 
-export enum UserRole {
-  CLIENT = 'client',
-  ADMIN = 'admin',
-  SUPER_ADMIN = 'super_admin',
-}
+// Re-export auth types from dedicated module
+export * from './auth.types';
 
 export interface Service {
   id: string;

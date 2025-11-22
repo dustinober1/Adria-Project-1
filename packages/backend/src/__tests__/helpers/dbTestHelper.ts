@@ -1,0 +1,82 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+/**
+ * Clean up test users from the database
+ * Deletes all users whose email contains 'test' or 'example.com'
+ */
+export async function cleanupTestUsers(): Promise<void> {
+  await prisma.refreshToken.deleteMany({
+    where: {
+      user: {
+        email: {
+          contains: 'test',
+        },
+      },
+    },
+  });
+
+  await prisma.user.deleteMany({
+    where: {
+      OR: [
+        { email: { contains: 'test' } },
+        { email: { contains: 'example.com' } },
+      ],
+    },
+  });
+}
+
+/**
+ * Delete a specific user by email
+ */
+export async function deleteUserByEmail(email: string): Promise<void> {
+  await prisma.refreshToken.deleteMany({
+    where: {
+      user: {
+        email,
+      },
+    },
+  });
+
+  await prisma.user.deleteMany({
+    where: { email },
+  });
+}
+
+/**
+ * Delete all refresh tokens for a user
+ */
+export async function deleteRefreshTokensByUserId(
+  userId: string
+): Promise<void> {
+  await prisma.refreshToken.deleteMany({
+    where: { userId },
+  });
+}
+
+/**
+ * Count users in the database
+ */
+export async function countUsers(): Promise<number> {
+  return prisma.user.count();
+}
+
+/**
+ * Get user by email (for verification)
+ */
+export async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({
+    where: { email },
+    include: { refreshTokens: true },
+  });
+}
+
+/**
+ * Disconnect Prisma client
+ */
+export async function disconnectPrisma(): Promise<void> {
+  await prisma.$disconnect();
+}
+
+export { prisma };

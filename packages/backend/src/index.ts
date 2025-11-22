@@ -1,32 +1,71 @@
 import type { Server } from 'http';
 
 import cors from 'cors';
-import { config as loadEnv } from 'dotenv';
 import express, { Application, json, urlencoded } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
+import { env } from './config/env';
+import { swaggerOptions } from './config/swagger';
+import { logger } from './lib/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
+import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
 import healthRoutes from './routes/health';
-
-// Load environment variables
-loadEnv();
+import profileRoutes from './routes/profile';
 
 const app: Application = express();
-const PORT = process.env.PORT || 3001;
+const PORT = env.port;
+
+// Generate Swagger specification
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 // Middleware
+app.set('trust proxy', 1);
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: env.frontendUrl,
+    credentials: true,
+  })
+);
+app.use(
+  rateLimit({
+    windowMs: env.rateLimitWindowMs,
+    max: env.rateLimitMaxRequests,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+  })
+);
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.use(
+  morgan('combined', {
+    stream: {
+      write: (message: string) => logger.info(message.trim()),
+    },
+  })
+);
+
+// Swagger documentation endpoint
+app.use(
+  '/api/v1/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Adria Cross API Documentation',
+  })
+);
 
 // Routes
 app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/profile', profileRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Error handling
 app.use(notFoundHandler);
@@ -37,8 +76,8 @@ let server: Server | null = null;
 
 if (process.env.NODE_ENV !== 'test') {
   server = app.listen(PORT, () => {
-    console.log(`Backend server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`Backend server running on port ${PORT}`);
+    logger.info(`Environment: ${env.nodeEnv}`);
   });
 }
 
@@ -49,9 +88,9 @@ process.on('SIGTERM', () => {
     return;
   }
 
-  console.log('SIGTERM signal received: closing HTTP server');
+  logger.warn('SIGTERM signal received: closing HTTP server');
   server.close(() => {
-    console.log('HTTP server closed');
+    logger.info('HTTP server closed');
     process.exit(0);
   });
 });
