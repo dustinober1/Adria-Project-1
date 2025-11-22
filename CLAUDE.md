@@ -10,11 +10,13 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 **Current Phase**: Sprint 1 - Infrastructure Setup
 **Completed User Stories**:
+- US-1.1: Monorepo structure setup - COMPLETED
 - US-1.2: CI/CD pipeline configuration (GitHub Actions, Cloud Build, deployment automation)
 - US-1.3: PostgreSQL database setup documentation and migration strategy (Prisma)
 
 **Next Steps**:
-- US-1.1: Monorepo structure setup (packages/backend, packages/frontend, packages/shared)
+- US-2.1: REST API framework setup (Sprint 2)
+- US-2.2: User authentication system (Sprint 2)
 
 ## Documentation
 
@@ -50,17 +52,45 @@ All documentation and planning docs are in the `/docs` folder:
 
 ## Architecture
 
-### Static Site Structure
-- **Root Pages**: `index.html`, `about.html`, `services.html`, `contact.html`, `intake-form.html`, `more-information.html`
-- **Blog**: `blog.html` redirects to `blog/index.html`, with individual blog posts under `blog/posts/`
-- **Styling**: Single CSS file (`landing.css`) with minified version (`landing.min.css`)
-- **Client Scripts**: Minimal JavaScript - `logger.js` for console output control
+### Monorepo Structure (Current)
+
+The project is now organized as a monorepo with npm workspaces:
+
+- **packages/backend**: Express.js REST API with TypeScript
+- **packages/frontend**: Next.js 14+ application with App Router
+- **packages/shared**: Shared TypeScript types, constants, and utilities
+- **legacy-static-site**: Original static HTML site (preserved for reference)
+
+### Technology Stack
+
+#### Backend
+- **Runtime**: Node.js 18+
+- **Framework**: Express.js
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT with bcrypt
+- **Validation**: Zod schemas
+- **Security**: Helmet, CORS, rate limiting
+- **Logging**: Winston + Morgan
+
+#### Frontend
+- **Framework**: Next.js 14+ with App Router
+- **Language**: TypeScript
+- **UI**: Tailwind CSS
+- **State Management**: React Query + Context API
+- **Forms**: React Hook Form + Zod
+- **HTTP Client**: Axios
+
+#### Development Environment
+- **Local Setup**: Docker Compose with postgres, backend, frontend services
+- **Database**: PostgreSQL 15
+- **Code Quality**: ESLint + Prettier with unified configuration
+- **Type Checking**: TypeScript strict mode
 
 ### Deployment Architecture
-- **Container**: Nginx Alpine-based Docker image
-- **Port Configuration**: Reads `PORT` environment variable at startup (default 8080)
-- **Entrypoint**: `docker-entrypoint.sh` substitutes `${PORT}` into Nginx config from template
-- **Target Platform**: Google Cloud Run compatible
+- **Container**: Docker images for backend and frontend
+- **Target Platform**: Google Cloud Run
+- **Database**: Google Cloud SQL (PostgreSQL)
 - **CI/CD Pipeline**:
   - GitHub Actions for PR checks (testing, linting, type-checking, security scans)
   - Google Cloud Build for automated deployments
@@ -80,6 +110,60 @@ All documentation and planning docs are in the `/docs` folder:
 - **Theme Colors**: Primary gold (#c19a5d), background (#fdfcfb)
 
 ## Commands
+
+### Monorepo Development
+
+```bash
+# Install all dependencies
+npm install
+
+# Start all services with Docker Compose
+npm run docker:up
+
+# View logs from all services
+npm run docker:logs
+
+# Stop all services
+npm run docker:down
+
+# Run linting across all packages
+npm run lint
+
+# Format all code
+npm run format
+
+# Type check all packages
+npm run typecheck
+
+# Build all packages
+npm run build
+
+# Run tests in all packages
+npm run test
+```
+
+### Package-Specific Commands
+
+```bash
+# Backend
+cd packages/backend
+npm run dev          # Start development server
+npm run build        # Build TypeScript
+npm run test         # Run tests
+npm run lint         # Lint code
+
+# Frontend
+cd packages/frontend
+npm run dev          # Start Next.js dev server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Lint code
+
+# Shared
+cd packages/shared
+npm run build        # Build shared package
+npm run dev          # Watch mode for development
+```
 
 ### CI/CD Operations
 
@@ -278,3 +362,90 @@ docker run -p 8080:8080 adria-website
 
 ### Deploy to Google Cloud Run
 The Dockerfile is optimized for Cloud Run. Set the `PORT` environment variable during deployment (Cloud Run sets this automatically).
+
+## Monorepo Development Guide
+
+### Getting Started with the Monorepo
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables**:
+   ```bash
+   cp packages/backend/.env.example packages/backend/.env
+   cp packages/frontend/.env.example packages/frontend/.env
+   ```
+
+3. **Start development environment**:
+   ```bash
+   npm run docker:up
+   ```
+
+4. **Access applications**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - Health Check: http://localhost:3001/api/v1/health
+
+### Package Structure
+
+#### Backend Package (`packages/backend`)
+- Express.js REST API with TypeScript
+- Health check endpoint at `/api/v1/health`
+- Middleware: error handling, CORS, helmet, rate limiting
+- Environment variables managed via `.env` file
+- Hot-reloading with `tsx watch` in development
+
+#### Frontend Package (`packages/frontend`)
+- Next.js 14+ with App Router
+- Tailwind CSS for styling
+- TypeScript strict mode
+- Responsive design with mobile-first approach
+- Environment variables prefixed with `NEXT_PUBLIC_`
+
+#### Shared Package (`packages/shared`)
+- Common TypeScript types and interfaces
+- Shared constants (API routes, pagination, rate limits, etc.)
+- Utility functions (slugify, formatCurrency, validation, etc.)
+- No runtime dependencies except Zod for schema validation
+
+### Code Quality Tools
+
+All packages share unified ESLint and Prettier configurations:
+
+- **ESLint**: TypeScript-aware linting with import ordering
+- **Prettier**: Consistent code formatting
+- **TypeScript**: Strict mode with comprehensive type checking
+
+Run from root:
+```bash
+npm run lint      # Lint all packages
+npm run format    # Format all code
+npm run typecheck # Type check all packages
+```
+
+### Adding New Features
+
+1. **API Endpoints** (Backend):
+   - Create route file in `packages/backend/src/routes/`
+   - Add controller in `packages/backend/src/controllers/`
+   - Register route in `packages/backend/src/index.ts`
+
+2. **Pages** (Frontend):
+   - Create page in `packages/frontend/src/app/`
+   - Add components in `packages/frontend/src/components/`
+
+3. **Shared Types**:
+   - Add interfaces to `packages/shared/src/types/`
+   - Export from `packages/shared/src/index.ts`
+
+### Legacy Static Site
+
+The original static HTML site is preserved in `legacy-static-site/` for:
+- Reference during development
+- Content migration to CMS
+- Rollback capability if needed
+- Historical record
+
+Do not modify files in this directory.
