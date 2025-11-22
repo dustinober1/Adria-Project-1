@@ -7,6 +7,26 @@ const prisma = new PrismaClient();
  * Deletes all users whose email contains 'test' or 'example.com'
  */
 export async function cleanupTestUsers(): Promise<void> {
+  await prisma.blogPost.deleteMany({
+    where: {
+      OR: [
+        { slug: { contains: 'test', mode: 'insensitive' } },
+        { title: { contains: 'test', mode: 'insensitive' } },
+        { author: { email: { contains: 'example.com' } } },
+      ],
+    },
+  });
+
+  await prisma.service.deleteMany({
+    where: {
+      OR: [
+        { slug: { contains: 'test', mode: 'insensitive' } },
+        { name: { contains: 'test', mode: 'insensitive' } },
+        { name: { contains: 'Draft', mode: 'insensitive' } },
+      ],
+    },
+  });
+
   await prisma.refreshToken.deleteMany({
     where: {
       user: {

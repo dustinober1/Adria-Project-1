@@ -8,8 +8,8 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 ## Project Status
 
-**Current Phase**: Sprint 2 - COMPLETED ✅ (December 20, 2025)
-**Sprint 2 Velocity**: 20 story points delivered
+**Current Phase**: Sprint 3 - COMPLETED ✅ (January 5, 2026)
+**Sprint 3 Velocity**: 22 story points delivered
 
 **Completed User Stories**:
 - ✅ US-1.1: Monorepo structure setup (5 points)
@@ -18,26 +18,29 @@ Adria Cross is a professional personal stylist website currently in transformati
 - ✅ US-2.1: REST API framework setup with middleware, rate limiting, logging, and Swagger docs
 - ✅ US-2.2: User authentication system with JWT, bcrypt, refresh tokens, and Prisma persistence
 - ✅ US-2.3: Role-based access control (client, admin, super_admin) with admin/profile endpoints
+- ✅ US-3.1: Services model + public list/detail + admin CRUD with validation/pagination
+- ✅ US-3.2: Blog/content model + published-only public feeds + admin CRUD/status management
+- ✅ US-3.3: Shared pagination helpers, validation, seeds, and full integration test coverage for services/posts
 
-**Sprint 2 Deliverables**:
-- Hardened Express server with helmet, CORS, rate limiting, and Winston + Morgan logging
-- Prisma-backed auth flows (register/login/refresh/logout/me) with JWT + refresh tokens and password policies
-- RBAC middleware with hierarchical roles; protected admin + profile routes using real JWT auth
-- Admin user management (list/get/change role/delete) and user profile management (get/update/change password)
-- Updated Swagger docs, environment variable templates, and shared types (first/last name)
-- New integration tests covering auth, admin, and profile flows
+**Sprint 3 Deliverables**:
+- Prisma models/migration for `Service` and `BlogPost` with seeds (sample services and posts)
+- Service API: public list/detail (active-only, pagination/sort), admin CRUD with slug validation
+- Blog API: public published list/detail, admin list, CRUD, status patch with publishedAt handling
+- Shared pagination helper; zod validation for services/posts; slug generation via shared utils
+- Updated Swagger schemas, backend README endpoints, and Jest maxWorkers=1 for DB stability
+- Integration tests for services, posts, admin/profile/auth all green against Postgres
 
-**Next Sprint**: Sprint 3 - Services & Content Models (Weeks 5-6)
+**Next Sprint**: Sprint 4 - Contact & Inquiry System (Weeks 7-8)
 **Next Steps**:
-- US-3.1: Service model + CRUD endpoints (public + admin)
-- US-3.2: Blog/content models and validation
-- US-3.3: Content listing + detail endpoints, pagination, and public fetch guards
+- US-4.1: Contact form submission with validation + rate limiting + recaptcha
+- US-4.2: Inquiry management endpoints (admin) with statuses and notifications
+- US-4.3: Basic email templates/transport wiring (SendGrid)
 
-## Recent Updates (Sprint 2 completion)
-- Replaced mock auth with real JWT protection on admin/profile routes; RBAC enforced via middleware hierarchy
-- Added rate limiting, centralized env config, Winston logger, and refreshed .env templates
-- Implemented Prisma-backed admin/profile controllers and seeded super admin/admin/test users via API tests
-- Added integration tests for admin and profile flows; refreshed auth route tests to be self-contained
+## Recent Updates (Sprint 3 completion)
+- Added Prisma migration for services/blog posts; seeds for sample catalog/posts
+- New routes/controllers for services and posts with RBAC and pagination
+- Tests updated (services/posts integration) and Jest serial execution for DB safety
+- Swagger schemas extended; README and sprint docs refreshed
 
 ## Documentation
 

@@ -244,6 +244,58 @@ const swaggerDefinition = {
         },
         required: ['success', 'message', 'timestamp', 'environment'],
       },
+      Service: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          name: { type: 'string' },
+          slug: { type: 'string' },
+          description: { type: 'string' },
+          durationMinutes: { type: 'integer' },
+          priceCents: { type: 'integer' },
+          active: { type: 'boolean' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+        required: [
+          'id',
+          'name',
+          'slug',
+          'description',
+          'durationMinutes',
+          'priceCents',
+          'active',
+          'createdAt',
+          'updatedAt',
+        ],
+      },
+      BlogPost: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          title: { type: 'string' },
+          slug: { type: 'string' },
+          excerpt: { type: 'string' },
+          content: { type: 'string' },
+          featuredImage: { type: 'string', nullable: true },
+          status: { type: 'string', enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'] },
+          publishedAt: { type: 'string', format: 'date-time', nullable: true },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+          authorId: { type: 'string', format: 'uuid' },
+        },
+        required: [
+          'id',
+          'title',
+          'slug',
+          'excerpt',
+          'content',
+          'status',
+          'createdAt',
+          'updatedAt',
+          'authorId',
+        ],
+      },
     },
     responses: {
       BadRequest: {
@@ -326,6 +378,14 @@ const swaggerDefinition = {
     {
       name: 'Authentication',
       description: 'User authentication and authorization endpoints',
+    },
+    {
+      name: 'Services',
+      description: 'Styling services catalogue endpoints',
+    },
+    {
+      name: 'Posts',
+      description: 'Blog/content endpoints',
     },
   ],
 };

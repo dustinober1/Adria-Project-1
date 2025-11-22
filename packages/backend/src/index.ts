@@ -16,7 +16,9 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
 import healthRoutes from './routes/health';
+import postsRoutes from './routes/posts';
 import profileRoutes from './routes/profile';
+import servicesRoutes from './routes/services';
 
 const app: Application = express();
 const PORT = env.port;
@@ -66,6 +68,8 @@ app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/services', servicesRoutes);
+app.use('/api/v1/posts', postsRoutes);
 
 // Error handling
 app.use(notFoundHandler);

@@ -26,6 +26,7 @@ model User {
 
   // Relations
   refreshTokens RefreshToken[]
+  blogPosts     BlogPost[]
 
   @@map("users")
   @@index([email])
@@ -56,4 +57,51 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+// Service offerings for styling engagements
+model Service {
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  description     String
+  durationMinutes Int      @map("duration_minutes")
+  priceCents      Int      @map("price_cents")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("services")
+  @@index([active])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+// Blog posts / content pieces
+model BlogPost {
+  id            String         @id @default(uuid())
+  title         String
+  slug          String         @unique
+  excerpt       String
+  content       String
+  featuredImage String?        @map("featured_image")
+  status        BlogPostStatus @default(DRAFT)
+  publishedAt   DateTime?      @map("published_at")
+  authorId      String         @map("author_id")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+  @@index([status])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+// Post publication statuses
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }

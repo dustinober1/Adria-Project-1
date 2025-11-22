@@ -1,5 +1,6 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { slugify } from '@adria/shared';
 
 const prisma = new PrismaClient();
 
@@ -89,6 +90,90 @@ async function main() {
   console.log('  Password: Test123!');
   console.log('  Role:     CLIENT');
   console.log('─────────────────────────────────────────────\n');
+
+  // Seed example services
+  const services = [
+    {
+      name: 'Closet Edit',
+      description:
+        'A focused session to audit your closet, identify gaps, and create outfits with what you already own.',
+      durationMinutes: 120,
+      priceCents: 35000,
+    },
+    {
+      name: 'Wardrobe Overhaul',
+      description:
+        'A full wardrobe refresh with curated looks for work, weekends, and special occasions.',
+      durationMinutes: 240,
+      priceCents: 75000,
+    },
+    {
+      name: 'Event Styling',
+      description:
+        'Head-to-toe styling for your upcoming event, including accessories and tailoring recommendations.',
+      durationMinutes: 90,
+      priceCents: 25000,
+    },
+  ];
+
+  for (const service of services) {
+    await prisma.service.upsert({
+      where: { slug: slugify(service.name) },
+      update: {},
+      create: {
+        name: service.name,
+        slug: slugify(service.name),
+        description: service.description,
+        durationMinutes: service.durationMinutes,
+        priceCents: service.priceCents,
+        active: true,
+      },
+    });
+  }
+
+  // Seed example blog posts
+  const posts = [
+    {
+      title: 'How to Build a Capsule Wardrobe',
+      excerpt:
+        'Simplify your closet with versatile pieces you can mix and match all season long.',
+      content:
+        'A capsule wardrobe focuses on timeless pieces that can be paired effortlessly. Start with neutrals, add a few statement items, and make sure everything fits your lifestyle...',
+      status: 'PUBLISHED' as const,
+    },
+    {
+      title: 'Mixing Patterns Like a Pro',
+      excerpt:
+        'Polka dots with stripes? Yes! Learn the rules (and how to break them) for mixing patterns.',
+      content:
+        'Pattern mixing works best when you vary scale and keep a common color thread. Anchor with a solid, and layer in prints that share hues...',
+      status: 'PUBLISHED' as const,
+    },
+    {
+      title: 'Seasonal Color Trends to Watch',
+      excerpt:
+        'From jewel tones to earthy neutrals, here are the colors dominating the upcoming season.',
+      content:
+        'This season leans into rich jewel tones balanced by grounded neutrals. Think emerald, garnet, and sapphire paired with camel and charcoal...',
+      status: 'DRAFT' as const,
+    },
+  ];
+
+  for (const post of posts) {
+    await prisma.blogPost.upsert({
+      where: { slug: slugify(post.title) },
+      update: {},
+      create: {
+        title: post.title,
+        slug: slugify(post.title),
+        excerpt: post.excerpt,
+        content: post.content,
+        status: post.status,
+        publishedAt: post.status === 'PUBLISHED' ? new Date() : null,
+        authorId: adminUser.id,
+      },
+    });
+  }
 }
 
 main()

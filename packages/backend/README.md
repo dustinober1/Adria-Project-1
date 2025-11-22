@@ -195,6 +195,19 @@ The backend provides comprehensive interactive API documentation using Swagger U
 - **POST** `/api/v1/admin/users/:id/role` - Change user role (super_admin only)
 - **DELETE** `/api/v1/admin/users/:id` - Delete user (super_admin only)
 
+### Services
+
+- **GET** `/api/v1/services` - Public list of active services (paginated)
+- **GET** `/api/v1/services/:id` and `/slug/:slug` - Public service detail
+- **POST/PUT/DELETE** `/api/v1/services` - Admin-only CRUD for services
+
+### Blog / Posts
+
+- **GET** `/api/v1/posts` - Public list of published posts (paginated)
+- **GET** `/api/v1/posts/:slug` - Public post detail by slug (published only)
+- **GET** `/api/v1/posts/admin/list` - Admin list (all statuses, paginated)
+- **POST/PUT/DELETE/PATCH status** `/api/v1/posts` - Admin-only CRUD + status changes
+
 ## Project Structure
 
 ```
