@@ -296,6 +296,107 @@ const swaggerDefinition = {
           'authorId',
         ],
       },
+      ContactInquiry: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          fullName: { type: 'string' },
+          email: { type: 'string', format: 'email' },
+          phone: { type: 'string', nullable: true },
+          serviceInterest: { type: 'string', nullable: true },
+          message: { type: 'string' },
+          status: {
+            type: 'string',
+            enum: ['NEW', 'IN_PROGRESS', 'RESPONDED', 'CLOSED'],
+          },
+          respondedAt: { type: 'string', format: 'date-time', nullable: true },
+          closedAt: { type: 'string', format: 'date-time', nullable: true },
+          adminNotes: { type: 'string', nullable: true },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+        required: [
+          'id',
+          'fullName',
+          'email',
+          'message',
+          'status',
+          'createdAt',
+          'updatedAt',
+        ],
+      },
+      ContactSubmissionRequest: {
+        type: 'object',
+        properties: {
+          fullName: { type: 'string', example: 'Jordan Parker' },
+          email: {
+            type: 'string',
+            format: 'email',
+            example: 'jordan@example.com',
+          },
+          phone: { type: 'string', example: '+1 555-123-4567' },
+          serviceInterest: {
+            type: 'string',
+            example: 'Wardrobe Overhaul',
+          },
+          message: {
+            type: 'string',
+            example:
+              'I would like to refresh my wardrobe before a new job starts.',
+          },
+          recaptchaToken: {
+            type: 'string',
+            description: 'reCAPTCHA v3 token from client',
+          },
+        },
+        required: [
+          'fullName',
+          'email',
+          'message',
+          'recaptchaToken',
+        ],
+      },
+      ContactSubmissionResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              status: { type: 'string', enum: ['NEW'] },
+              createdAt: { type: 'string', format: 'date-time' },
+              notifications: {
+                type: 'object',
+                properties: {
+                  visitor: { type: 'boolean' },
+                  admin: { type: 'boolean' },
+                },
+              },
+            },
+          },
+        },
+      },
+      PaginationMeta: {
+        type: 'object',
+        properties: {
+          page: { type: 'integer', example: 1 },
+          limit: { type: 'integer', example: 20 },
+          total: { type: 'integer', example: 42 },
+          totalPages: { type: 'integer', example: 3 },
+        },
+      },
+      InquiryStatusUpdateRequest: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            enum: ['new', 'in_progress', 'responded', 'closed'],
+          },
+          adminNotes: { type: 'string' },
+        },
+        required: ['status'],
+      },
     },
     responses: {
       BadRequest: {
@@ -386,6 +487,14 @@ const swaggerDefinition = {
     {
       name: 'Posts',
       description: 'Blog/content endpoints',
+    },
+    {
+      name: 'Contact',
+      description: 'Public contact form endpoints',
+    },
+    {
+      name: 'Admin - Inquiries',
+      description: 'Admin-only inquiry management endpoints',
     },
   ],
 };

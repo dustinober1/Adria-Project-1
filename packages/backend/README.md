@@ -57,6 +57,18 @@ REFRESH_TOKEN_EXPIRES_IN=30d
 BCRYPT_ROUNDS=10
 LOG_LEVEL=info
 
+# Contact & Email
+EMAIL_ENABLED=true
+SENDGRID_API_KEY=your-sendgrid-api-key
+SENDGRID_FROM_EMAIL=noreply@adriacross.com
+SENDGRID_ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_REPLY_TO=support@adriacross.com
+RECAPTCHA_SECRET_KEY=your-recaptcha-secret
+RECAPTCHA_MIN_SCORE=0.5
+CONTACT_RATE_LIMIT_MAX=3
+CONTACT_RATE_LIMIT_WINDOW_MS=3600000
+ADMIN_DASHBOARD_URL=http://localhost:3000/admin/inquiries
+
 # Logging
 LOG_LEVEL=info
 ```
@@ -207,6 +219,13 @@ The backend provides comprehensive interactive API documentation using Swagger U
 - **GET** `/api/v1/posts/:slug` - Public post detail by slug (published only)
 - **GET** `/api/v1/posts/admin/list` - Admin list (all statuses, paginated)
 - **POST/PUT/DELETE/PATCH status** `/api/v1/posts` - Admin-only CRUD + status changes
+
+### Contact & Inquiries
+
+- **POST** `/api/v1/contact/submit` - Public contact form with validation, per-IP rate limiting (3/hour), and reCAPTCHA v3 verification
+- **GET** `/api/v1/admin/inquiries` - Admin list with filters (status, date range, service interest, search), pagination, and sorting
+- **GET** `/api/v1/admin/inquiries/:id` - Admin inquiry detail
+- **PUT** `/api/v1/admin/inquiries/:id/status` - Admin status update with guarded transitions (new → in_progress → responded → closed) and admin notes
 
 ## Project Structure
 

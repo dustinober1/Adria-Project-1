@@ -8,8 +8,8 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 ## Project Status
 
-**Current Phase**: Sprint 3 - COMPLETED ✅ (January 5, 2026)
-**Sprint 3 Velocity**: 22 story points delivered
+**Current Phase**: Sprint 4 - COMPLETED ✅ (January 19, 2026)
+**Sprint 4 Velocity**: 22 story points delivered
 
 **Completed User Stories**:
 - ✅ US-1.1: Monorepo structure setup (5 points)
@@ -21,26 +21,29 @@ Adria Cross is a professional personal stylist website currently in transformati
 - ✅ US-3.1: Services model + public list/detail + admin CRUD with validation/pagination
 - ✅ US-3.2: Blog/content model + published-only public feeds + admin CRUD/status management
 - ✅ US-3.3: Shared pagination helpers, validation, seeds, and full integration test coverage for services/posts
+- ✅ US-4.1: Contact form submission with validation, rate limiting, reCAPTCHA, and notifications
+- ✅ US-4.2: Admin inquiry management endpoints (list/detail/status with filters and RBAC)
+- ✅ US-4.3: Basic email templates/transport wiring (SendGrid) with feature flag
 
-**Sprint 3 Deliverables**:
-- Prisma models/migration for `Service` and `BlogPost` with seeds (sample services and posts)
-- Service API: public list/detail (active-only, pagination/sort), admin CRUD with slug validation
-- Blog API: public published list/detail, admin list, CRUD, status patch with publishedAt handling
-- Shared pagination helper; zod validation for services/posts; slug generation via shared utils
-- Updated Swagger schemas, backend README endpoints, and Jest maxWorkers=1 for DB stability
-- Integration tests for services, posts, admin/profile/auth all green against Postgres
+**Sprint 4 Deliverables**:
+- Prisma `ContactInquiry` model + migration + seeds
+- Public contact submission endpoint with validation, per-IP limiter (3/hour), reCAPTCHA helper, dedupe guard, SendGrid notifications
+- Admin inquiries endpoints (list/filter/search/sort, detail, status transitions) with RBAC and pagination
+- SendGrid email templates (visitor confirmation + admin alert) with non-prod log-only mode
+- Frontend contact page (RHF + Zod + reCAPTCHA loader) and admin inquiries UI (filters, detail, status updates, React Query)
+- Swagger docs updated; env templates expanded; Docker Compose runs Postgres on host port 55432 with seeded data
 
-**Next Sprint**: Sprint 4 - Contact & Inquiry System (Weeks 7-8)
+**Next Sprint**: Sprint 5 - Intake Form System (Weeks 9-10)
 **Next Steps**:
-- US-4.1: Contact form submission with validation + rate limiting + recaptcha
-- US-4.2: Inquiry management endpoints (admin) with statuses and notifications
-- US-4.3: Basic email templates/transport wiring (SendGrid)
+- US-5.1: Intake form builder (FormTemplate + CRUD, field types, validation rules)
+- US-5.2: Intake submission endpoint with email notifications/admin linkage
 
-## Recent Updates (Sprint 3 completion)
-- Added Prisma migration for services/blog posts; seeds for sample catalog/posts
-- New routes/controllers for services and posts with RBAC and pagination
-- Tests updated (services/posts integration) and Jest serial execution for DB safety
-- Swagger schemas extended; README and sprint docs refreshed
+## Recent Updates (Sprint 4 completion)
+- Added Prisma migration and seeds for ContactInquiry
+- New public contact endpoint with reCAPTCHA + per-IP limiter + email notifications
+- Admin inquiries list/detail/status endpoints with filters, sorting, pagination, and transition guards
+- Frontend contact form + admin inquiries UI (React Query, RHF); reCAPTCHA loader
+- Docker Compose Postgres exposed on host port 55432; stack launched with seeded data for testing
 
 ## Documentation
 

@@ -1,7 +1,11 @@
 import request from 'supertest';
 
 import app from '../../index';
-import { cleanupTestUsers, disconnectPrisma } from '../helpers/dbTestHelper';
+import {
+  cleanupTestUsers,
+  disconnectPrisma,
+  prisma,
+} from '../helpers/dbTestHelper';
 
 const adminCredentials = {
   email: `admin-service-${Date.now()}@example.com`,
@@ -85,6 +89,12 @@ describe('Services API', () => {
       durationMinutes: 60,
       priceCents: 10000,
     };
+
+    await prisma.service.deleteMany({
+      where: {
+        slug: 'duplicate-service',
+      },
+    });
 
     const first = await request(app)
       .post('/api/v1/services')

@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from '@prisma/client';
+import { InquiryStatus, PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { slugify } from '@adria/shared';
 
@@ -172,6 +172,55 @@ async function main() {
         publishedAt: post.status === 'PUBLISHED' ? new Date() : null,
         authorId: adminUser.id,
       },
+    });
+  }
+
+  // Seed example contact inquiries
+  const inquiries = [
+    {
+      id: 'seed-inquiry-jordan',
+      fullName: 'Jordan Parker',
+      email: 'jordan.parker@example.com',
+      phone: '555-0101',
+      serviceInterest: 'Wardrobe Overhaul',
+      message:
+        'I am looking for a full wardrobe refresh before my new job starts next month.',
+      status: InquiryStatus.NEW,
+      metadata: { seeded: true, recaptchaScore: 0.9 },
+    },
+    {
+      id: 'seed-inquiry-taylor',
+      fullName: 'Taylor Smith',
+      email: 'taylor.smith@example.com',
+      phone: '555-0202',
+      serviceInterest: 'Closet Edit',
+      message:
+        'Need help decluttering and organizing my closet for spring.',
+      status: InquiryStatus.IN_PROGRESS,
+      metadata: { seeded: true, recaptchaScore: 0.86 },
+      adminNotes: 'Initial email sent; awaiting scheduling.',
+      respondedAt: new Date(),
+    },
+    {
+      id: 'seed-inquiry-alex',
+      fullName: 'Alex Lee',
+      email: 'alex.lee@example.com',
+      phone: '555-0303',
+      serviceInterest: 'Event Styling',
+      message:
+        'Styling for an upcoming wedding in three weeks. Need two looks.',
+      status: InquiryStatus.RESPONDED,
+      metadata: { seeded: true, recaptchaScore: 0.92 },
+      adminNotes: 'Consult scheduled; sent lookbook samples.',
+      respondedAt: new Date(),
+    },
+  ];
+
+  for (const inquiry of inquiries) {
+    await prisma.contactInquiry.upsert({
+      where: { id: inquiry.id },
+      update: {},
+      create: inquiry,
     });
   }
 }

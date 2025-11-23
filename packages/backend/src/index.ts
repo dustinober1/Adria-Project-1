@@ -15,7 +15,9 @@ import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
 import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
+import contactRoutes from './routes/contact';
 import healthRoutes from './routes/health';
+import adminInquiriesRoutes from './routes/adminInquiries';
 import postsRoutes from './routes/posts';
 import profileRoutes from './routes/profile';
 import servicesRoutes from './routes/services';
@@ -68,8 +70,10 @@ app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/admin/inquiries', adminInquiriesRoutes);
 app.use('/api/v1/services', servicesRoutes);
 app.use('/api/v1/posts', postsRoutes);
+app.use('/api/v1/contact', contactRoutes);
 
 // Error handling
 app.use(notFoundHandler);

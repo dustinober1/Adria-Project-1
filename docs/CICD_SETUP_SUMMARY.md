@@ -12,6 +12,15 @@ This document summarizes the complete CI/CD pipeline implementation for the Adri
 
 ---
 
+## Sprint 4 Additions (Contact & Inquiry)
+- New secrets to be stored in Secret Manager / GitHub Actions / Cloud Build:
+  - `RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `RECAPTCHA_MIN_SCORE`
+  - `SENDGRID_FROM_EMAIL`, `SENDGRID_ADMIN_EMAIL`, `SENDGRID_REPLY_TO`, `EMAIL_ENABLED`
+  - `CONTACT_RATE_LIMIT_MAX`, `CONTACT_RATE_LIMIT_WINDOW_MS`, `ADMIN_DASHBOARD_URL`
+- Backend/Frontend containers assume these are injected at deploy time; local Docker Compose uses defaults with email disabled.
+
+---
+
 ## What Was Created
 
 ### 1. GitHub Actions Workflows

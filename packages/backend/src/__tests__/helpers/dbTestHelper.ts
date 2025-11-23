@@ -37,6 +37,16 @@ export async function cleanupTestUsers(): Promise<void> {
     },
   });
 
+  await prisma.contactInquiry.deleteMany({
+    where: {
+      OR: [
+        { email: { contains: 'test', mode: 'insensitive' } },
+        { email: { contains: 'example.com', mode: 'insensitive' } },
+        { fullName: { contains: 'test', mode: 'insensitive' } },
+      ],
+    },
+  });
+
   await prisma.user.deleteMany({
     where: {
       OR: [

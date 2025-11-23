@@ -66,8 +66,18 @@ DATABASE_URL="postgresql://user:pass@host/db?connection_limit=10&pool_timeout=20
 | Variable | Description | Example | Required |
 |----------|-------------|---------|----------|
 | `SENDGRID_API_KEY` | SendGrid API key for email sending | `SG.xxx` | No |
-| `FROM_EMAIL` | Default sender email address | `noreply@adriacross.com` | No |
-| `ADMIN_EMAIL` | Admin notification email | `admin@adriacross.com` | No |
+| `SENDGRID_FROM_EMAIL` | Default sender email address | `noreply@adriacross.com` | No |
+| `SENDGRID_ADMIN_EMAIL` | Admin notification email | `admin@adriacross.com` | No |
+| `SENDGRID_REPLY_TO` | Optional reply-to for visitor confirmations | `support@adriacross.com` | No |
+| `EMAIL_ENABLED` | Toggle email sending (disable in test/local) | `true` | No |
+
+### reCAPTCHA (contact form)
+
+| Variable | Description | Example | Required |
+|----------|-------------|---------|----------|
+| `RECAPTCHA_SECRET_KEY` | Server-side secret key for v3 verification | `your-recaptcha-secret` | No (required in prod) |
+| `RECAPTCHA_MIN_SCORE` | Minimum acceptable score (0.0 - 1.0) | `0.5` | No |
+| `RECAPTCHA_SITE_KEY` | Public site key (frontend) | `your-site-key` | No (required in prod) |
 
 ### Google Cloud
 
@@ -91,10 +101,14 @@ DATABASE_URL="postgresql://user:pass@host/db?connection_limit=10&pool_timeout=20
 |----------|-------------|---------|----------|
 | `RATE_LIMIT_WINDOW_MS` | Rate limit window in milliseconds | `60000` (1 minute) | No |
 | `RATE_LIMIT_MAX_REQUESTS` | Max requests per window | `100` | No |
+| `CONTACT_RATE_LIMIT_MAX` | Max contact submissions per IP per window | `3` | No |
+| `CONTACT_RATE_LIMIT_WINDOW_MS` | Contact rate limit window | `3600000` (1 hour) | No |
 
 **Default Rate Limits (if not set):**
-- Window: 15 minutes (900000 ms)
-- Max requests: 100
+- Global window: 1 minute (60000 ms)
+- Global max requests: 100
+- Contact form window: 1 hour (3600000 ms)
+- Contact form max requests: 3
 
 ## Environment-Specific Configurations
 
@@ -115,8 +129,18 @@ BCRYPT_ROUNDS=10
 
 # SendGrid (optional for dev)
 SENDGRID_API_KEY=
-FROM_EMAIL=noreply@adriacross.com
-ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_FROM_EMAIL=noreply@adriacross.com
+SENDGRID_ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_REPLY_TO=support@adriacross.com
+EMAIL_ENABLED=true
+
+# reCAPTCHA (optional for dev; required in prod)
+RECAPTCHA_SECRET_KEY=
+RECAPTCHA_MIN_SCORE=0.5
+
+# Contact form rate limits
+CONTACT_RATE_LIMIT_MAX=3
+CONTACT_RATE_LIMIT_WINDOW_MS=3600000
 
 # Google Cloud (optional for dev)
 GCP_PROJECT_ID=
@@ -149,8 +173,18 @@ BCRYPT_ROUNDS=12
 
 # SendGrid
 SENDGRID_API_KEY=<from-secret-manager>
-FROM_EMAIL=staging@adriacross.com
-ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_FROM_EMAIL=staging@adriacross.com
+SENDGRID_ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_REPLY_TO=support@adriacross.com
+EMAIL_ENABLED=true
+
+# reCAPTCHA
+RECAPTCHA_SECRET_KEY=<from-secret-manager>
+RECAPTCHA_MIN_SCORE=0.5
+
+# Contact form rate limits
+CONTACT_RATE_LIMIT_MAX=3
+CONTACT_RATE_LIMIT_WINDOW_MS=3600000
 
 # Google Cloud
 GCP_PROJECT_ID=adria-project-staging
@@ -183,8 +217,18 @@ BCRYPT_ROUNDS=12
 
 # SendGrid
 SENDGRID_API_KEY=<from-secret-manager>
-FROM_EMAIL=noreply@adriacross.com
-ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_FROM_EMAIL=noreply@adriacross.com
+SENDGRID_ADMIN_EMAIL=admin@adriacross.com
+SENDGRID_REPLY_TO=support@adriacross.com
+EMAIL_ENABLED=true
+
+# reCAPTCHA
+RECAPTCHA_SECRET_KEY=<from-secret-manager>
+RECAPTCHA_MIN_SCORE=0.5
+
+# Contact form rate limits
+CONTACT_RATE_LIMIT_MAX=3
+CONTACT_RATE_LIMIT_WINDOW_MS=3600000
 
 # Google Cloud
 GCP_PROJECT_ID=adria-project-prod
@@ -237,7 +281,8 @@ gcloud run services update SERVICE_NAME \
 2. `adria-jwt-refresh-secret` - JWT refresh token secret
 3. `adria-db-prod-password` - Database password
 4. `adria-sendgrid-api-key` - SendGrid API key
-5. `adria-google-client-secret` - OAuth client secret (if using)
+5. `adria-recaptcha-secret` - reCAPTCHA v3 secret key
+6. `adria-google-client-secret` - OAuth client secret (if using)
 
 ## Validation
 

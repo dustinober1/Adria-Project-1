@@ -105,3 +105,31 @@ enum BlogPostStatus {
   PUBLISHED
   ARCHIVED
 }
+
+model ContactInquiry {
+  id              String         @id @default(uuid())
+  fullName        String         @map("full_name")
+  email           String
+  phone           String?
+  serviceInterest String?        @map("service_interest")
+  message         String
+  status          InquiryStatus  @default(NEW)
+  metadata        Json?
+  respondedAt     DateTime?      @map("responded_at")
+  closedAt        DateTime?      @map("closed_at")
+  adminNotes      String?        @map("admin_notes")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  @@map("contact_inquiries")
+  @@index([status])
+  @@index([createdAt])
+  @@index([email, createdAt])
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESPONDED
+  CLOSED
+}

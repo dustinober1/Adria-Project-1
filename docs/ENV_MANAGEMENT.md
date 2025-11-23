@@ -63,6 +63,12 @@ The Adria Cross application uses environment variables to configure different as
 - `STRIPE_SECRET_KEY` - Payment processing
 - `GOOGLE_CALENDAR_CLIENT_ID` - Calendar integration
 - `GCP_PROJECT_ID` - Google Cloud project
+- `SENDGRID_FROM_EMAIL` / `SENDGRID_ADMIN_EMAIL` / `SENDGRID_REPLY_TO` - Email sender + notifications
+- `EMAIL_ENABLED` - Toggle to disable sending in non-prod
+- `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` - Contact form spam protection
+- `RECAPTCHA_MIN_SCORE` - Threshold for v3 score (default 0.5)
+- `CONTACT_RATE_LIMIT_MAX` / `CONTACT_RATE_LIMIT_WINDOW_MS` - Per-IP contact submission rate limits
+- `ADMIN_DASHBOARD_URL` - Deep-link for admin notifications
 
 ---
 

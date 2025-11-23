@@ -40,13 +40,18 @@ export enum BlogPostStatus {
 
 export interface ContactInquiry {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   phone?: string;
   message: string;
   serviceInterest?: string;
   status: InquiryStatus;
+  respondedAt?: Date | null;
+  closedAt?: Date | null;
+  adminNotes?: string | null;
+  metadata?: Record<string, unknown>;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export enum InquiryStatus {
@@ -54,6 +59,25 @@ export enum InquiryStatus {
   IN_PROGRESS = 'in_progress',
   RESPONDED = 'responded',
   CLOSED = 'closed',
+}
+
+export interface CreateInquiryRequest {
+  fullName: string;
+  email: string;
+  phone?: string;
+  message: string;
+  serviceInterest?: string;
+  recaptchaToken: string;
+}
+
+export interface InquiryListResponse {
+  data: ContactInquiry[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 export interface ApiResponse<T = unknown> {
