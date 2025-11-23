@@ -377,6 +377,128 @@ const swaggerDefinition = {
           },
         },
       },
+      FormFieldOption: {
+        type: 'object',
+        properties: {
+          label: { type: 'string' },
+          value: { type: 'string' },
+        },
+      },
+      FormFieldValidation: {
+        type: 'object',
+        properties: {
+          required: { type: 'boolean', example: true },
+          minLength: { type: 'integer', example: 3 },
+          maxLength: { type: 'integer', example: 2000 },
+          pattern: { type: 'string', example: '^[A-Za-z ]+$' },
+        },
+      },
+      FormField: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          label: { type: 'string' },
+          type: {
+            type: 'string',
+            enum: ['text', 'textarea', 'select', 'radio', 'checkbox'],
+          },
+          placeholder: { type: 'string', nullable: true },
+          helperText: { type: 'string', nullable: true },
+          options: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/FormFieldOption',
+            },
+            nullable: true,
+          },
+          validation: {
+            $ref: '#/components/schemas/FormFieldValidation',
+          },
+        },
+        required: ['id', 'label', 'type'],
+      },
+      FormTemplateRequest: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Virtual Styling Intake' },
+          description: { type: 'string' },
+          serviceId: { type: 'string', format: 'uuid', nullable: true },
+          active: { type: 'boolean', example: true },
+          fields: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/FormField' },
+          },
+        },
+        required: ['name', 'fields'],
+      },
+      FormTemplate: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          name: { type: 'string' },
+          description: { type: 'string', nullable: true },
+          serviceId: { type: 'string', format: 'uuid', nullable: true },
+          fields: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/FormField' },
+          },
+          version: { type: 'integer' },
+          active: { type: 'boolean' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+      },
+      FormSubmission: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          formTemplateId: { type: 'string', format: 'uuid' },
+          templateVersion: { type: 'integer' },
+          userId: { type: 'string', nullable: true },
+          email: { type: 'string', format: 'email', nullable: true },
+          responses: { type: 'object', additionalProperties: true },
+          metadata: { type: 'object', additionalProperties: true },
+          createdAt: { type: 'string', format: 'date-time' },
+          formTemplate: {
+            type: 'object',
+            nullable: true,
+            properties: {
+              id: { type: 'string' },
+              name: { type: 'string' },
+              version: { type: 'integer' },
+              fields: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/FormField' },
+              },
+            },
+          },
+        },
+      },
+      FormSubmissionRequest: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', format: 'email' },
+          responses: { type: 'object', additionalProperties: true },
+          recaptchaToken: { type: 'string' },
+        },
+        required: ['responses', 'recaptchaToken'],
+      },
+      FormSubmissionResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          templateId: { type: 'string', format: 'uuid' },
+          status: { type: 'string', example: 'received' },
+          createdAt: { type: 'string', format: 'date-time' },
+          notifications: {
+            type: 'object',
+            properties: {
+              visitor: { type: 'boolean' },
+              admin: { type: 'boolean' },
+            },
+          },
+        },
+      },
       PaginationMeta: {
         type: 'object',
         properties: {
@@ -495,6 +617,14 @@ const swaggerDefinition = {
     {
       name: 'Admin - Inquiries',
       description: 'Admin-only inquiry management endpoints',
+    },
+    {
+      name: 'Forms',
+      description: 'Public form templates and submissions',
+    },
+    {
+      name: 'Admin - Forms',
+      description: 'Admin endpoints for form templates and submissions',
     },
   ],
 };

@@ -69,6 +69,8 @@ The Adria Cross application uses environment variables to configure different as
 - `RECAPTCHA_MIN_SCORE` - Threshold for v3 score (default 0.5)
 - `CONTACT_RATE_LIMIT_MAX` / `CONTACT_RATE_LIMIT_WINDOW_MS` - Per-IP contact submission rate limits
 - `ADMIN_DASHBOARD_URL` - Deep-link for admin notifications
+- `FORMS_RATE_LIMIT_MAX` / `FORMS_RATE_LIMIT_WINDOW_MS` - Intake form submission rate limits
+- `ADMIN_FORMS_URL` - Admin deep-link for intake submissions
 
 ---
 

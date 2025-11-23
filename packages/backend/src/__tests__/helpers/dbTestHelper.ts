@@ -47,6 +47,25 @@ export async function cleanupTestUsers(): Promise<void> {
     },
   });
 
+  await prisma.formSubmission.deleteMany({
+    where: {
+      OR: [
+        { email: { contains: 'test', mode: 'insensitive' } },
+        { email: { contains: 'example.com', mode: 'insensitive' } },
+        { id: { contains: 'test', mode: 'insensitive' } },
+      ],
+    },
+  });
+
+  await prisma.formTemplate.deleteMany({
+    where: {
+      OR: [
+        { name: { contains: 'test', mode: 'insensitive' } },
+        { id: { contains: 'test', mode: 'insensitive' } },
+      ],
+    },
+  });
+
   await prisma.user.deleteMany({
     where: {
       OR: [

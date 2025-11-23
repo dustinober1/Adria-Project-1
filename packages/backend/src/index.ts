@@ -18,6 +18,8 @@ import authRoutes from './routes/auth';
 import contactRoutes from './routes/contact';
 import healthRoutes from './routes/health';
 import adminInquiriesRoutes from './routes/adminInquiries';
+import adminFormsRoutes from './routes/adminForms';
+import formsRoutes from './routes/forms';
 import postsRoutes from './routes/posts';
 import profileRoutes from './routes/profile';
 import servicesRoutes from './routes/services';
@@ -71,9 +73,11 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/admin/inquiries', adminInquiriesRoutes);
+app.use('/api/v1/admin/forms', adminFormsRoutes);
 app.use('/api/v1/services', servicesRoutes);
 app.use('/api/v1/posts', postsRoutes);
 app.use('/api/v1/contact', contactRoutes);
+app.use('/api/v1/forms', formsRoutes);
 
 // Error handling
 app.use(notFoundHandler);

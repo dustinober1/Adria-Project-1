@@ -94,6 +94,8 @@ DATABASE_URL="postgresql://user:pass@host/db?connection_limit=10&pool_timeout=20
 |----------|-------------|---------|----------|
 | `FRONTEND_URL` | Frontend application URL | `http://localhost:3000` | No |
 | `BACKEND_URL` | Backend API URL | `http://localhost:3001` | No |
+| `ADMIN_DASHBOARD_URL` | Admin link used in inquiry notifications | `http://localhost:3000/admin/inquiries` | No |
+| `ADMIN_FORMS_URL` | Admin link used in form submission notifications | `http://localhost:3000/admin/forms` | No |
 
 ### Rate Limiting
 
@@ -103,6 +105,8 @@ DATABASE_URL="postgresql://user:pass@host/db?connection_limit=10&pool_timeout=20
 | `RATE_LIMIT_MAX_REQUESTS` | Max requests per window | `100` | No |
 | `CONTACT_RATE_LIMIT_MAX` | Max contact submissions per IP per window | `3` | No |
 | `CONTACT_RATE_LIMIT_WINDOW_MS` | Contact rate limit window | `3600000` (1 hour) | No |
+| `FORMS_RATE_LIMIT_MAX` | Max intake form submissions per IP per window | `5` | No |
+| `FORMS_RATE_LIMIT_WINDOW_MS` | Intake form rate limit window | `3600000` (1 hour) | No |
 
 **Default Rate Limits (if not set):**
 - Global window: 1 minute (60000 ms)

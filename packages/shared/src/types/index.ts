@@ -5,6 +5,7 @@ export * from './user.types';
 
 // Re-export auth types from dedicated module
 export * from './auth.types';
+export * from './form.types';
 
 export interface Service {
   id: string;

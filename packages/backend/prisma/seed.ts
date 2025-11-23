@@ -114,6 +114,13 @@ async function main() {
       durationMinutes: 90,
       priceCents: 25000,
     },
+    {
+      name: 'Virtual Styling',
+      description:
+        'Remote styling with curated digital lookbooks and shoppable links tailored to your goals.',
+      durationMinutes: 180,
+      priceCents: 42000,
+    },
   ];
 
   for (const service of services) {
@@ -221,6 +228,176 @@ async function main() {
       where: { id: inquiry.id },
       update: {},
       create: inquiry,
+    });
+  }
+
+  const serviceLookup = await prisma.service.findMany();
+  const serviceBySlug = Object.fromEntries(
+    serviceLookup.map((service) => [service.slug, service.id])
+  );
+
+  const formTemplates = [
+    {
+      id: 'form-template-virtual-styling',
+      name: 'Virtual Styling Intake',
+      description:
+        'Collects preferences, timelines, and inspiration for remote styling engagements.',
+      serviceSlug: slugify('Virtual Styling'),
+      fields: [
+        {
+          id: 'style_goals',
+          label: 'What are your style goals?',
+          type: 'textarea',
+          helperText: 'Share occasions, lifestyle needs, and what you want to feel.',
+          validation: { required: true, minLength: 20, maxLength: 2000 },
+        },
+        {
+          id: 'timeline',
+          label: 'Timeline',
+          type: 'select',
+          options: [
+            { label: '1-2 weeks', value: '1-2 weeks' },
+            { label: '3-4 weeks', value: '3-4 weeks' },
+            { label: '5-8 weeks', value: '5-8 weeks' },
+          ],
+          validation: { required: true },
+        },
+        {
+          id: 'budget',
+          label: 'Budget range',
+          type: 'radio',
+          options: [
+            { label: '$1,000 - $2,000', value: '1000-2000' },
+            { label: '$2,000 - $4,000', value: '2000-4000' },
+            { label: '$4,000+', value: '4000+' },
+          ],
+          validation: { required: true },
+        },
+        {
+          id: 'sizes',
+          label: 'Sizes & fit notes',
+          type: 'text',
+          placeholder: 'Top: M, Bottom: 29, Shoes: 9.5',
+          validation: { required: true, minLength: 2, maxLength: 200 },
+        },
+        {
+          id: 'style_links',
+          label: 'Links to inspiration (optional)',
+          type: 'textarea',
+          placeholder: 'Paste Pinterest, Instagram, or lookbook links',
+          validation: { required: false, maxLength: 1200 },
+        },
+      ],
+    },
+    {
+      id: 'form-template-event-styling',
+      name: 'Event Styling Intake',
+      description:
+        'Details for one-time event styling including dress code, venue, and inspiration.',
+      serviceSlug: slugify('Event Styling'),
+      fields: [
+        {
+          id: 'event_type',
+          label: 'Event type',
+          type: 'select',
+          options: [
+            { label: 'Wedding', value: 'wedding' },
+            { label: 'Gala', value: 'gala' },
+            { label: 'Work event', value: 'work' },
+            { label: 'Other', value: 'other' },
+          ],
+          validation: { required: true },
+        },
+        {
+          id: 'event_date',
+          label: 'Event date',
+          type: 'text',
+          placeholder: 'MM/DD/YYYY',
+          validation: { required: true, minLength: 5, maxLength: 20 },
+        },
+        {
+          id: 'venue',
+          label: 'Venue + location',
+          type: 'text',
+          validation: { required: true, minLength: 3, maxLength: 200 },
+        },
+        {
+          id: 'dress_code',
+          label: 'Dress code / vibe',
+          type: 'textarea',
+          validation: { required: true, minLength: 10, maxLength: 800 },
+        },
+        {
+          id: 'color_palette',
+          label: 'Preferred colors (optional)',
+          type: 'text',
+          validation: { required: false, maxLength: 120 },
+        },
+        {
+          id: 'past_looks',
+          label: 'Looks you liked before',
+          type: 'textarea',
+          validation: { required: false, maxLength: 800 },
+        },
+      ],
+    },
+  ];
+
+  for (const template of formTemplates) {
+    const createdTemplate = await prisma.formTemplate.upsert({
+      where: { id: template.id },
+      update: {},
+      create: {
+        id: template.id,
+        name: template.name,
+        description: template.description,
+        serviceId: template.serviceSlug
+          ? serviceBySlug[template.serviceSlug]
+          : undefined,
+        fields: template.fields,
+        active: true,
+      },
+    });
+
+    console.log('✅ Seeded form template', {
+      id: createdTemplate.id,
+      name: createdTemplate.name,
+      version: createdTemplate.version,
+    });
+
+    await prisma.formSubmission.upsert({
+      where: { id: `${template.id}-submission-1` },
+      update: {},
+      create: {
+        id: `${template.id}-submission-1`,
+        formTemplateId: createdTemplate.id,
+        templateVersion: createdTemplate.version,
+        email:
+          template.id === 'form-template-virtual-styling'
+            ? 'casey@example.com'
+            : 'devon@example.com',
+        responses:
+          template.id === 'form-template-virtual-styling'
+            ? {
+                style_goals:
+                  'Refresh weekday and weekend outfits for a remote job with occasional travel.',
+                timeline: '3-4 weeks',
+                budget: '2000-4000',
+                sizes: 'Top M, Bottom 29, Shoes 9.5',
+                style_links:
+                  'https://www.pinterest.com/search/pins/?q=minimal%20workwear',
+              }
+            : {
+                event_type: 'gala',
+                event_date: '04/18/2026',
+                venue: 'Modern art museum in downtown Chicago',
+                dress_code:
+                  'Black tie with room for modern silhouettes; open to bold jewelry.',
+                color_palette: 'Emerald, black, metallics',
+                past_looks: 'Loved last year’s emerald jumpsuit.',
+              },
+        metadata: { seeded: true, recaptchaScore: 0.99 },
+      },
     });
   }
 }

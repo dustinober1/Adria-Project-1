@@ -19,6 +19,12 @@ export default function Home() {
             Contact Adria
           </a>
           <a
+            href="/forms"
+            className="px-6 py-3 rounded-full border border-[#c19a5d] text-[#4a4a4a] font-semibold hover:bg-[#f5f3ed]"
+          >
+            Intake Forms
+          </a>
+          <a
             href="/admin/inquiries"
             className="px-6 py-3 rounded-full border border-[#c19a5d] text-[#4a4a4a] font-semibold hover:bg-[#f5f3ed]"
           >

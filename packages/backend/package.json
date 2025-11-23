@@ -25,6 +25,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@adria/shared": "2.0.0",
     "@prisma/client": "^5.8.1",
     "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^2.4.3",

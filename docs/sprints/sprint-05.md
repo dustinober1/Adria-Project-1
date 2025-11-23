@@ -2,7 +2,7 @@
 
 **Sprint Duration:** January 20, 2026 to February 2, 2026 (2 weeks)  
 **Sprint Goal:** Deliver a flexible intake form system to replace Google Forms, including form templates, submissions, validation, notifications, and admin management.  
-**Status:** Planned
+**Status:** Completed (APIs, migration, frontend, notifications, tests)
 
 ---
 
@@ -30,14 +30,13 @@
 ---
 
 ## Deliverables
-- Prisma models/migration for `FormTemplate`, `FormField` (or JSON), and `FormSubmission`.
-- Admin APIs for templates: CRUD + activate/deactivate.
-- Public submission API for a template with validation.
-- Admin APIs for submissions: list/detail with filters/pagination.
-- SendGrid email templates for submission confirmation and admin alert.
-- Frontend admin UI to manage templates and view submissions.
-- Frontend public form rendering driven by template schema + client validation.
-- Updated Swagger, env templates, docs, and seeds for demo templates/submissions.
+- Prisma models/migration for `FormTemplate` and `FormSubmission` with JSON fields + versioning; seeds for two demo templates and submissions.
+- Admin APIs for templates (list/detail/create/update/deactivate) with guard against breaking changes once submissions exist; submission list/detail with filters and pagination.
+- Public form APIs: list templates, fetch template detail, submit with validation, rate limiting (5/hr), dedupe guard, and reCAPTCHA reuse.
+- Email notifications for submissions (visitor + admin) with admin deep-link and log-only behavior in non-prod.
+- Frontend admin UI for template builder (add fields/options/validation, activate/deactivate) and recent submissions via React Query.
+- Frontend public dynamic form rendering driven by template schema (RHF + Zod + reCAPTCHA) with success/error UX.
+- Swagger docs expanded, env examples updated (forms rate limits + admin forms URL), Jest coverage for backend + frontend paths.
 
 ---
 

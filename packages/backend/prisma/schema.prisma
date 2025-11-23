@@ -27,6 +27,7 @@ model User {
   // Relations
   refreshTokens RefreshToken[]
   blogPosts     BlogPost[]
+  formSubmissions FormSubmission[]
 
   @@map("users")
   @@index([email])
@@ -70,6 +71,8 @@ model Service {
   active          Boolean  @default(true)
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
+
+  formTemplates FormTemplate[]
 
   @@map("services")
   @@index([active])
@@ -132,4 +135,40 @@ enum InquiryStatus {
   IN_PROGRESS
   RESPONDED
   CLOSED
+}
+
+model FormTemplate {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  serviceId   String?  @map("service_id")
+  service     Service? @relation(fields: [serviceId], references: [id])
+  version     Int      @default(1)
+  fields      Json
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  submissions FormSubmission[]
+
+  @@map("form_templates")
+  @@index([active])
+  @@index([serviceId])
+}
+
+model FormSubmission {
+  id              String        @id @default(uuid())
+  formTemplateId  String        @map("form_template_id")
+  formTemplate    FormTemplate  @relation(fields: [formTemplateId], references: [id])
+  templateVersion Int           @map("template_version")
+  userId          String?       @map("user_id")
+  user            User?         @relation(fields: [userId], references: [id])
+  email           String?
+  responses       Json
+  metadata        Json?
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@map("form_submissions")
+  @@index([formTemplateId])
+  @@index([createdAt])
+  @@index([email, createdAt])
 }

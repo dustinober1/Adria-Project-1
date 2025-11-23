@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@adria/shared": ["../../shared/src"]
+      "@adria/shared": ["../shared/src"]
     },
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,

@@ -32,6 +32,14 @@ export const env = {
     process.env.CONTACT_RATE_LIMIT_WINDOW_MS,
     60 * 60 * 1000
   ),
+  formsRateLimitMax: numberFromEnv(
+    process.env.FORMS_RATE_LIMIT_MAX,
+    5
+  ),
+  formsRateLimitWindowMs: numberFromEnv(
+    process.env.FORMS_RATE_LIMIT_WINDOW_MS,
+    60 * 60 * 1000
+  ),
   logLevel: process.env.LOG_LEVEL ?? 'info',
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000',
   backendUrl: process.env.BACKEND_URL ?? 'http://localhost:3001',
@@ -54,6 +62,8 @@ export const env = {
   sendgridReplyTo: process.env.SENDGRID_REPLY_TO ?? undefined,
   adminDashboardUrl:
     process.env.ADMIN_DASHBOARD_URL ?? 'http://localhost:3000/admin/inquiries',
+  adminFormsUrl:
+    process.env.ADMIN_FORMS_URL ?? 'http://localhost:3000/admin/forms',
 };
 
 export type EnvConfig = typeof env;

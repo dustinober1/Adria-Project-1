@@ -8,8 +8,8 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 ## Project Status
 
-**Current Phase**: Sprint 4 - COMPLETED ✅ (January 19, 2026)
-**Sprint 4 Velocity**: 22 story points delivered
+**Current Phase**: Sprint 5 - COMPLETED ✅ (February 2, 2026)
+**Sprint 5 Velocity**: 22 story points delivered
 
 **Completed User Stories**:
 - ✅ US-1.1: Monorepo structure setup (5 points)
@@ -24,26 +24,30 @@ Adria Cross is a professional personal stylist website currently in transformati
 - ✅ US-4.1: Contact form submission with validation, rate limiting, reCAPTCHA, and notifications
 - ✅ US-4.2: Admin inquiry management endpoints (list/detail/status with filters and RBAC)
 - ✅ US-4.3: Email templates/transport wiring (SendGrid) with feature flag
+- ✅ US-5.1: Intake form builder (FormTemplate CRUD, field schema validation, versioning/guards)
+- ✅ US-5.2: Intake submission endpoint + notifications/admin linkage (public + admin flows)
 
-**Sprint 4 Deliverables**:
-- Prisma `ContactInquiry` model + migration + seeds
-- Public contact submission endpoint with Zod validation, per-IP limiter (3/hr), reCAPTCHA helper, dedupe guard, SendGrid notifications
-- Admin inquiries endpoints (list/filter/search/sort, detail, status transitions) with RBAC and pagination
-- SendGrid email templates (visitor confirmation + admin alert) with non-prod log-only mode
-- Frontend contact page (RHF + Zod + reCAPTCHA loader) and admin inquiries UI (filters, detail, status updates, React Query)
-- Swagger docs updated; env templates expanded; Docker Compose runs Postgres on host port 55432 with seeded data
+**Sprint 5 Deliverables**:
+- Prisma `FormTemplate` + `FormSubmission` migration with seeds for Virtual/Event intake templates
+- Admin form template CRUD with change guards once submissions exist + submission list/detail APIs (filters/pagination/RBAC)
+- Public form submission endpoints with validation, dedupe window, per-IP limiter (5/hr), and reCAPTCHA reuse
+- SendGrid notifications for submissions (visitor + admin) with log-only behavior in non-prod and admin forms deep-link
+- Frontend admin forms experience (React Query builder UI) and public dynamic intake form rendering with RHF/Zod/reCAPTCHA
+- Swagger expanded for forms; env templates updated (forms rate limits, admin forms URL); Jest coverage for forms flows
 
-**Next Sprint**: Sprint 5 - Intake Form System (Weeks 9-10)
+**Next Sprint**: Sprint 6 - Email Experience Hardening (Weeks 11-12)
 **Next Steps**:
-- US-5.1: Intake form builder (FormTemplate + CRUD, field types, validation rules)
-- US-5.2: Intake submission endpoint with email notifications/admin linkage
+- US-6.1: Email service abstraction for reliability/observability
+- US-6.2: Branded email templates across flows
+- US-6.3: Admin notification coverage + routing rules
 
-## Recent Updates (Sprint 4 completion)
-- Added Prisma migration and seeds for ContactInquiry
-- New public contact endpoint with reCAPTCHA + per-IP limiter + notification emails
-- Admin inquiries list/detail/status endpoints with filters, sorting, pagination, and transition guards
-- Frontend contact form + admin inquiries UI built with React Query and RHF
-- Docker Compose Postgres now exposed on host port 55432 to avoid local conflicts; stack launched with seeded data for testing
+## Recent Updates (Sprint 5 completion)
+- Added Prisma models/migration for FormTemplate/FormSubmission with JSON field schemas, versioning, and demo seeds
+- New public forms APIs: list/detail templates and submit with validation, dedupe guard, per-IP limiter, reCAPTCHA reuse
+- Admin forms APIs: template CRUD with guardrails and submission list/detail with filters/pagination
+- Email notifications for submissions with admin deep-links; env defaults for forms rate limits + admin forms URL
+- Frontend admin forms UI + public dynamic intake form rendering; RHF + Zod + React Query + reCAPTCHA wired
+- Swagger/docs/env templates refreshed; backend + frontend test suites passing for forms coverage
 
 ## Documentation
 

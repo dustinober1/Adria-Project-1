@@ -9,7 +9,10 @@ const config = createJestConfig({
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '\\.(css|scss|sass)$': 'identity-obj-proxy',
+    '^@adria/shared$': '<rootDir>/../shared/src/index.ts',
+    '^@adria/shared/(.*)$': '<rootDir>/../shared/src/$1',
   },
+  moduleDirectories: ['node_modules', '<rootDir>/../shared/src', '<rootDir>'],
   testMatch: ['**/__tests__/**/*.test.ts?(x)'],
   clearMocks: true,
 });

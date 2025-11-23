@@ -1,4 +1,4 @@
-import type { ContactInquiry } from '@prisma/client';
+import type { ContactInquiry, FormSubmission, FormTemplate } from '@prisma/client';
 import sgMail, { type MailDataRequired } from '@sendgrid/mail';
 
 import { env } from '../config/env';
@@ -120,4 +120,104 @@ export async function sendInquiryNotifications(inquiry: ContactInquiry) {
     visitor,
     admin,
   };
+}
+
+const buildFormVisitorMessage = (
+  submission: FormSubmission,
+  template: Pick<FormTemplate, 'name' | 'id'>,
+  summary: string
+): MailDataRequired => {
+  return {
+    to: submission.email ?? env.sendgridAdminEmail,
+    from: env.sendgridFromEmail,
+    replyTo: env.sendgridReplyTo ?? env.sendgridFromEmail,
+    subject: `We received your "${template.name}" form`,
+    text: [
+      'Thanks for sharing details with Adria Cross.',
+      `Form: ${template.name}`,
+      '',
+      'What you sent:',
+      summary,
+      '',
+      'We will follow up soon with next steps.',
+      '— Adria Cross Team',
+    ].join('\n'),
+    html: `
+      <p>Thanks for sharing details with Adria Cross.</p>
+      <p><strong>Form:</strong> ${template.name}</p>
+      <p><strong>What you sent:</strong><br/>${summary.replace(/\n/g, '<br/>')}</p>
+      <p>We will follow up soon with next steps.</p>
+      <p>— Adria Cross Team</p>
+    `,
+  };
+};
+
+const buildFormAdminNotification = (
+  submission: FormSubmission,
+  template: FormTemplate,
+  summary: string
+): MailDataRequired => {
+  return {
+    to: env.sendgridAdminEmail,
+    from: env.sendgridFromEmail,
+    subject: `New submission for ${template.name}`,
+    text: [
+      `Template: ${template.name}`,
+      `Template ID: ${template.id}`,
+      `Submission: ${submission.id}`,
+      '',
+      'Responses:',
+      summary,
+      '',
+      `View in admin: ${env.adminFormsUrl}`,
+    ].join('\n'),
+    html: `
+      <p><strong>Template:</strong> ${template.name}</p>
+      <p><strong>Submission:</strong> ${submission.id}</p>
+      <p><strong>Responses:</strong><br/>${summary.replace(/\n/g, '<br/>')}</p>
+      <p><a href="${env.adminFormsUrl}">View in admin</a></p>
+    `,
+  };
+};
+
+const summarizeResponses = (
+  submission: FormSubmission,
+  template: FormTemplate
+): string => {
+  const labelMap = Object.fromEntries(
+    (template.fields as unknown[] as { id: string; label?: string }[]).map(
+      (field) => [field.id, field.label ?? field.id]
+    )
+  );
+
+  return Object.entries(submission.responses as Record<string, unknown>)
+    .slice(0, 12)
+    .map(([key, value]) => {
+      const label = labelMap[key] ?? key;
+      if (Array.isArray(value)) {
+        return `- ${label}: ${value.join(', ')}`;
+      }
+      return `- ${label}: ${String(value)}`;
+    })
+    .join('\n');
+};
+
+export async function sendFormSubmissionNotifications(
+  submission: FormSubmission,
+  template: FormTemplate
+) {
+  const summary = summarizeResponses(submission, template);
+
+  const visitor =
+    submission.email && submission.email.length > 0
+      ? await sendEmail(
+          buildFormVisitorMessage(submission, template, summary)
+        )
+      : { sent: false, skipped: true as const };
+
+  const admin = await sendEmail(
+    buildFormAdminNotification(submission, template, summary)
+  );
+
+  return { visitor, admin };
 }
