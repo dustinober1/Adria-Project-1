@@ -8,8 +8,8 @@ Adria Cross is a professional personal stylist website currently in transformati
 
 ## Project Status
 
-**Current Phase**: Sprint 5 - COMPLETED ✅ (February 2, 2026)
-**Sprint 5 Velocity**: 22 story points delivered
+**Current Phase**: Sprint 7 - COMPLETED ✅ (March 2, 2026)
+**Recent Velocity**: Sprint 6 - 22 pts; Sprint 7 - 22 pts (steady)
 
 **Completed User Stories**:
 - ✅ US-1.1: Monorepo structure setup (5 points)
@@ -26,31 +26,41 @@ Adria Cross is a professional personal stylist website currently in transformati
 - ✅ US-4.3: Email templates/transport wiring (SendGrid) with feature flag
 - ✅ US-5.1: Intake form builder (FormTemplate CRUD, field schema validation, versioning/guards)
 - ✅ US-5.2: Intake submission endpoint + notifications/admin linkage (public + admin flows)
+- ✅ US-6.1: Email service abstraction for reliability/observability
+- ✅ US-6.2: Branded email templates across flows
+- ✅ US-6.3: Admin notification coverage + routing rules
+- ✅ US-6.4: Email flags/secrets/operability docs
+- ✅ US-7.1: Availability model + calendar wiring
+- ✅ US-7.2: Booking request/confirm APIs + double-booking guard
+- ✅ US-7.3: Booking UIs (client + admin) with filters/actions
+- ✅ US-7.4: Notifications/reminders with ICS + status transitions
 
-**Sprint 5 Deliverables**:
-- Prisma `FormTemplate` + `FormSubmission` migration with seeds for Virtual/Event intake templates
-- Admin form template CRUD with change guards once submissions exist + submission list/detail APIs (filters/pagination/RBAC)
-- Public form submission endpoints with validation, dedupe window, per-IP limiter (5/hr), and reCAPTCHA reuse
-- SendGrid notifications for submissions (visitor + admin) with log-only behavior in non-prod and admin forms deep-link
-- Frontend admin forms experience (React Query builder UI) and public dynamic intake form rendering with RHF/Zod/reCAPTCHA
-- Swagger expanded for forms; env templates updated (forms rate limits, admin forms URL); Jest coverage for forms flows
+**Sprint 6 Deliverables**:
+- Email adapter with retry/backoff, circuit breaker, sandbox/log-only flag, and structured metrics/logging; per-template overrides and typed results.
+- Branded HTML/text templates with shared partials and previews (dev route + CLI); variables validation + snapshot coverage.
+- Admin notification routing (to/cc/bcc/digest) with feature flags; submission tagging; updated env templates, Swagger, and ops runbooks (SPF/DKIM/secrets).
+- Jest unit/integration coverage for adapter/templates/routing; staging verification with sandbox/live toggles.
 
-**Next Sprint**: Sprint 6 - Email Experience Hardening (Weeks 11-12)  
-**Following**: Sprint 7 - Booking & Calendar Sync (Weeks 13-14)
+**Sprint 7 Deliverables**:
+- Prisma migration for `Availability`/`Booking` with overlap guard and seeds; transactional double-booking protection.
+- Booking APIs (public request + admin approve/decline/reschedule/cancel) with validation, rate limiting, recaptcha, ICS download links, and calendar sync flag.
+- Calendar service abstraction + ICS helper; Google Calendar sync mocked in dev/test and gated by `CALENDAR_SYNC_ENABLED`.
+- Frontend booking request form (RHF+Zod) and admin bookings dashboard (filters/actions/status pills); notifications/reminders with ICS; tests across layers and staging smoke.
+
+**Next Sprint**: Sprint 8 - Calendar Integration Foundation (Weeks 15-16)  
+**Following**: Sprint 9 - API Testing & Documentation (Weeks 17-18)
 **Next Steps**:
-- US-6.1: Email service abstraction for reliability/observability
-- US-6.2: Branded email templates across flows
-- US-6.3: Admin notification coverage + routing rules
-- US-7.1: Availability model + calendar wiring
-- US-7.2: Booking request/confirm APIs + double-booking guard
+- US-8.1: Google Calendar API integration (auth/refresh + read/write client)
+- US-8.2: Public availability endpoint with busy-time exclusion, buffers, caching
+- US-8.3: Admin availability rule CRUD (recurring/overrides, service durations)
+- US-9.1: API test expansion toward 80%+ coverage and CI runtime targets
 
-## Recent Updates (Sprint 5 completion)
-- Added Prisma models/migration for FormTemplate/FormSubmission with JSON field schemas, versioning, and demo seeds
-- New public forms APIs: list/detail templates and submit with validation, dedupe guard, per-IP limiter, reCAPTCHA reuse
-- Admin forms APIs: template CRUD with guardrails and submission list/detail with filters/pagination
-- Email notifications for submissions with admin deep-links; env defaults for forms rate limits + admin forms URL
-- Frontend admin forms UI + public dynamic intake form rendering; RHF + Zod + React Query + reCAPTCHA wired
-- Swagger/docs/env templates refreshed; backend + frontend test suites passing for forms coverage
+## Recent Updates (Sprints 6-7 completion)
+- Email adapter hardened with retry/backoff/circuit breaker, sandbox/log-only flag, structured metrics/logs, and branded templates/partials plus preview surfaces.
+- Admin notification routing (to/cc/bcc/digest) added with feature flags; env templates, Swagger, and ops runbooks updated; staging verification completed.
+- Booking migration/models/seeds delivered with overlap guard; booking APIs (public + admin) include recaptcha, rate limits, status machine, ICS download links, and calendar sync flag.
+- Calendar service abstraction + ICS helper shipped with Google Calendar mock in dev/test; notifications/reminders wired for request/approval/reschedule/cancel.
+- Frontend booking form (RHF + Zod) and admin bookings dashboard (filters/status actions) live; test suites cover adapter/templates/routing, booking flows, ICS, and calendar mock paths.
 
 ## Documentation
 
@@ -65,7 +75,7 @@ All documentation and planning docs are in the `/docs` folder:
 - `docs/PLANNING_README.md` - Planning methodology
 - `docs/QUICK_START_GUIDE.md` - Quick start guide for new team members
 - `docs/SPRINT_TEMPLATE.md` - Sprint tracking template
-- `docs/sprints/sprint-01.md` - Sprint 1 completed documentation
+- `docs/sprints/` - Sprint logs (01-07 completed)
 
 ## Database Architecture
 
