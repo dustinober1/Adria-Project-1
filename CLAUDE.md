@@ -35,11 +35,14 @@ Adria Cross is a professional personal stylist website currently in transformati
 - Frontend admin forms experience (React Query builder UI) and public dynamic intake form rendering with RHF/Zod/reCAPTCHA
 - Swagger expanded for forms; env templates updated (forms rate limits, admin forms URL); Jest coverage for forms flows
 
-**Next Sprint**: Sprint 6 - Email Experience Hardening (Weeks 11-12)
+**Next Sprint**: Sprint 6 - Email Experience Hardening (Weeks 11-12)  
+**Following**: Sprint 7 - Booking & Calendar Sync (Weeks 13-14)
 **Next Steps**:
 - US-6.1: Email service abstraction for reliability/observability
 - US-6.2: Branded email templates across flows
 - US-6.3: Admin notification coverage + routing rules
+- US-7.1: Availability model + calendar wiring
+- US-7.2: Booking request/confirm APIs + double-booking guard
 
 ## Recent Updates (Sprint 5 completion)
 - Added Prisma models/migration for FormTemplate/FormSubmission with JSON field schemas, versioning, and demo seeds
