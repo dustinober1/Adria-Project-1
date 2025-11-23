@@ -161,7 +161,7 @@ npx prisma migrate reset
 
 ### Production/Staging
 
-For production, use the rollback procedures documented in `/docs/ROLLBACK_PROCEDURES.md`:
+For production, use the rollback procedures documented in `/docs/operations/ROLLBACK_PROCEDURES.md`:
 
 1. Create a backup before major migrations
 2. Test migration on staging first

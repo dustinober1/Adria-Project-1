@@ -68,7 +68,7 @@
 - [ ] Add seed script snippet to create 3 sample inquiries (varied statuses) for staging/demo; gated by `NODE_ENV`.
 - [ ] Extend `packages/shared` with inquiry types (CreateInquiryRequest, InquiryResponse, InquiryStatus enum) and export barrel.
 - [ ] Update `.env.example` (root + packages/backend + packages/frontend) with new vars and inline comments.
-- [ ] Document env setup in `docs/ENV_MANAGEMENT.md` and note SendGrid/reCAPTCHA secrets in CI/CD instructions.
+- [ ] Document env setup in `docs/operations/ENV_MANAGEMENT.md` and note SendGrid/reCAPTCHA secrets in CI/CD instructions.
 
 ### Track 2: Backend - Public Contact Submission (US-4.1)
 - [ ] Create `routes/contact.ts`; register under `/api/v1/contact` in `src/index.ts`.
@@ -120,8 +120,8 @@
 - [ ] Add monitoring hooks (log counts) and 429/400 dashboards (if logging stack available).
 
 ### Track 8: Ops, Docs, and Rollout
-- [ ] Update `docs/ENV_MANAGEMENT.md`, `packages/backend/README.md`, and Swagger docs with new endpoints and env vars.
-- [ ] Configure SendGrid domain + API key + sender identity; store secrets in GitHub Actions/Cloud Build; document in `docs/CICD_SETUP_SUMMARY.md`.
+- [ ] Update `docs/operations/ENV_MANAGEMENT.md`, `packages/backend/README.md`, and Swagger docs with new endpoints and env vars.
+- [ ] Configure SendGrid domain + API key + sender identity; store secrets in GitHub Actions/Cloud Build; document in `docs/operations/CICD_SETUP_SUMMARY.md`.
 - [ ] Add CI checks for new tests; ensure `npm run test` covers backend + frontend suites.
 - [ ] Staging deployment after feature complete; send test submission end-to-end; verify emails arrive and admin UI updates.
 - [ ] Prepare release notes and support runbook (how to rotate SendGrid/reCAPTCHA keys, how to unblock rate-limited IP).

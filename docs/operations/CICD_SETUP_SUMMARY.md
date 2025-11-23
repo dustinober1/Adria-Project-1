@@ -216,7 +216,7 @@ All scripts are located in `/scripts/` and are executable.
 
 ### 4. Documentation
 
-#### `docs/ENV_MANAGEMENT.md`
+#### `ENV_MANAGEMENT.md`
 
 **Covers:**
 - Environment variable strategy
@@ -227,7 +227,7 @@ All scripts are located in `/scripts/` and are executable.
 - Security best practices
 - Troubleshooting guide
 
-#### `docs/DATABASE_MIGRATIONS.md`
+#### `DATABASE_MIGRATIONS.md`
 
 **Covers:**
 - Prisma migration workflows
@@ -238,7 +238,7 @@ All scripts are located in `/scripts/` and are executable.
 - Testing strategies
 - Troubleshooting
 
-#### `docs/ROLLBACK_PROCEDURES.md`
+#### `ROLLBACK_PROCEDURES.md`
 
 **Covers:**
 - Application rollback procedures
@@ -597,9 +597,9 @@ scripts/gradual-rollout.sh              # Traffic migration
 scripts/monitor-health.sh               # Health monitoring
 scripts/rollback.sh                     # Rollback automation
 scripts/smoke-tests.sh                  # Smoke testing
-docs/ENV_MANAGEMENT.md                  # Environment variables guide
-docs/DATABASE_MIGRATIONS.md             # Migration procedures
-docs/ROLLBACK_PROCEDURES.md             # Rollback guide
+ENV_MANAGEMENT.md                  # Environment variables guide
+DATABASE_MIGRATIONS.md             # Migration procedures
+ROLLBACK_PROCEDURES.md             # Rollback guide
 CLAUDE.md                               # Project documentation
 ```
 
@@ -615,9 +615,9 @@ CLAUDE.md                               # Project documentation
 
 **Documentation:**
 - CI/CD: This document
-- Environments: `docs/ENV_MANAGEMENT.md`
-- Migrations: `docs/DATABASE_MIGRATIONS.md`
-- Rollbacks: `docs/ROLLBACK_PROCEDURES.md`
+- Environments: `ENV_MANAGEMENT.md`
+- Migrations: `DATABASE_MIGRATIONS.md`
+- Rollbacks: `ROLLBACK_PROCEDURES.md`
 
 ---
 

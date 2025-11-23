@@ -65,16 +65,18 @@ Adria Cross is a professional personal stylist website currently in transformati
 ## Documentation
 
 All documentation and planning docs are in the `/docs` folder:
-- `docs/TRANSFORMATION_PLAN.md` - Complete transformation roadmap (52 sprints, 156 user stories)
-- `docs/TRANSFORMATION_SUMMARY.md` - Executive summary with budget and metrics
-- `docs/DATABASE_SETUP.md` - PostgreSQL and Prisma setup guide
-- `docs/DATABASE_MIGRATIONS.md` - Database migration procedures and best practices
-- `docs/ENV_MANAGEMENT.md` - Environment variable and secrets management guide
-- `docs/ROLLBACK_PROCEDURES.md` - Deployment and database rollback procedures
-- `docs/CICD_SETUP_SUMMARY.md` - CI/CD pipeline documentation
-- `docs/PLANNING_README.md` - Planning methodology
-- `docs/QUICK_START_GUIDE.md` - Quick start guide for new team members
-- `docs/SPRINT_TEMPLATE.md` - Sprint tracking template
+- `docs/overview/TRANSFORMATION_SUMMARY.md` - Executive summary with budget and metrics
+- `docs/overview/QUICK_START_GUIDE.md` - Quick start guide for new team members
+- `docs/roadmap/TRANSFORMATION_PLAN.md` - Complete transformation roadmap (52 sprints, 156 user stories)
+- `docs/roadmap/PLANNING_README.md` - Planning methodology
+- `docs/roadmap/SPRINT_TEMPLATE.md` - Sprint tracking template
+- `docs/operations/ENV_MANAGEMENT.md` - Environment variable and secrets management guide
+- `docs/operations/DATABASE_SETUP.md` - PostgreSQL and Prisma setup guide
+- `docs/operations/DATABASE_MIGRATIONS.md` - Database migration procedures and best practices
+- `docs/operations/ROLLBACK_PROCEDURES.md` - Deployment and database rollback procedures
+- `docs/operations/CICD_SETUP_SUMMARY.md` - CI/CD pipeline documentation
+- `docs/architecture/API_DOCUMENTATION_SETUP.md` - API documentation setup
+- `docs/architecture/RBAC_IMPLEMENTATION.md` - RBAC implementation notes
 - `docs/sprints/` - Sprint logs (01-07 completed)
 
 ## Database Architecture
@@ -89,7 +91,7 @@ All documentation and planning docs are in the `/docs` folder:
 **Key Files**:
 - `.env.example` - Environment variable template with database configuration
 - `scripts/db-setup.sh` - Automated database provisioning script
-- `docs/DATABASE_SETUP.md` - Comprehensive setup documentation
+- `docs/operations/DATABASE_SETUP.md` - Comprehensive setup documentation
 
 **Database Connection**:
 - Local Development: Cloud SQL Proxy
@@ -304,15 +306,26 @@ root/
 │   └── logger.min.js     # Minified version
 ├── images/               # Static images (empty directory in repo)
 ├── docs/                 # Documentation
-│   ├── TRANSFORMATION_PLAN.md
-│   ├── TRANSFORMATION_SUMMARY.md
-│   ├── DATABASE_SETUP.md
-│   ├── DATABASE_MIGRATIONS.md
-│   ├── ENV_MANAGEMENT.md
-│   ├── ROLLBACK_PROCEDURES.md
-│   ├── PLANNING_README.md
-│   ├── QUICK_START_GUIDE.md
-│   └── SPRINT_TEMPLATE.md
+│   ├── overview/
+│   │   ├── TRANSFORMATION_SUMMARY.md
+│   │   └── QUICK_START_GUIDE.md
+│   ├── roadmap/
+│   │   ├── TRANSFORMATION_PLAN.md
+│   │   ├── PLANNING_README.md
+│   │   └── SPRINT_TEMPLATE.md
+│   ├── operations/
+│   │   ├── ENV_MANAGEMENT.md
+│   │   ├── DATABASE_SETUP.md
+│   │   ├── DATABASE_MIGRATIONS.md
+│   │   ├── ROLLBACK_PROCEDURES.md
+│   │   └── CICD_SETUP_SUMMARY.md
+│   ├── architecture/
+│   │   ├── API_DOCUMENTATION_SETUP.md
+│   │   └── RBAC_IMPLEMENTATION.md
+│   └── sprints/
+│       ├── sprint-01.md
+│       ├── sprint-02.md
+│       └── ...
 ├── scripts/              # Automation scripts
 │   ├── db-setup.sh      # Database provisioning script
 │   ├── run-migrations.sh  # Database migration runner

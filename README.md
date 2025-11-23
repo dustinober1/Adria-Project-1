@@ -304,7 +304,7 @@ The application is designed for Google Cloud Run deployment:
    gcloud run deploy adria-frontend --image gcr.io/PROJECT_ID/adria-frontend
    ```
 
-See `docs/DEPLOYMENT.md` for detailed deployment instructions.
+See `docs/operations/CICD_SETUP_SUMMARY.md` for deployment pipeline steps and `docs/operations/ROLLBACK_PROCEDURES.md` for rollback guidance.
 
 ## Database
 
@@ -355,9 +355,10 @@ npm run seed
 
 ## Documentation
 
-- [Transformation Plan](docs/TRANSFORMATION_PLAN.md) - Complete 2-year roadmap
-- [Sprint Guide](docs/PLANNING_README.md) - Sprint planning documentation
-- [Quick Start](docs/QUICK_START_GUIDE.md) - Quick reference guide
+- [Documentation Index](docs/README.md) - Overview of the curated documentation subdirectories
+- [Transformation Plan](docs/roadmap/TRANSFORMATION_PLAN.md) - Complete 2-year roadmap
+- [Sprint Guide](docs/roadmap/PLANNING_README.md) - Sprint planning documentation
+- [Quick Start](docs/overview/QUICK_START_GUIDE.md) - Quick reference guide
 - [Legacy Site](legacy-static-site/README.md) - Original static site
 
 ## Support
@@ -373,6 +374,6 @@ UNLICENSED - Private project for Adria Cross
 
 ---
 
-**Current Status:** Sprint 1 - Foundation & Setup Complete
+**Current Status:** Sprint 7 - Booking & Calendar Sync Completed
 
 Built with by Adria Cross Team

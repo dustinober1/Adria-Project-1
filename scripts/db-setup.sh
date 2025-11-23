@@ -21,7 +21,7 @@
 #   ./scripts/db-setup.sh dev       # Setup development database only
 #   ./scripts/db-setup.sh all       # Setup all environments
 #
-# See docs/DATABASE_SETUP.md for detailed documentation
+# See docs/operations/DATABASE_SETUP.md for detailed documentation
 ################################################################################
 
 set -e  # Exit on error
@@ -430,13 +430,13 @@ main() {
     echo ""
     log_info "Next steps:"
     echo "  1. Install Cloud SQL Proxy: brew install cloud-sql-proxy"
-    echo "  2. Start proxy: See docs/DATABASE_SETUP.md"
+    echo "  2. Start proxy: See docs/operations/DATABASE_SETUP.md"
     echo "  3. Update .env with DATABASE_URL"
     echo "  4. Install Prisma: cd packages/backend && npm install prisma @prisma/client"
     echo "  5. Initialize Prisma: npx prisma init"
     echo "  6. Run migrations: npx prisma migrate dev"
     echo ""
-    log_info "For detailed instructions, see: docs/DATABASE_SETUP.md"
+    log_info "For detailed instructions, see: docs/operations/DATABASE_SETUP.md"
     echo ""
 }
 

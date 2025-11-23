@@ -372,7 +372,7 @@ The following routes exist but are **not yet documented** with Swagger annotatio
 ### Created Files
 1. `/packages/backend/src/config/swagger.ts` - Swagger configuration
 2. `/packages/backend/README.md` - Backend documentation
-3. `/docs/API_DOCUMENTATION_SETUP.md` - This file
+3. `/docs/architecture/API_DOCUMENTATION_SETUP.md` - This file
 
 ### Modified Files
 1. `/packages/backend/package.json` - Added Swagger dependencies

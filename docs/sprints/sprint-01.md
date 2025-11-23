@@ -267,11 +267,11 @@ None
 ### Documentation Created/Updated
 1. **README.md** - Comprehensive setup guide for monorepo
 2. **CLAUDE.md** - Updated with monorepo architecture and Sprint 1 status
-3. **docs/DATABASE_SETUP.md** - Complete PostgreSQL setup guide
-4. **docs/ENV_MANAGEMENT.md** - Environment variable management with Google Secret Manager
-5. **docs/DATABASE_MIGRATIONS.md** - Database migration procedures
-6. **docs/ROLLBACK_PROCEDURES.md** - Deployment rollback procedures
-7. **docs/CICD_SETUP_SUMMARY.md** - CI/CD pipeline documentation
+3. **docs/operations/DATABASE_SETUP.md** - Complete PostgreSQL setup guide
+4. **docs/operations/ENV_MANAGEMENT.md** - Environment variable management with Google Secret Manager
+5. **docs/operations/DATABASE_MIGRATIONS.md** - Database migration procedures
+6. **docs/operations/ROLLBACK_PROCEDURES.md** - Deployment rollback procedures
+7. **docs/operations/CICD_SETUP_SUMMARY.md** - CI/CD pipeline documentation
 8. **docs/sprints/sprint-01.md** - This sprint documentation
 9. **.env.example** - Environment variable template (80+ variables)
 10. **scripts/db-setup.sh** - Automated database provisioning script
@@ -323,12 +323,11 @@ Adria-Project-1/
 │   └── shared/           # Common types and utilities
 ├── legacy-static-site/   # Original static HTML site
 ├── docs/                 # Comprehensive documentation
-│   ├── sprints/          # Sprint tracking
-│   ├── DATABASE_SETUP.md
-│   ├── ENV_MANAGEMENT.md
-│   ├── DATABASE_MIGRATIONS.md
-│   ├── ROLLBACK_PROCEDURES.md
-│   └── CICD_SETUP_SUMMARY.md
+│   ├── overview/         # Summary + quick start
+│   ├── roadmap/          # Transformation plan and sprint templates
+│   ├── operations/       # Runbooks (env, DB, CI/CD, rollback)
+│   ├── architecture/     # Implementation guides
+│   └── sprints/          # Sprint tracking
 ├── scripts/              # Automation scripts
 │   ├── db-setup.sh
 │   ├── run-migrations.sh

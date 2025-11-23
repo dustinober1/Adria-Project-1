@@ -520,7 +520,7 @@ See `prisma/MIGRATION_GUIDE.md` for detailed troubleshooting.
 ## Resources
 
 - **Prisma Docs:** https://www.prisma.io/docs
-- **Cloud SQL Guide:** `/docs/DATABASE_SETUP.md`
+- **Cloud SQL Guide:** `/docs/operations/DATABASE_SETUP.md`
 - **Migration Guide:** `prisma/MIGRATION_GUIDE.md`
 - **Env Variables:** `ENV_VARIABLES.md`
 
